@@ -244,22 +244,37 @@ bool Raven_Game::AttemptToAddBot(Raven_Bot* pBot)
 //
 //  Adds a bot and switches on the default steering behavior
 //-----------------------------------------------------------------------------
+void Raven_Game::CreateHumanBot(Raven_Bot* rb) {
+	if (!m_thereIsAHuman) {
+		m_pSelectedBot = rb;
+		m_pSelectedBot->SetIsPossessed(true);
+		m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
+		m_thereIsAHuman = true;
+	}
+}
+
+
 void Raven_Game::AddBots(unsigned int NumBotsToAdd)
-{ 
+{
+  m_thereIsAHuman = false;
   while (NumBotsToAdd--)
   {
     //create a bot. (its position is irrelevant at this point because it will
     //not be rendered until it is spawned)
     Raven_Bot* rb = new Raven_Bot(this, Vector2D());
-
-    //switch the default steering behaviors on
-    rb->GetSteering()->WallAvoidanceOn();
-    rb->GetSteering()->SeparationOn();
+	
+	//switch the default steering behaviors on
+	rb->GetSteering()->WallAvoidanceOn();
+	rb->GetSteering()->SeparationOn();
 
     m_Bots.push_back(rb);
 
     //register the bot with the entity manager
     EntityMgr->RegisterEntity(rb);
+
+	////////////////////////////////	HUMAN BOT	//////////////////////////////////////////////
+	//if you don't want human bot, comment this line
+	CreateHumanBot(rb);
 
     
 #ifdef LOG_CREATIONAL_STUFF
@@ -404,6 +419,9 @@ bool Raven_Game::LoadMap(const std::string& filename)
   return false;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////// Bot controlled ////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 //------------------------- ExorciseAnyPossessedBot ---------------------------
 //
@@ -427,30 +445,33 @@ void Raven_Game::ExorciseAnyPossessedBot()
 //-----------------------------------------------------------------------------
 void Raven_Game::ClickRightMouseButton(POINTS p)
 {
-  Raven_Bot* pBot = GetBotAtPosition(POINTStoVector(p));
+	//If a bot is not human from the beginning
+	if (!m_thereIsAHuman) {
+		Raven_Bot* pBot = GetBotAtPosition(POINTStoVector(p));
 
-  //if there is no selected bot just return;
-  if (!pBot && m_pSelectedBot == NULL) return;
+		//if there is no selected bot just return;
+		if (!pBot && m_pSelectedBot == NULL) return;
 
-  //if the cursor is over a different bot to the existing selection,
-  //change selection
-  if (pBot && pBot != m_pSelectedBot)
-  { 
-    if (m_pSelectedBot) m_pSelectedBot->Exorcise();
-    m_pSelectedBot = pBot;
+		//if the cursor is over a different bot to the existing selection,
+		//change selection
+		if (pBot && pBot != m_pSelectedBot)
+		{
+			if (m_pSelectedBot) m_pSelectedBot->Exorcise();
+			m_pSelectedBot = pBot;
 
-    return;
-  }
+			return;
+		}
 
-  //if the user clicks on a selected bot twice it becomes possessed(under
-  //the player's control)
-  if (pBot && pBot == m_pSelectedBot)
-  {
-    m_pSelectedBot->TakePossession();
+		//if the user clicks on a selected bot twice it becomes possessed(under
+		//the player's control)
+		if (pBot && pBot == m_pSelectedBot)
+		{
+			m_pSelectedBot->TakePossession();
 
-    //clear any current goals
-    m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
-  }
+			//clear any current goals
+			m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
+		}
+	}
 
   //if the bot is possessed then a right click moves the bot to the cursor
   //position
@@ -526,6 +547,8 @@ void Raven_Game::ChangeWeaponOfPossessedBot(unsigned int weapon)const
     }
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //---------------------------- isLOSOkay --------------------------------------
 //

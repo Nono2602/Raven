@@ -11,6 +11,7 @@
 #include "Raven_UserOptions.h"
 #include "Raven_Game.h"
 #include "lua/Raven_Scriptor.h"
+#include <iostream>
 
 
 //need to include this for the toolbar stuff
@@ -28,6 +29,30 @@ char*	g_szWindowClassName = "MyWindowClass";
 
 Raven_Game* g_pRaven;
 
+//Matcher arme courante au type d'arme
+int WeaponType(int nbRoulette) {
+	int res = 0;
+	switch (nbRoulette) {
+		case 0: {
+			res = type_blaster;
+		}
+		break;
+		case 1: {
+			res = type_shotgun;
+		}
+		break;
+		case 2: {
+			res = type_rocket_launcher;
+		}
+		break;
+		case 3: {
+			res = type_rail_gun;
+		}
+		break;
+	}
+	return res;
+}
+
 
 //---------------------------- WindowProc ---------------------------------
 //	
@@ -39,6 +64,10 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
                              WPARAM wParam,
                              LPARAM lParam)
 {
+	//numero arme courante
+	static int armeCourante = 0; //type_blaster
+	//nombre arme differente possible au total
+	int nbArme = 3;
  
    //these hold the dimensions of the client window area
 	 static int cxClient, cyClient; 
@@ -133,33 +162,37 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
            break;
 
          case '1':
-
-           g_pRaven->ChangeWeaponOfPossessedBot(type_blaster);
+			if (!g_pRaven->isThereAHuman()) {
+				 g_pRaven->ChangeWeaponOfPossessedBot(type_blaster);
+			}
 
            break;
 
          case '2':
-
-           g_pRaven->ChangeWeaponOfPossessedBot(type_shotgun);
+			 if (!g_pRaven->isThereAHuman()) {
+				 g_pRaven->ChangeWeaponOfPossessedBot(type_shotgun);
+			 }
 
            break;
            
          case '3':
-
-           g_pRaven->ChangeWeaponOfPossessedBot(type_rocket_launcher);
+			 if (!g_pRaven->isThereAHuman()) {
+				 g_pRaven->ChangeWeaponOfPossessedBot(type_rocket_launcher);
+			 }
 
            break;
 
          case '4':
-
-           g_pRaven->ChangeWeaponOfPossessedBot(type_rail_gun);
+			 if (!g_pRaven->isThereAHuman()) {
+				 g_pRaven->ChangeWeaponOfPossessedBot(type_rail_gun);
+			 }
 
            break;
 
          case 'X':
-
-           g_pRaven->ExorciseAnyPossessedBot();
-
+			 if (!g_pRaven->isThereAHuman()) {
+				 g_pRaven->ExorciseAnyPossessedBot();
+			 }
            break;
 
 
@@ -178,19 +211,38 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
       break;
 
 
-    case WM_LBUTTONDOWN:
+    case WM_LBUTTONDOWN: //tire vers l'endroit ou se trouve le curseur de la souris
     {
-      g_pRaven->ClickLeftMouseButton(MAKEPOINTS(lParam));
+		 g_pRaven->ClickLeftMouseButton(MAKEPOINTS(lParam));
     }
     
     break;
 
-   case WM_RBUTTONDOWN:
+   case WM_RBUTTONDOWN: //se deplace a l'endroit ou se trouve le curseur de la souris
     {
-      g_pRaven->ClickRightMouseButton(MAKEPOINTS(lParam));
+		g_pRaven->ClickRightMouseButton(MAKEPOINTS(lParam));
     }
-    
     break;
+
+   case WM_MOUSEWHEEL: //change les armes avec la molette de la souris
+   {
+	   if ((short)HIWORD(wParam)/120 > 0) { //si la roulette est montee
+		   if (armeCourante >= nbArme) {
+			   armeCourante = 0;
+		   } else {
+			   armeCourante++;
+		   }
+	   } else if ((short)HIWORD(wParam)/120 < 0) { //si la roulette est descendue
+		   if (armeCourante <= 0) {
+			   armeCourante = nbArme;
+		   } else {
+			   armeCourante--;
+		   }
+	   }
+	   debug_con << "weapon : " << WeaponType(armeCourante) << "";
+	   g_pRaven->ChangeWeaponOfPossessedBot(WeaponType(armeCourante));
+   }
+   break;
 
     case WM_COMMAND:
     {

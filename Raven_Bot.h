@@ -160,6 +160,7 @@ public:
   void          SetSpawning(){m_Status = spawning;}
   void          SetDead(){m_Status = dead;}
   void          SetAlive(){m_Status = alive;}
+  void          SetIsPossessed(bool poss) { m_bPossessed = poss; }
 
   //returns a value indicating the time in seconds it will take the bot
   //to reach the given position at its current speed.
