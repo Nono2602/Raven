@@ -10,7 +10,7 @@ INCLUDELIB LIBCMTD
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG174380 DB	'<Goal_FollowPath::Activate>: Unrecognized edge type', 00H
+$SG174390 DB	'<Goal_FollowPath::Activate>: Unrecognized edge type', 00H
 ?colors@@3QBKB DD 0ffH					; colors
 	DD	0ff0000H
 	DD	0ff00H
@@ -8023,7 +8023,7 @@ $LN8@Activate:
 ; 69   : 
 ; 70   :     throw std::runtime_error("<Goal_FollowPath::Activate>: Unrecognized edge type");
 
-	push	OFFSET $SG174380
+	push	OFFSET $SG174390
 	lea	ecx, DWORD PTR $T2[ebp]
 	call	??0runtime_error@std@@QAE@PBD@Z		; std::runtime_error::runtime_error
 	push	OFFSET __TI2?AVruntime_error@std@@

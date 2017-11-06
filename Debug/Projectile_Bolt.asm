@@ -10,22 +10,22 @@ INCLUDELIB LIBCMTD
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG170277 DB	'Bolt_MaxForce', 00H
+$SG170287 DB	'Bolt_MaxForce', 00H
 	ORG $+2
-$SG170278 DB	'Bolt_Mass', 00H
+$SG170288 DB	'Bolt_Mass', 00H
 	ORG $+2
-$SG170279 DB	'Bolt_MaxSpeed', 00H
+$SG170289 DB	'Bolt_MaxSpeed', 00H
 	ORG $+2
-$SG170280 DB	'Bolt_Scale', 00H
+$SG170290 DB	'Bolt_Scale', 00H
 	ORG $+1
-$SG170281 DB	'Bolt_Damage', 00H
-$SG170282 DB	'a', 00H, 'r', 00H, 'm', 00H, 'o', 00H, 'r', 00H, 'y', 00H
+$SG170291 DB	'Bolt_Damage', 00H
+$SG170292 DB	'a', 00H, 'r', 00H, 'm', 00H, 'o', 00H, 'r', 00H, 'y', 00H
 	DB	'\', 00H, 'P', 00H, 'r', 00H, 'o', 00H, 'j', 00H, 'e', 00H, 'c'
 	DB	00H, 't', 00H, 'i', 00H, 'l', 00H, 'e', 00H, '_', 00H, 'B', 00H
 	DB	'o', 00H, 'l', 00H, 't', 00H, '.', 00H, 'c', 00H, 'p', 00H, 'p'
 	DB	00H, 00H, 00H
 	ORG $+2
-$SG170283 DB	't', 00H, 'a', 00H, 'r', 00H, 'g', 00H, 'e', 00H, 't', 00H
+$SG170293 DB	't', 00H, 'a', 00H, 'r', 00H, 'g', 00H, 'e', 00H, 't', 00H
 	DB	' ', 00H, '!', 00H, '=', 00H, ' ', 00H, 'V', 00H, 'e', 00H, 'c'
 	DB	00H, 't', 00H, 'o', 00H, 'r', 00H, '2', 00H, 'D', 00H, '(', 00H
 	DB	')', 00H, 00H, 00H
@@ -3912,7 +3912,7 @@ _this$ = -4						; size = 4
 ?GetMap@Raven_Game@@QAEQAVRaven_Map@@XZ PROC		; Raven_Game::GetMap, COMDAT
 ; _this$ = ecx
 
-; 163  :   Raven_Map* const                         GetMap(){return m_pMap;}
+; 164  :   Raven_Map* const                         GetMap(){return m_pMap;}
 
 	push	ebp
 	mov	ebp, esp
@@ -4000,7 +4000,7 @@ _this$ = -4						; size = 4
 ?GetWorld@Raven_Bot@@QAEQAVRaven_Game@@XZ PROC		; Raven_Bot::GetWorld, COMDAT
 ; _this$ = ecx
 
-; 204  :   Raven_Game* const                  GetWorld(){return m_pWorld;} 
+; 207  :   Raven_Game* const                  GetWorld(){return m_pWorld;} 
 
 	push	ebp
 	mov	ebp, esp
@@ -4023,7 +4023,7 @@ ___$ReturnUdt$ = 8					; size = 4
 ?Facing@Raven_Bot@@QBE?AUVector2D@@XZ PROC		; Raven_Bot::Facing, COMDAT
 ; _this$ = ecx
 
-; 152  :   Vector2D      Facing()const{return m_vFacing;}
+; 153  :   Vector2D      Facing()const{return m_vFacing;}
 
 	push	ebp
 	mov	ebp, esp
@@ -4031,7 +4031,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 208				; 000000d0H
+	add	eax, 216				; 000000d8H
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	mov	edx, DWORD PTR [eax]
 	mov	DWORD PTR [ecx], edx
@@ -5228,31 +5228,31 @@ _target$ = 12						; size = 16
 
 ; 18   :         Raven_Projectile(target,
 
-	push	OFFSET $SG170277
+	push	OFFSET $SG170287
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG170278
+	push	OFFSET $SG170288
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG170279
+	push	OFFSET $SG170289
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG170280
+	push	OFFSET $SG170290
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG170281
+	push	OFFSET $SG170291
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetInt@Scriptor@@QAEHPAD@Z		; Scriptor::GetInt
@@ -5321,8 +5321,8 @@ _target$ = 12						; size = 16
 	test	edx, edx
 	jne	SHORT $LN3@Bolt
 	push	29					; 0000001dH
-	push	OFFSET $SG170282
-	push	OFFSET $SG170283
+	push	OFFSET $SG170292
+	push	OFFSET $SG170293
 	call	__wassert
 	add	esp, 12					; 0000000cH
 $LN3@Bolt:

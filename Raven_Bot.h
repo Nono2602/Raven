@@ -30,8 +30,6 @@ class Raven_WeaponSystem;
 class Raven_SensoryMemory;
 
 
-
-
 class Raven_Bot : public MovingEntity
 {
 private:
@@ -66,6 +64,9 @@ private:
   //this handles all the weapons. and has methods for aiming, selecting and
   //shooting them
   Raven_WeaponSystem*                m_pWeaponSys;
+
+  //check if the weapon changed
+  bool								 weaponChanged;
 
   //A regulator object limits the update frequency of a specific AI component
   Regulator*                         m_pWeaponSelectionRegulator;
@@ -156,11 +157,13 @@ public:
   bool          isDead()const{return m_Status == dead;}
   bool          isAlive()const{return m_Status == alive;}
   bool          isSpawning()const{return m_Status == spawning;}
+  bool			isWeaponChanged()const { return weaponChanged; }
   
   void          SetSpawning(){m_Status = spawning;}
   void          SetDead(){m_Status = dead;}
   void          SetAlive(){m_Status = alive;}
   void          SetIsPossessed(bool poss) { m_bPossessed = poss; }
+  void          SetWeaponChanged(bool ch) { weaponChanged = ch; }
 
   //returns a value indicating the time in seconds it will take the bot
   //to reach the given position at its current speed.

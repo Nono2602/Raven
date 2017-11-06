@@ -25,18 +25,18 @@ CONST	SEGMENT
 	DD	0ffff00H
 	DD	0c8c8c8H
 	DD	0e6e6ffH
-$SG168647 DB	'WallDetectionFeelerLength', 00H
+$SG168657 DB	'WallDetectionFeelerLength', 00H
 	ORG $+2
-$SG168648 DB	'SeparationWeight', 00H
+$SG168658 DB	'SeparationWeight', 00H
 	ORG $+3
-$SG168649 DB	'WanderWeight', 00H
+$SG168659 DB	'WanderWeight', 00H
 	ORG $+3
-$SG168650 DB	'WallAvoidanceWeight', 00H
-$SG168651 DB	'SeekWeight', 00H
+$SG168660 DB	'WallAvoidanceWeight', 00H
+$SG168661 DB	'SeekWeight', 00H
 	ORG $+1
-$SG168652 DB	'ArriveWeight', 00H
+$SG168662 DB	'ArriveWeight', 00H
 	ORG $+3
-$SG168653 DB	'ViewDistance', 00H
+$SG168663 DB	'ViewDistance', 00H
 CONST	ENDS
 PUBLIC	?__empty_global_delete@@YAXPAX@Z		; __empty_global_delete
 PUBLIC	?__empty_global_delete@@YAXPAXI@Z		; __empty_global_delete
@@ -5219,7 +5219,7 @@ _range$ = 12						; size = 8
 ?TagRaven_BotsWithinViewRange@Raven_Game@@QAEXPAVBaseGameEntity@@N@Z PROC ; Raven_Game::TagRaven_BotsWithinViewRange, COMDAT
 ; _this$ = ecx
 
-; 170  :               {TagNeighbors(pRaven_Bot, m_Bots, range);}  
+; 171  :               {TagNeighbors(pRaven_Bot, m_Bots, range);}  
 
 	push	ebp
 	mov	ebp, esp
@@ -5252,7 +5252,7 @@ _this$ = -4						; size = 4
 ?GetAllBots@Raven_Game@@QBEABV?$list@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@XZ PROC ; Raven_Game::GetAllBots, COMDAT
 ; _this$ = ecx
 
-; 164  :   const std::list<Raven_Bot*>&             GetAllBots()const{return m_Bots;}
+; 165  :   const std::list<Raven_Bot*>&             GetAllBots()const{return m_Bots;}
 
 	push	ebp
 	mov	ebp, esp
@@ -5274,7 +5274,7 @@ _this$ = -4						; size = 4
 ?GetMap@Raven_Game@@QAEQAVRaven_Map@@XZ PROC		; Raven_Game::GetMap, COMDAT
 ; _this$ = ecx
 
-; 163  :   Raven_Map* const                         GetMap(){return m_pMap;}
+; 164  :   Raven_Map* const                         GetMap(){return m_pMap;}
 
 	push	ebp
 	mov	ebp, esp
@@ -7724,7 +7724,7 @@ _agent$ = 12						; size = 4
 
 ; 32   :              m_dWallDetectionFeelerLength(script->GetDouble("WallDetectionFeelerLength")),
 
-	push	OFFSET $SG168647
+	push	OFFSET $SG168657
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -7757,7 +7757,7 @@ _agent$ = 12						; size = 4
 
 ; 28   :              m_dWeightSeparation(script->GetDouble("SeparationWeight")),
 
-	push	OFFSET $SG168648
+	push	OFFSET $SG168658
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -7766,7 +7766,7 @@ _agent$ = 12						; size = 4
 
 ; 29   :              m_dWeightWander(script->GetDouble("WanderWeight")),
 
-	push	OFFSET $SG168649
+	push	OFFSET $SG168659
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -7775,7 +7775,7 @@ _agent$ = 12						; size = 4
 
 ; 30   :              m_dWeightWallAvoidance(script->GetDouble("WallAvoidanceWeight")),
 
-	push	OFFSET $SG168650
+	push	OFFSET $SG168660
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -7784,7 +7784,7 @@ _agent$ = 12						; size = 4
 
 ; 40   :              m_dWeightSeek(script->GetDouble("SeekWeight")),
 
-	push	OFFSET $SG168651
+	push	OFFSET $SG168661
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -7793,7 +7793,7 @@ _agent$ = 12						; size = 4
 
 ; 41   :              m_dWeightArrive(script->GetDouble("ArriveWeight")),
 
-	push	OFFSET $SG168652
+	push	OFFSET $SG168662
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -7802,7 +7802,7 @@ _agent$ = 12						; size = 4
 
 ; 31   :              m_dViewDistance(script->GetDouble("ViewDistance")),
 
-	push	OFFSET $SG168653
+	push	OFFSET $SG168663
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble

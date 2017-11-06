@@ -10,7 +10,7 @@ INCLUDELIB LIBCMTD
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG163872 DB	'Bot_TriggerUpdateFreq', 00H
+$SG163882 DB	'Bot_TriggerUpdateFreq', 00H
 	ORG $+2
 ?colors@@3QBKB DD 0ffH					; colors
 	DD	0ff0000H
@@ -3198,7 +3198,7 @@ _range$ = 12						; size = 8
 
 ; 15   :                                      double      range):Trigger_LimitedLifetime<Raven_Bot>(FrameRate /script->GetInt("Bot_TriggerUpdateFreq")),
 
-	push	OFFSET $SG163872
+	push	OFFSET $SG163882
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetInt@Scriptor@@QAEHPAD@Z		; Scriptor::GetInt

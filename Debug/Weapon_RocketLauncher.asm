@@ -10,36 +10,47 @@ INCLUDELIB LIBCMTD
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG174083 DB	'DistToTarget', 00H
+$SG174093 DB	'DistToTarget', 00H
 ?piecewise_construct@std@@3Upiecewise_construct_t@1@B	ORG $+1 ; std::piecewise_construct
 	ORG $+2
-$SG174084 DB	'AmmoStatus', 00H
+$SG174094 DB	'AmmoStatus', 00H
 	ORG $+1
-$SG174085 DB	'Desirability', 00H
+$SG174095 DB	'Desirability', 00H
 	ORG $+3
-$SG174140 DB	'DistToTarget', 00H
+$SG174190 DB	'DistToTarget', 00H
 	ORG $+3
-$SG174141 DB	'Target_Close', 00H
+$SG174191 DB	'Target_VeryClose', 00H
 	ORG $+3
-$SG174142 DB	'Target_Medium', 00H
+$SG174192 DB	'Target_Close', 00H
+	ORG $+3
+$SG174193 DB	'Target_Medium', 00H
 	ORG $+2
-$SG174143 DB	'Target_Far', 00H
+$SG174194 DB	'Target_Far', 00H
 	ORG $+1
-$SG174144 DB	'Desirability', 00H
-	ORG $+3
-$SG174145 DB	'VeryDesirable', 00H
-	ORG $+2
-$SG174146 DB	'Desirable', 00H
-	ORG $+2
-$SG174147 DB	'Undesirable', 00H
-$SG174148 DB	'AmmoStatus', 00H
+$SG174195 DB	'Target_VeryFar', 00H
 	ORG $+1
-$SG174149 DB	'Ammo_Loads', 00H
-	ORG $+1
-$SG174150 DB	'Ammo_Okay', 00H
-	ORG $+2
-$SG174151 DB	'Ammo_Low', 00H
+$SG174196 DB	'Desirability', 00H
 	ORG $+3
+$SG174197 DB	'VeryDesirable', 00H
+	ORG $+2
+$SG174198 DB	'VeryDesirable', 00H
+	ORG $+2
+$SG174199 DB	'Desirable', 00H
+	ORG $+2
+$SG174200 DB	'Undesirable', 00H
+$SG174201 DB	'Undesirable', 00H
+$SG174202 DB	'AmmoStatus', 00H
+	ORG $+1
+$SG174203 DB	'Ammo_Full', 00H
+	ORG $+2
+$SG174204 DB	'Ammo_Loads', 00H
+	ORG $+1
+$SG174205 DB	'Ammo_Okay', 00H
+	ORG $+2
+$SG174206 DB	'Ammo_Low', 00H
+	ORG $+3
+$SG174207 DB	'Ammo_Empty', 00H
+	ORG $+1
 ?colors@@3QBKB DD 0ffH					; colors
 	DD	0ff0000H
 	DD	0ff00H
@@ -55,13 +66,13 @@ $SG174151 DB	'Ammo_Low', 00H
 	DD	0ffff00H
 	DD	0c8c8c8H
 	DD	0e6e6ffH
-$SG174056 DB	'Rocket_MaxSpeed', 00H
-$SG174057 DB	'RocketLauncher_IdealRange', 00H
+$SG174066 DB	'Rocket_MaxSpeed', 00H
+$SG174067 DB	'RocketLauncher_IdealRange', 00H
 	ORG $+2
-$SG174058 DB	'RocketLauncher_FiringFreq', 00H
+$SG174068 DB	'RocketLauncher_FiringFreq', 00H
 	ORG $+2
-$SG174059 DB	'RocketLauncher_MaxRoundsCarried', 00H
-$SG174060 DB	'RocketLauncher_DefaultRounds', 00H
+$SG174069 DB	'RocketLauncher_MaxRoundsCarried', 00H
+$SG174070 DB	'RocketLauncher_DefaultRounds', 00H
 CONST	ENDS
 PUBLIC	?__empty_global_delete@@YAXPAX@Z		; __empty_global_delete
 PUBLIC	?__empty_global_delete@@YAXPAXI@Z		; __empty_global_delete
@@ -580,16 +591,20 @@ PUBLIC	__real@00800000
 PUBLIC	__real@3f50624dd2f1a9fc
 PUBLIC	__real@3ff0000000000000
 PUBLIC	__real@4008000000000000
+PUBLIC	__real@4014000000000000
 PUBLIC	__real@4018000000000000
 PUBLIC	__real@4024000000000000
 PUBLIC	__real@402e000000000000
 PUBLIC	__real@4039000000000000
-PUBLIC	__real@403e000000000000
+PUBLIC	__real@4041800000000000
 PUBLIC	__real@4049000000000000
 PUBLIC	__real@4052c00000000000
+PUBLIC	__real@4055400000000000
+PUBLIC	__real@4056800000000000
 PUBLIC	__real@4059000000000000
 PUBLIC	__real@4062c00000000000
 PUBLIC	__real@4072c00000000000
+PUBLIC	__real@4087700000000000
 PUBLIC	__real@408f400000000000
 PUBLIC	__real@7f7fffff
 PUBLIC	__real@7fefffffffffffff
@@ -630,6 +645,7 @@ EXTRN	?Instance@Raven_Scriptor@@SAPAV1@XZ:PROC	; Raven_Scriptor::Instance
 EXTRN	?AddLeftShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z:PROC ; FuzzyVariable::AddLeftShoulderSet
 EXTRN	?AddRightShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z:PROC ; FuzzyVariable::AddRightShoulderSet
 EXTRN	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z:PROC ; FuzzyVariable::AddTriangularSet
+EXTRN	?AddSingletonSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z:PROC ; FuzzyVariable::AddSingletonSet
 EXTRN	?Fuzzify@FuzzyVariable@@QAEXN@Z:PROC		; FuzzyVariable::Fuzzify
 EXTRN	?DeFuzzifyMaxAv@FuzzyVariable@@QBENXZ:PROC	; FuzzyVariable::DeFuzzifyMaxAv
 EXTRN	?DeFuzzifyCentroid@FuzzyVariable@@QBENH@Z:PROC	; FuzzyVariable::DeFuzzifyCentroid
@@ -713,6 +729,10 @@ CONST	ENDS
 CONST	SEGMENT
 __real@408f400000000000 DQ 0408f400000000000r	; 1000
 CONST	ENDS
+;	COMDAT __real@4087700000000000
+CONST	SEGMENT
+__real@4087700000000000 DQ 04087700000000000r	; 750
+CONST	ENDS
 ;	COMDAT __real@4072c00000000000
 CONST	SEGMENT
 __real@4072c00000000000 DQ 04072c00000000000r	; 300
@@ -725,6 +745,14 @@ CONST	ENDS
 CONST	SEGMENT
 __real@4059000000000000 DQ 04059000000000000r	; 100
 CONST	ENDS
+;	COMDAT __real@4056800000000000
+CONST	SEGMENT
+__real@4056800000000000 DQ 04056800000000000r	; 90
+CONST	ENDS
+;	COMDAT __real@4055400000000000
+CONST	SEGMENT
+__real@4055400000000000 DQ 04055400000000000r	; 85
+CONST	ENDS
 ;	COMDAT __real@4052c00000000000
 CONST	SEGMENT
 __real@4052c00000000000 DQ 04052c00000000000r	; 75
@@ -733,9 +761,9 @@ CONST	ENDS
 CONST	SEGMENT
 __real@4049000000000000 DQ 04049000000000000r	; 50
 CONST	ENDS
-;	COMDAT __real@403e000000000000
+;	COMDAT __real@4041800000000000
 CONST	SEGMENT
-__real@403e000000000000 DQ 0403e000000000000r	; 30
+__real@4041800000000000 DQ 04041800000000000r	; 35
 CONST	ENDS
 ;	COMDAT __real@4039000000000000
 CONST	SEGMENT
@@ -752,6 +780,10 @@ CONST	ENDS
 ;	COMDAT __real@4018000000000000
 CONST	SEGMENT
 __real@4018000000000000 DQ 04018000000000000r	; 6
+CONST	ENDS
+;	COMDAT __real@4014000000000000
+CONST	SEGMENT
+__real@4014000000000000 DQ 04014000000000000r	; 5
 CONST	ENDS
 ;	COMDAT __real@4008000000000000
 CONST	SEGMENT
@@ -2070,7 +2102,7 @@ __ehfuncinfo$??0RocketLauncher@@QAE@PAVRaven_Bot@@@Z DD 019930522H
 	DD	00H
 	DD	01H
 __ehfuncinfo$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ DD 019930522H
-	DD	015H
+	DD	02bH
 	DD	FLAT:__unwindtable$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ
 	DD	2 DUP(00H)
 	DD	2 DUP(00H)
@@ -2085,39 +2117,83 @@ __unwindtable$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ DD 0ffffffffH
 	DD	02H
 	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$6
 	DD	03H
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$7
-	DD	03H
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$9
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$8
+	DD	04H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$10
 	DD	05H
 	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$11
-	DD	06H
+	DD	05H
 	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$13
 	DD	07H
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$14
-	DD	07H
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$16
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$15
+	DD	08H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$17
 	DD	09H
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$18
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$19
 	DD	0aH
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$20
-	DD	0bH
 	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$21
 	DD	0bH
 	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$22
 	DD	0bH
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$23
-	DD	0bH
 	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$24
-	DD	0bH
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$25
-	DD	0bH
+	DD	0dH
 	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$26
-	DD	0bH
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$27
-	DD	0bH
+	DD	0eH
 	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$28
-	DD	0bH
-	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$29
+	DD	0fH
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$30
+	DD	010H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$32
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$33
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$34
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$35
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$36
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$37
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$38
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$39
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$40
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$41
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$42
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$43
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$44
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$45
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$46
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$47
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$48
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$49
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$50
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$51
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$52
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$53
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$54
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$55
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$56
+	DD	011H
+	DD	FLAT:__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$57
 xdata$x	ENDS
 ;	COMDAT xdata$x
 xdata$x	SEGMENT
@@ -6469,7 +6545,7 @@ ___that$ = 8						; size = 4
 ??0?$tuple@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@std@@QAE@$$QAV01@@Z PROC ; std::tuple<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const &>::tuple<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const &>, COMDAT
 ; _this$ = ecx
 
-; 135  : }
+; 186  : }
 
 	push	ebp
 	mov	ebp, esp
@@ -10995,7 +11071,7 @@ _this$ = -4						; size = 4
 ?GetMap@Raven_Game@@QAEQAVRaven_Map@@XZ PROC		; Raven_Game::GetMap, COMDAT
 ; _this$ = ecx
 
-; 163  :   Raven_Map* const                         GetMap(){return m_pMap;}
+; 164  :   Raven_Map* const                         GetMap(){return m_pMap;}
 
 	push	ebp
 	mov	ebp, esp
@@ -11255,30 +11331,30 @@ _DistToTarget$ = 8					; size = 8
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 68   :   if (m_iNumRoundsLeft == 0)
+; 68   : 	if (m_iNumRoundsLeft == 0)
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+44], 0
 	jne	SHORT $LN2@GetDesirab
 
-; 69   :   {
-; 70   :     m_dLastDesirabilityScore = 0;
+; 69   : 	{
+; 70   : 		m_dLastDesirabilityScore = 0;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	xorps	xmm0, xmm0
 	movsd	QWORD PTR [ecx+72], xmm0
 
-; 71   :   }
-; 72   :   else
+; 71   : 	}
+; 72   : 	else
 
 	jmp	$LN3@GetDesirab
 $LN2@GetDesirab:
 
-; 73   :   {
-; 74   :     //fuzzify distance and amount of ammo
-; 75   :     m_FuzzyModule.Fuzzify("DistToTarget", DistToTarget);
+; 73   : 	{
+; 74   : 		//fuzzify distance and amount of ammo
+; 75   : 		m_FuzzyModule.Fuzzify("DistToTarget", DistToTarget);
 
-	push	OFFSET $SG174083
+	push	OFFSET $SG174093
 	lea	ecx, DWORD PTR $T4[ebp]
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
@@ -11294,9 +11370,9 @@ $LN2@GetDesirab:
 	lea	ecx, DWORD PTR $T4[ebp]
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 
-; 76   :     m_FuzzyModule.Fuzzify("AmmoStatus", (double)m_iNumRoundsLeft);
+; 76   : 		m_FuzzyModule.Fuzzify("AmmoStatus", (double)m_iNumRoundsLeft);
 
-	push	OFFSET $SG174084
+	push	OFFSET $SG174094
 	lea	ecx, DWORD PTR $T3[ebp]
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
@@ -11319,9 +11395,9 @@ $LN2@GetDesirab:
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 
 ; 77   : 
-; 78   :     m_dLastDesirabilityScore = m_FuzzyModule.DeFuzzify("Desirability", FuzzyModule::max_av);
+; 78   : 		m_dLastDesirabilityScore = m_FuzzyModule.DeFuzzify("Desirability", FuzzyModule::max_av);
 
-	push	OFFSET $SG174085
+	push	OFFSET $SG174095
 	lea	ecx, DWORD PTR $T2[ebp]
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	mov	DWORD PTR __$EHRec$[ebp+8], 2
@@ -11338,9 +11414,9 @@ $LN2@GetDesirab:
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 $LN3@GetDesirab:
 
-; 79   :   }
+; 79   : 	}
 ; 80   : 
-; 81   :   return m_dLastDesirabilityScore;
+; 81   : 	return m_dLastDesirabilityScore;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	fld	QWORD PTR [eax+72]
@@ -11393,7 +11469,7 @@ _pos$ = 8						; size = 16
 ?ShootAt@RocketLauncher@@UAEXUVector2D@@@Z PROC		; RocketLauncher::ShootAt, COMDAT
 ; _this$ = ecx
 
-; 47   : { 
+; 47   : {
 
 	push	ebp
 	mov	ebp, esp
@@ -11401,7 +11477,7 @@ _pos$ = 8						; size = 16
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 48   :   if (NumRoundsRemaining() > 0 && isReadyForNextShot())
+; 48   : 	if (NumRoundsRemaining() > 0 && isReadyForNextShot())
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?NumRoundsRemaining@Raven_Weapon@@QBEHXZ ; Raven_Weapon::NumRoundsRemaining
@@ -11413,9 +11489,9 @@ _pos$ = 8						; size = 16
 	test	eax, eax
 	je	$LN2@ShootAt
 
-; 49   :   {
-; 50   :     //fire off a rocket!
-; 51   :     m_pOwner->GetWorld()->AddRocket(m_pOwner, pos);
+; 49   : 	{
+; 50   : 		//fire off a rocket!
+; 51   : 		m_pOwner->GetWorld()->AddRocket(m_pOwner, pos);
 
 	sub	esp, 16					; 00000010H
 	mov	ecx, esp
@@ -11437,7 +11513,7 @@ _pos$ = 8						; size = 16
 	call	?AddRocket@Raven_Game@@QAEXPAVRaven_Bot@@UVector2D@@@Z ; Raven_Game::AddRocket
 
 ; 52   : 
-; 53   :     m_iNumRoundsLeft--;
+; 53   : 		m_iNumRoundsLeft--;
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+44]
@@ -11446,15 +11522,15 @@ _pos$ = 8						; size = 16
 	mov	DWORD PTR [eax+44], edx
 
 ; 54   : 
-; 55   :     UpdateTimeWeaponIsNextAvailable();
+; 55   : 		UpdateTimeWeaponIsNextAvailable();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?UpdateTimeWeaponIsNextAvailable@Raven_Weapon@@IAEXXZ ; Raven_Weapon::UpdateTimeWeaponIsNextAvailable
 
 ; 56   : 
-; 57   :     //add a trigger to the game so that the other bots can hear this shot
-; 58   :     //(provided they are within range)
-; 59   :     m_pOwner->GetWorld()->GetMap()->AddSoundTrigger(m_pOwner, script->GetDouble("RocketLauncher_SoundRange"));
+; 57   : 		//add a trigger to the game so that the other bots can hear this shot
+; 58   : 		//(provided they are within range)
+; 59   : 		m_pOwner->GetWorld()->GetMap()->AddSoundTrigger(m_pOwner, script->GetDouble("RocketLauncher_SoundRange"));
 
 	push	OFFSET ??_C@_0BK@OOJFHLCP@RocketLauncher_SoundRange?$AA@
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
@@ -11474,7 +11550,7 @@ _pos$ = 8						; size = 16
 	call	?AddSoundTrigger@Raven_Map@@QAEXPAVRaven_Bot@@N@Z ; Raven_Map::AddSoundTrigger
 $LN2@ShootAt:
 
-; 60   :   }
+; 60   : 	}
 ; 61   : }
 
 	add	esp, 4
@@ -11499,7 +11575,7 @@ _this$ = -4						; size = 4
 ?Render@RocketLauncher@@UAEXXZ PROC			; RocketLauncher::Render
 ; _this$ = ecx
 
-; 124  : {
+; 175  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -11513,7 +11589,7 @@ _this$ = -4						; size = 4
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 125  :     m_vecWeaponVBTrans = WorldTransform(m_vecWeaponVB,
+; 176  : 	m_vecWeaponVBTrans = WorldTransform(m_vecWeaponVB,
 
 	lea	eax, DWORD PTR $T6[ebp]
 	push	eax
@@ -11559,19 +11635,19 @@ _this$ = -4						; size = 4
 	lea	ecx, DWORD PTR $T1[ebp]
 	call	??1?$vector@UVector2D@@V?$allocator@UVector2D@@@std@@@std@@QAE@XZ ; std::vector<Vector2D,std::allocator<Vector2D> >::~vector<Vector2D,std::allocator<Vector2D> >
 
-; 126  :                                    m_pOwner->Pos(),
-; 127  :                                    m_pOwner->Facing(),
-; 128  :                                    m_pOwner->Facing().Perp(),
-; 129  :                                    m_pOwner->Scale());
-; 130  : 
-; 131  :   gdi->RedPen();
+; 177  : 		m_pOwner->Pos(),
+; 178  : 		m_pOwner->Facing(),
+; 179  : 		m_pOwner->Facing().Perp(),
+; 180  : 		m_pOwner->Scale());
+; 181  : 
+; 182  : 	gdi->RedPen();
 
 	call	?Instance@Cgdi@@SAPAV1@XZ		; Cgdi::Instance
 	mov	ecx, eax
 	call	?RedPen@Cgdi@@QAEXXZ			; Cgdi::RedPen
 
-; 132  : 
-; 133  :   gdi->ClosedShape(m_vecWeaponVBTrans);
+; 183  : 
+; 184  : 	gdi->ClosedShape(m_vecWeaponVBTrans);
 
 	mov	eax, DWORD PTR _this$[ebp]
 	add	eax, 112				; 00000070H
@@ -11580,7 +11656,7 @@ _this$ = -4						; size = 4
 	mov	ecx, eax
 	call	?ClosedShape@Cgdi@@QAEXABV?$vector@UVector2D@@V?$allocator@UVector2D@@@std@@@std@@@Z ; Cgdi::ClosedShape
 
-; 134  : }
+; 185  : }
 
 	pop	edi
 	add	esp, 104				; 00000068H
@@ -11628,34 +11704,34 @@ _owner$ = 8						; size = 4
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 14   :                       Raven_Weapon(type_rocket_launcher,
+; 14   : 	Raven_Weapon(type_rocket_launcher,
 
 	mov	eax, DWORD PTR _owner$[ebp]
 	push	eax
-	push	OFFSET $SG174056
+	push	OFFSET $SG174066
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG174057
+	push	OFFSET $SG174067
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG174058
+	push	OFFSET $SG174068
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG174059
+	push	OFFSET $SG174069
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetInt@Scriptor@@QAEHPAD@Z		; Scriptor::GetInt
 	push	eax
-	push	OFFSET $SG174060
+	push	OFFSET $SG174070
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetInt@Scriptor@@QAEHPAD@Z		; Scriptor::GetInt
@@ -11670,12 +11746,12 @@ _owner$ = 8						; size = 4
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [ecx], OFFSET ??_7RocketLauncher@@6B@
 
-; 22   :     //setup the vertex buffer
-; 23   :   const int NumWeaponVerts = 8;
+; 22   : 	//setup the vertex buffer
+; 23   : 	const int NumWeaponVerts = 8;
 
 	mov	DWORD PTR _NumWeaponVerts$[ebp], 8
 
-; 24   :   const Vector2D weapon[NumWeaponVerts] = {Vector2D(0, -3),
+; 24   : 	const Vector2D weapon[NumWeaponVerts] = { Vector2D(0, -3),
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@c008000000000000
@@ -11686,7 +11762,7 @@ _owner$ = 8						; size = 4
 	lea	ecx, DWORD PTR _weapon$[ebp]
 	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
 
-; 25   :                                            Vector2D(6, -3),
+; 25   : 											 Vector2D(6, -3),
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@c008000000000000
@@ -11697,7 +11773,7 @@ _owner$ = 8						; size = 4
 	lea	ecx, DWORD PTR _weapon$[ebp+16]
 	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
 
-; 26   :                                            Vector2D(6, -1),
+; 26   : 											 Vector2D(6, -1),
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@bff0000000000000
@@ -11708,7 +11784,7 @@ _owner$ = 8						; size = 4
 	lea	ecx, DWORD PTR _weapon$[ebp+32]
 	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
 
-; 27   :                                            Vector2D(15, -1),
+; 27   : 											 Vector2D(15, -1),
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@bff0000000000000
@@ -11719,7 +11795,7 @@ _owner$ = 8						; size = 4
 	lea	ecx, DWORD PTR _weapon$[ebp+48]
 	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
 
-; 28   :                                            Vector2D(15, 1),
+; 28   : 											 Vector2D(15, 1),
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@3ff0000000000000
@@ -11730,7 +11806,7 @@ _owner$ = 8						; size = 4
 	lea	ecx, DWORD PTR _weapon$[ebp+64]
 	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
 
-; 29   :                                            Vector2D(6, 1),
+; 29   : 											 Vector2D(6, 1),
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@3ff0000000000000
@@ -11741,7 +11817,7 @@ _owner$ = 8						; size = 4
 	lea	ecx, DWORD PTR _weapon$[ebp+80]
 	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
 
-; 30   :                                            Vector2D(6, 3),
+; 30   : 											 Vector2D(6, 3),
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4008000000000000
@@ -11752,7 +11828,7 @@ _owner$ = 8						; size = 4
 	lea	ecx, DWORD PTR _weapon$[ebp+96]
 	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
 
-; 31   :                                            Vector2D(0, 3)
+; 31   : 											 Vector2D(0, 3)
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4008000000000000
@@ -11763,8 +11839,8 @@ _owner$ = 8						; size = 4
 	lea	ecx, DWORD PTR _weapon$[ebp+112]
 	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
 
-; 32   :                                            };
-; 33   :   for (int vtx=0; vtx<NumWeaponVerts; ++vtx)
+; 32   : 	};
+; 33   : 	for (int vtx = 0; vtx < NumWeaponVerts; ++vtx)
 
 	mov	DWORD PTR _vtx$2[ebp], 0
 	jmp	SHORT $LN4@RocketLaun
@@ -11776,8 +11852,8 @@ $LN4@RocketLaun:
 	cmp	DWORD PTR _vtx$2[ebp], 8
 	jge	SHORT $LN3@RocketLaun
 
-; 34   :   {
-; 35   :     m_vecWeaponVB.push_back(weapon[vtx]);
+; 34   : 	{
+; 35   : 		m_vecWeaponVB.push_back(weapon[vtx]);
 
 	mov	eax, DWORD PTR _vtx$2[ebp]
 	shl	eax, 4
@@ -11787,14 +11863,14 @@ $LN4@RocketLaun:
 	add	ecx, 96					; 00000060H
 	call	?push_back@?$vector@UVector2D@@V?$allocator@UVector2D@@@std@@@std@@QAEXABUVector2D@@@Z ; std::vector<Vector2D,std::allocator<Vector2D> >::push_back
 
-; 36   :   }
+; 36   : 	}
 
 	jmp	SHORT $LN2@RocketLaun
 $LN3@RocketLaun:
 
 ; 37   : 
-; 38   :   //setup the fuzzy module
-; 39   :   InitializeFuzzyModule();
+; 38   : 	//setup the fuzzy module
+; 39   : 	InitializeFuzzyModule();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?InitializeFuzzyModule@RocketLauncher@@EAEXXZ ; RocketLauncher::InitializeFuzzyModule
@@ -11861,74 +11937,146 @@ text$x	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\mes documents\git\projet-ia-raven\raven\armory\weapon_rocketlauncher.cpp
 _TEXT	SEGMENT
-tv697 = -620						; size = 4
-tv703 = -616						; size = 4
-tv695 = -612						; size = 4
-tv702 = -608						; size = 4
-tv693 = -604						; size = 4
-tv701 = -600						; size = 4
-tv691 = -596						; size = 4
-tv700 = -592						; size = 4
-tv689 = -588						; size = 4
-tv699 = -584						; size = 4
-tv687 = -580						; size = 4
-tv698 = -576						; size = 4
-tv685 = -572						; size = 4
-tv72 = -568						; size = 4
-tv683 = -564						; size = 4
-tv179 = -560						; size = 4
-tv681 = -556						; size = 4
-tv254 = -552						; size = 4
-tv301 = -548						; size = 4
-tv280 = -544						; size = 4
-tv259 = -540						; size = 4
-tv226 = -536						; size = 4
-tv205 = -532						; size = 4
-tv184 = -528						; size = 4
-tv151 = -524						; size = 4
-tv130 = -520						; size = 4
-tv77 = -516						; size = 4
-$T2 = -512						; size = 20
-$T3 = -492						; size = 20
-$T4 = -472						; size = 20
-$T5 = -452						; size = 20
-$T6 = -432						; size = 20
-$T7 = -412						; size = 20
-$T8 = -392						; size = 20
-$T9 = -372						; size = 20
-$T10 = -352						; size = 20
-$T11 = -332						; size = 4
-$T12 = -328						; size = 4
-$T13 = -324						; size = 4
-$T14 = -320						; size = 4
-$T15 = -316						; size = 4
-$T16 = -312						; size = 4
-$T17 = -308						; size = 4
-$T18 = -304						; size = 4
-$T19 = -300						; size = 4
-_$S9$ = -292						; size = 8
-_Ammo_Low$ = -280					; size = 4
-_$S8$ = -272						; size = 8
-_Ammo_Okay$ = -260					; size = 4
-_$S7$ = -252						; size = 8
-_Ammo_Loads$ = -240					; size = 4
-$T20 = -236						; size = 28
-_AmmoStatus$ = -208					; size = 4
+tv1403 = -1236						; size = 4
+tv1425 = -1232						; size = 4
+tv1401 = -1228						; size = 4
+tv1424 = -1224						; size = 4
+tv1399 = -1220						; size = 4
+tv1423 = -1216						; size = 4
+tv1397 = -1212						; size = 4
+tv1422 = -1208						; size = 4
+tv1395 = -1204						; size = 4
+tv1421 = -1200						; size = 4
+tv1393 = -1196						; size = 4
+tv1420 = -1192						; size = 4
+tv1391 = -1188						; size = 4
+tv1419 = -1184						; size = 4
+tv1389 = -1180						; size = 4
+tv1418 = -1176						; size = 4
+tv1387 = -1172						; size = 4
+tv1417 = -1168						; size = 4
+tv1385 = -1164						; size = 4
+tv1416 = -1160						; size = 4
+tv1383 = -1156						; size = 4
+tv1415 = -1152						; size = 4
+tv1381 = -1148						; size = 4
+tv1414 = -1144						; size = 4
+tv1379 = -1140						; size = 4
+tv1413 = -1136						; size = 4
+tv1377 = -1132						; size = 4
+tv1412 = -1128						; size = 4
+tv1375 = -1124						; size = 4
+tv1411 = -1120						; size = 4
+tv1373 = -1116						; size = 4
+tv1410 = -1112						; size = 4
+tv1371 = -1108						; size = 4
+tv1409 = -1104						; size = 4
+tv1369 = -1100						; size = 4
+tv1408 = -1096						; size = 4
+tv1367 = -1092						; size = 4
+tv1407 = -1088						; size = 4
+tv1365 = -1084						; size = 4
+tv1406 = -1080						; size = 4
+tv1363 = -1076						; size = 4
+tv1405 = -1072						; size = 4
+tv1361 = -1068						; size = 4
+tv1404 = -1064						; size = 4
+tv1359 = -1060						; size = 4
+tv72 = -1056						; size = 4
+tv1357 = -1052						; size = 4
+tv221 = -1048						; size = 4
+tv1355 = -1044						; size = 4
+tv370 = -1040						; size = 4
+tv459 = -1036						; size = 4
+tv438 = -1032						; size = 4
+tv417 = -1028						; size = 4
+tv396 = -1024						; size = 4
+tv375 = -1020						; size = 4
+tv310 = -1016						; size = 4
+tv289 = -1012						; size = 4
+tv268 = -1008						; size = 4
+tv247 = -1004						; size = 4
+tv226 = -1000						; size = 4
+tv193 = -996						; size = 4
+tv172 = -992						; size = 4
+tv151 = -988						; size = 4
+tv130 = -984						; size = 4
+tv77 = -980						; size = 4
+$T2 = -976						; size = 20
+$T3 = -956						; size = 20
+$T4 = -936						; size = 20
+$T5 = -916						; size = 20
+$T6 = -896						; size = 20
+$T7 = -876						; size = 20
+$T8 = -856						; size = 20
+$T9 = -836						; size = 20
+$T10 = -816						; size = 20
+$T11 = -796						; size = 20
+$T12 = -776						; size = 20
+$T13 = -756						; size = 20
+$T14 = -736						; size = 20
+$T15 = -716						; size = 20
+$T16 = -696						; size = 20
+$T17 = -676						; size = 20
+$T18 = -656						; size = 20
+$T19 = -636						; size = 20
+$T20 = -616						; size = 20
+$T21 = -596						; size = 20
+$T22 = -576						; size = 20
+$T23 = -556						; size = 20
+$T24 = -536						; size = 20
+$T25 = -516						; size = 20
+$T26 = -496						; size = 20
+$T27 = -476						; size = 4
+$T28 = -472						; size = 4
+$T29 = -468						; size = 4
+$T30 = -464						; size = 4
+$T31 = -460						; size = 4
+$T32 = -456						; size = 4
+$T33 = -452						; size = 4
+$T34 = -448						; size = 4
+$T35 = -444						; size = 4
+$T36 = -440						; size = 4
+$T37 = -436						; size = 4
+$T38 = -432						; size = 4
+$T39 = -428						; size = 4
+$T40 = -424						; size = 4
+$T41 = -420						; size = 4
+_$S15$ = -412						; size = 8
+_Ammo_Empty$ = -400					; size = 4
+_$S14$ = -392						; size = 8
+_Ammo_Low$ = -380					; size = 4
+_$S13$ = -372						; size = 8
+_Ammo_Okay$ = -360					; size = 4
+_$S12$ = -352						; size = 8
+_Ammo_Loads$ = -340					; size = 4
+_$S11$ = -332						; size = 8
+_Ammo_Full$ = -320					; size = 4
+$T42 = -316						; size = 28
+_AmmoStatus$ = -288					; size = 4
+_$S10$ = -280						; size = 8
+_VeryUndesirable$ = -268				; size = 4
+_$S9$ = -260						; size = 8
+_Undesirable$ = -248					; size = 4
+_$S8$ = -240						; size = 8
+_Desirable$ = -228					; size = 4
+_$S7$ = -220						; size = 8
+_VeryDesirable$ = -208					; size = 4
 _$S6$ = -200						; size = 8
-_Undesirable$ = -188					; size = 4
-_$S5$ = -180						; size = 8
-_Desirable$ = -168					; size = 4
-_$S4$ = -160						; size = 8
-_VeryDesirable$ = -148					; size = 4
-$T21 = -144						; size = 28
-_Desirability$ = -116					; size = 4
+_ExtremelyDesirable$ = -188				; size = 4
+$T43 = -184						; size = 28
+_Desirability$ = -156					; size = 4
+_$S5$ = -148						; size = 8
+_Target_VeryFar$ = -136					; size = 4
+_$S4$ = -128						; size = 8
+_Target_Far$ = -116					; size = 4
 _$S3$ = -108						; size = 8
-_Target_Far$ = -96					; size = 4
+_Target_Medium$ = -96					; size = 4
 _$S2$ = -88						; size = 8
-_Target_Medium$ = -76					; size = 4
+_Target_Close$ = -76					; size = 4
 _$S1$ = -68						; size = 8
-_Target_Close$ = -56					; size = 4
-$T22 = -52						; size = 28
+_Target_VeryClose$ = -56				; size = 4
+$T44 = -52						; size = 28
 _DistToTarget$ = -24					; size = 4
 _this$ = -20						; size = 4
 __$ArrayPad$ = -16					; size = 4
@@ -11944,11 +12092,11 @@ __$EHRec$ = -12						; size = 12
 	push	__ehhandler$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ
 	mov	eax, DWORD PTR fs:0
 	push	eax
-	sub	esp, 608				; 00000260H
+	sub	esp, 1224				; 000004c8H
 	push	edi
 	push	ecx
-	lea	edi, DWORD PTR [ebp-620]
-	mov	ecx, 152				; 00000098H
+	lea	edi, DWORD PTR [ebp-1236]
+	mov	ecx, 306				; 00000132H
 	mov	eax, -858993460				; ccccccccH
 	rep stosd
 	pop	ecx
@@ -11960,27 +12108,55 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 90   :   FuzzyVariable& DistToTarget = m_FuzzyModule.CreateFLV("DistToTarget");
+; 90   : 	/*
+; 91   : 	  FuzzyVariable& DistToTarget = m_FuzzyModule.CreateFLV("DistToTarget");
+; 92   : 	  FzSet& Target_Close = DistToTarget.AddLeftShoulderSet("Target_Close",0,25,150);
+; 93   : 	  FzSet& Target_Medium = DistToTarget.AddTriangularSet("Target_Medium",25,150,300);
+; 94   : 	  FzSet& Target_Far = DistToTarget.AddRightShoulderSet("Target_Far",150,300,1000);
+; 95   : 
+; 96   : 	  FuzzyVariable& Desirability = m_FuzzyModule.CreateFLV("Desirability");
+; 97   : 	  FzSet& VeryDesirable = Desirability.AddRightShoulderSet("VeryDesirable", 50, 75, 100);
+; 98   : 	  FzSet& Desirable = Desirability.AddTriangularSet("Desirable", 25, 50, 75);
+; 99   : 	  FzSet& Undesirable = Desirability.AddLeftShoulderSet("Undesirable", 0, 25, 50);
+; 100  : 
+; 101  : 	  FuzzyVariable& AmmoStatus = m_FuzzyModule.CreateFLV("AmmoStatus");
+; 102  : 	  FzSet& Ammo_Loads = AmmoStatus.AddRightShoulderSet("Ammo_Loads", 10, 30, 100);
+; 103  : 	  FzSet& Ammo_Okay = AmmoStatus.AddTriangularSet("Ammo_Okay", 0, 10, 30);
+; 104  : 	  FzSet& Ammo_Low = AmmoStatus.AddTriangularSet("Ammo_Low", 0, 0, 10);
+; 105  : 
+; 106  : 
+; 107  : 	  m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Loads), Undesirable);
+; 108  : 	  m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Okay), Undesirable);
+; 109  : 	  m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Low), Undesirable);
+; 110  : 
+; 111  : 	  m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Loads), VeryDesirable);
+; 112  : 	  m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Okay), VeryDesirable);
+; 113  : 	  m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Low), Desirable);
+; 114  : 
+; 115  : 	  m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Loads), Desirable);
+; 116  : 	  m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Okay), Undesirable);
+; 117  : 	  m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Low), Undesirable);
+; 118  : 	*/
+; 119  : 	FuzzyVariable& DistToTarget = m_FuzzyModule.CreateFLV("DistToTarget");
 
-	push	OFFSET $SG174140
-	lea	ecx, DWORD PTR $T22[ebp]
+	push	OFFSET $SG174190
+	lea	ecx, DWORD PTR $T44[ebp]
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
-	lea	eax, DWORD PTR $T22[ebp]
+	lea	eax, DWORD PTR $T44[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?CreateFLV@FuzzyModule@@QAEAAVFuzzyVariable@@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; FuzzyModule::CreateFLV
 	mov	DWORD PTR _DistToTarget$[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
-	lea	ecx, DWORD PTR $T22[ebp]
+	lea	ecx, DWORD PTR $T44[ebp]
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 
-; 91   : 
-; 92   :   FzSet& Target_Close = DistToTarget.AddLeftShoulderSet("Target_Close",0,25,150);
+; 120  : 	FzSet& Target_VeryClose = DistToTarget.AddLeftShoulderSet("Target_VeryClose", 0, 25, 75);
 
 	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@4062c00000000000
+	movsd	xmm0, QWORD PTR __real@4052c00000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4039000000000000
@@ -11990,8 +12166,8 @@ __$EHRec$ = -12						; size = 12
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 28					; 0000001cH
 	mov	ecx, esp
-	mov	DWORD PTR $T19[ebp], esp
-	push	OFFSET $SG174141
+	mov	DWORD PTR $T41[ebp], esp
+	push	OFFSET $SG174191
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	lea	ecx, DWORD PTR _$S1$[ebp]
 	push	ecx
@@ -12000,23 +12176,23 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR tv77[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 	lea	edx, DWORD PTR _$S1$[ebp]
-	mov	DWORD PTR _Target_Close$[ebp], edx
+	mov	DWORD PTR _Target_VeryClose$[ebp], edx
 
-; 93   :   FzSet& Target_Medium = DistToTarget.AddTriangularSet("Target_Medium",25,150,300);
+; 121  : 	FzSet& Target_Close = DistToTarget.AddTriangularSet("Target_Close", 25, 75, 150);
 
-	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@4072c00000000000
-	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4062c00000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4052c00000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4039000000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 28					; 0000001cH
 	mov	ecx, esp
-	mov	DWORD PTR $T18[ebp], esp
-	push	OFFSET $SG174142
+	mov	DWORD PTR $T40[ebp], esp
+	push	OFFSET $SG174192
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	lea	eax, DWORD PTR _$S2$[ebp]
 	push	eax
@@ -12025,12 +12201,37 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR tv130[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	lea	ecx, DWORD PTR _$S2$[ebp]
-	mov	DWORD PTR _Target_Medium$[ebp], ecx
+	mov	DWORD PTR _Target_Close$[ebp], ecx
 
-; 94   :   FzSet& Target_Far = DistToTarget.AddRightShoulderSet("Target_Far",150,300,1000);
+; 122  : 	FzSet& Target_Medium = DistToTarget.AddTriangularSet("Target_Medium", 75, 150, 300);
 
 	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@408f400000000000
+	movsd	xmm0, QWORD PTR __real@4072c00000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4062c00000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4052c00000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 28					; 0000001cH
+	mov	ecx, esp
+	mov	DWORD PTR $T39[ebp], esp
+	push	OFFSET $SG174193
+	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	lea	edx, DWORD PTR _$S3$[ebp]
+	push	edx
+	mov	ecx, DWORD PTR _DistToTarget$[ebp]
+	call	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddTriangularSet
+	mov	DWORD PTR tv151[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 3
+	lea	eax, DWORD PTR _$S3$[ebp]
+	mov	DWORD PTR _Target_Medium$[ebp], eax
+
+; 123  : 	FzSet& Target_Far = DistToTarget.AddTriangularSet("Target_Far", 150, 300, 750);
+
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4087700000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4072c00000000000
@@ -12040,205 +12241,468 @@ __$EHRec$ = -12						; size = 12
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 28					; 0000001cH
 	mov	ecx, esp
-	mov	DWORD PTR $T17[ebp], esp
-	push	OFFSET $SG174143
+	mov	DWORD PTR $T38[ebp], esp
+	push	OFFSET $SG174194
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
-	lea	edx, DWORD PTR _$S3$[ebp]
-	push	edx
+	lea	ecx, DWORD PTR _$S4$[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _DistToTarget$[ebp]
+	call	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddTriangularSet
+	mov	DWORD PTR tv172[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 4
+	lea	edx, DWORD PTR _$S4$[ebp]
+	mov	DWORD PTR _Target_Far$[ebp], edx
+
+; 124  : 	FzSet& Target_VeryFar = DistToTarget.AddRightShoulderSet("Target_VeryFar", 300, 750, 1000);
+
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@408f400000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4087700000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4072c00000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 28					; 0000001cH
+	mov	ecx, esp
+	mov	DWORD PTR $T37[ebp], esp
+	push	OFFSET $SG174195
+	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	lea	eax, DWORD PTR _$S5$[ebp]
+	push	eax
 	mov	ecx, DWORD PTR _DistToTarget$[ebp]
 	call	?AddRightShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddRightShoulderSet
-	mov	DWORD PTR tv151[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	lea	eax, DWORD PTR _$S3$[ebp]
-	mov	DWORD PTR _Target_Far$[ebp], eax
+	mov	DWORD PTR tv193[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 5
+	lea	ecx, DWORD PTR _$S5$[ebp]
+	mov	DWORD PTR _Target_VeryFar$[ebp], ecx
 
-; 95   : 
-; 96   :   FuzzyVariable& Desirability = m_FuzzyModule.CreateFLV("Desirability"); 
+; 125  : 
+; 126  : 	FuzzyVariable& Desirability = m_FuzzyModule.CreateFLV("Desirability");
 
-	push	OFFSET $SG174144
-	lea	ecx, DWORD PTR $T21[ebp]
+	push	OFFSET $SG174196
+	lea	ecx, DWORD PTR $T43[ebp]
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
-	mov	BYTE PTR __$EHRec$[ebp+8], 4
-	lea	ecx, DWORD PTR $T21[ebp]
-	push	ecx
+	mov	BYTE PTR __$EHRec$[ebp+8], 6
+	lea	edx, DWORD PTR $T43[ebp]
+	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?CreateFLV@FuzzyModule@@QAEAAVFuzzyVariable@@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; FuzzyModule::CreateFLV
 	mov	DWORD PTR _Desirability$[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	lea	ecx, DWORD PTR $T21[ebp]
+	mov	BYTE PTR __$EHRec$[ebp+8], 5
+	lea	ecx, DWORD PTR $T43[ebp]
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 
-; 97   :   FzSet& VeryDesirable = Desirability.AddRightShoulderSet("VeryDesirable", 50, 75, 100);
+; 127  : 	FzSet& ExtremelyDesirable = Desirability.AddRightShoulderSet("VeryDesirable", 75, 85, 100);
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4059000000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@4052c00000000000
+	movsd	xmm0, QWORD PTR __real@4055400000000000
 	movsd	QWORD PTR [esp], xmm0
-	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@4049000000000000
-	movsd	QWORD PTR [esp], xmm0
-	sub	esp, 28					; 0000001cH
-	mov	ecx, esp
-	mov	DWORD PTR $T16[ebp], esp
-	push	OFFSET $SG174145
-	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
-	lea	edx, DWORD PTR _$S4$[ebp]
-	push	edx
-	mov	ecx, DWORD PTR _Desirability$[ebp]
-	call	?AddRightShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddRightShoulderSet
-	mov	DWORD PTR tv184[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 5
-	lea	eax, DWORD PTR _$S4$[ebp]
-	mov	DWORD PTR _VeryDesirable$[ebp], eax
-
-; 98   :   FzSet& Desirable = Desirability.AddTriangularSet("Desirable", 25, 50, 75);
-
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4052c00000000000
 	movsd	QWORD PTR [esp], xmm0
-	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@4049000000000000
-	movsd	QWORD PTR [esp], xmm0
-	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@4039000000000000
-	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 28					; 0000001cH
 	mov	ecx, esp
-	mov	DWORD PTR $T15[ebp], esp
-	push	OFFSET $SG174146
-	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
-	lea	ecx, DWORD PTR _$S5$[ebp]
-	push	ecx
-	mov	ecx, DWORD PTR _Desirability$[ebp]
-	call	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddTriangularSet
-	mov	DWORD PTR tv205[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 6
-	lea	edx, DWORD PTR _$S5$[ebp]
-	mov	DWORD PTR _Desirable$[ebp], edx
-
-; 99   :   FzSet& Undesirable = Desirability.AddLeftShoulderSet("Undesirable", 0, 25, 50);
-
-	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@4049000000000000
-	movsd	QWORD PTR [esp], xmm0
-	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@4039000000000000
-	movsd	QWORD PTR [esp], xmm0
-	sub	esp, 8
-	xorps	xmm0, xmm0
-	movsd	QWORD PTR [esp], xmm0
-	sub	esp, 28					; 0000001cH
-	mov	ecx, esp
-	mov	DWORD PTR $T14[ebp], esp
-	push	OFFSET $SG174147
+	mov	DWORD PTR $T36[ebp], esp
+	push	OFFSET $SG174197
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	lea	eax, DWORD PTR _$S6$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _Desirability$[ebp]
-	call	?AddLeftShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddLeftShoulderSet
+	call	?AddRightShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddRightShoulderSet
 	mov	DWORD PTR tv226[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 7
 	lea	ecx, DWORD PTR _$S6$[ebp]
-	mov	DWORD PTR _Undesirable$[ebp], ecx
+	mov	DWORD PTR _ExtremelyDesirable$[ebp], ecx
 
-; 100  : 
-; 101  :   FuzzyVariable& AmmoStatus = m_FuzzyModule.CreateFLV("AmmoStatus");
-
-	push	OFFSET $SG174148
-	lea	ecx, DWORD PTR $T20[ebp]
-	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
-	mov	BYTE PTR __$EHRec$[ebp+8], 8
-	lea	edx, DWORD PTR $T20[ebp]
-	push	edx
-	mov	ecx, DWORD PTR _this$[ebp]
-	add	ecx, 16					; 00000010H
-	call	?CreateFLV@FuzzyModule@@QAEAAVFuzzyVariable@@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; FuzzyModule::CreateFLV
-	mov	DWORD PTR _AmmoStatus$[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 7
-	lea	ecx, DWORD PTR $T20[ebp]
-	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
-
-; 102  :   FzSet& Ammo_Loads = AmmoStatus.AddRightShoulderSet("Ammo_Loads", 10, 30, 100);
+; 128  : 	FzSet& VeryDesirable = Desirability.AddTriangularSet("VeryDesirable", 50, 85, 100);
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4059000000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@403e000000000000
+	movsd	xmm0, QWORD PTR __real@4055400000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@4024000000000000
+	movsd	xmm0, QWORD PTR __real@4049000000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 28					; 0000001cH
 	mov	ecx, esp
-	mov	DWORD PTR $T13[ebp], esp
-	push	OFFSET $SG174149
+	mov	DWORD PTR $T35[ebp], esp
+	push	OFFSET $SG174198
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	lea	edx, DWORD PTR _$S7$[ebp]
+	push	edx
+	mov	ecx, DWORD PTR _Desirability$[ebp]
+	call	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddTriangularSet
+	mov	DWORD PTR tv247[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 8
 	lea	eax, DWORD PTR _$S7$[ebp]
-	push	eax
-	mov	ecx, DWORD PTR _AmmoStatus$[ebp]
-	call	?AddRightShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddRightShoulderSet
-	mov	DWORD PTR tv259[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 9
-	lea	ecx, DWORD PTR _$S7$[ebp]
-	mov	DWORD PTR _Ammo_Loads$[ebp], ecx
+	mov	DWORD PTR _VeryDesirable$[ebp], eax
 
-; 103  :   FzSet& Ammo_Okay = AmmoStatus.AddTriangularSet("Ammo_Okay", 0, 10, 30);
+; 129  : 	FzSet& Desirable = Desirability.AddTriangularSet("Desirable", 35, 50, 50);
 
 	sub	esp, 8
-	movsd	xmm0, QWORD PTR __real@403e000000000000
+	movsd	xmm0, QWORD PTR __real@4049000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4049000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4041800000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 28					; 0000001cH
+	mov	ecx, esp
+	mov	DWORD PTR $T34[ebp], esp
+	push	OFFSET $SG174199
+	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	lea	ecx, DWORD PTR _$S8$[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _Desirability$[ebp]
+	call	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddTriangularSet
+	mov	DWORD PTR tv268[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 9
+	lea	edx, DWORD PTR _$S8$[ebp]
+	mov	DWORD PTR _Desirable$[ebp], edx
+
+; 130  : 	FzSet& Undesirable = Desirability.AddTriangularSet("Undesirable", 5, 10, 50);
+
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4049000000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4024000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4014000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 28					; 0000001cH
+	mov	ecx, esp
+	mov	DWORD PTR $T33[ebp], esp
+	push	OFFSET $SG174200
+	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	lea	eax, DWORD PTR _$S9$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Desirability$[ebp]
+	call	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddTriangularSet
+	mov	DWORD PTR tv289[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 10		; 0000000aH
+	lea	ecx, DWORD PTR _$S9$[ebp]
+	mov	DWORD PTR _Undesirable$[ebp], ecx
+
+; 131  : 	FzSet& VeryUndesirable = Desirability.AddLeftShoulderSet("Undesirable", 0, 5, 10);
+
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4024000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4014000000000000
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
 	xorps	xmm0, xmm0
 	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 28					; 0000001cH
 	mov	ecx, esp
-	mov	DWORD PTR $T12[ebp], esp
-	push	OFFSET $SG174150
+	mov	DWORD PTR $T32[ebp], esp
+	push	OFFSET $SG174201
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
-	lea	edx, DWORD PTR _$S8$[ebp]
+	lea	edx, DWORD PTR _$S10$[ebp]
+	push	edx
+	mov	ecx, DWORD PTR _Desirability$[ebp]
+	call	?AddLeftShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddLeftShoulderSet
+	mov	DWORD PTR tv310[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
+	lea	eax, DWORD PTR _$S10$[ebp]
+	mov	DWORD PTR _VeryUndesirable$[ebp], eax
+
+; 132  : 
+; 133  : 	FuzzyVariable& AmmoStatus = m_FuzzyModule.CreateFLV("AmmoStatus");
+
+	push	OFFSET $SG174202
+	lea	ecx, DWORD PTR $T42[ebp]
+	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	mov	BYTE PTR __$EHRec$[ebp+8], 12		; 0000000cH
+	lea	ecx, DWORD PTR $T42[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?CreateFLV@FuzzyModule@@QAEAAVFuzzyVariable@@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; FuzzyModule::CreateFLV
+	mov	DWORD PTR _AmmoStatus$[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
+	lea	ecx, DWORD PTR $T42[ebp]
+	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
+
+; 134  : 	FzSet& Ammo_Full = AmmoStatus.AddRightShoulderSet("Ammo_Full", 75, 90, 100);
+
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4059000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4056800000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4052c00000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 28					; 0000001cH
+	mov	ecx, esp
+	mov	DWORD PTR $T31[ebp], esp
+	push	OFFSET $SG174203
+	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	lea	edx, DWORD PTR _$S11$[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _AmmoStatus$[ebp]
-	call	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddTriangularSet
-	mov	DWORD PTR tv280[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 10		; 0000000aH
-	lea	eax, DWORD PTR _$S8$[ebp]
-	mov	DWORD PTR _Ammo_Okay$[ebp], eax
+	call	?AddRightShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddRightShoulderSet
+	mov	DWORD PTR tv375[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 13		; 0000000dH
+	lea	eax, DWORD PTR _$S11$[ebp]
+	mov	DWORD PTR _Ammo_Full$[ebp], eax
 
-; 104  :   FzSet& Ammo_Low = AmmoStatus.AddTriangularSet("Ammo_Low", 0, 0, 10);
+; 135  : 	FzSet& Ammo_Loads = AmmoStatus.AddTriangularSet("Ammo_Loads", 10, 75, 90);
 
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4056800000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4052c00000000000
+	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@4024000000000000
 	movsd	QWORD PTR [esp], xmm0
-	sub	esp, 8
-	xorps	xmm0, xmm0
-	movsd	QWORD PTR [esp], xmm0
-	sub	esp, 8
-	xorps	xmm0, xmm0
-	movsd	QWORD PTR [esp], xmm0
 	sub	esp, 28					; 0000001cH
 	mov	ecx, esp
-	mov	DWORD PTR $T11[ebp], esp
-	push	OFFSET $SG174151
+	mov	DWORD PTR $T30[ebp], esp
+	push	OFFSET $SG174204
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
-	lea	ecx, DWORD PTR _$S9$[ebp]
+	lea	ecx, DWORD PTR _$S12$[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _AmmoStatus$[ebp]
 	call	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddTriangularSet
-	mov	DWORD PTR tv301[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
-	lea	edx, DWORD PTR _$S9$[ebp]
-	mov	DWORD PTR _Ammo_Low$[ebp], edx
+	mov	DWORD PTR tv396[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 14		; 0000000eH
+	lea	edx, DWORD PTR _$S12$[ebp]
+	mov	DWORD PTR _Ammo_Loads$[ebp], edx
 
-; 105  : 
-; 106  : 
-; 107  :   m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Loads), Undesirable);
+; 136  : 	FzSet& Ammo_Okay = AmmoStatus.AddTriangularSet("Ammo_Okay", 5, 10, 75);
+
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4052c00000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4024000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4014000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 28					; 0000001cH
+	mov	ecx, esp
+	mov	DWORD PTR $T29[ebp], esp
+	push	OFFSET $SG174205
+	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	lea	eax, DWORD PTR _$S13$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _AmmoStatus$[ebp]
+	call	?AddTriangularSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddTriangularSet
+	mov	DWORD PTR tv417[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 15		; 0000000fH
+	lea	ecx, DWORD PTR _$S13$[ebp]
+	mov	DWORD PTR _Ammo_Okay$[ebp], ecx
+
+; 137  : 	FzSet& Ammo_Low = AmmoStatus.AddLeftShoulderSet("Ammo_Low", 1, 5, 10);
+
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4024000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@4014000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@3ff0000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 28					; 0000001cH
+	mov	ecx, esp
+	mov	DWORD PTR $T28[ebp], esp
+	push	OFFSET $SG174206
+	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	lea	edx, DWORD PTR _$S14$[ebp]
+	push	edx
+	mov	ecx, DWORD PTR _AmmoStatus$[ebp]
+	call	?AddLeftShoulderSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddLeftShoulderSet
+	mov	DWORD PTR tv438[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 16		; 00000010H
+	lea	eax, DWORD PTR _$S14$[ebp]
+	mov	DWORD PTR _Ammo_Low$[ebp], eax
+
+; 138  : 	FzSet& Ammo_Empty = AmmoStatus.AddSingletonSet("Ammo_Empty", 0, 0, 0);
+
+	sub	esp, 8
+	xorps	xmm0, xmm0
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	xorps	xmm0, xmm0
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	xorps	xmm0, xmm0
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 28					; 0000001cH
+	mov	ecx, esp
+	mov	DWORD PTR $T27[ebp], esp
+	push	OFFSET $SG174207
+	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
+	lea	ecx, DWORD PTR _$S15$[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _AmmoStatus$[ebp]
+	call	?AddSingletonSet@FuzzyVariable@@QAE?AVFzSet@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@NNN@Z ; FuzzyVariable::AddSingletonSet
+	mov	DWORD PTR tv459[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	edx, DWORD PTR _$S15$[ebp]
+	mov	DWORD PTR _Ammo_Empty$[ebp], edx
+
+; 139  : 
+; 140  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryClose, Ammo_Full), VeryUndesirable);
+
+	mov	eax, DWORD PTR _VeryUndesirable$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Ammo_Full$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Target_VeryClose$[ebp]
+	push	edx
+	lea	ecx, DWORD PTR $T26[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv370[ebp], eax
+	mov	eax, DWORD PTR tv370[ebp]
+	mov	DWORD PTR tv1355[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 18		; 00000012H
+	mov	ecx, DWORD PTR tv1355[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T26[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 141  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryClose, Ammo_Loads), VeryUndesirable);
+
+	mov	edx, DWORD PTR _VeryUndesirable$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Ammo_Loads$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Target_VeryClose$[ebp]
+	push	ecx
+	lea	ecx, DWORD PTR $T25[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv221[ebp], eax
+	mov	edx, DWORD PTR tv221[ebp]
+	mov	DWORD PTR tv1357[ebp], edx
+	mov	BYTE PTR __$EHRec$[ebp+8], 19		; 00000013H
+	mov	eax, DWORD PTR tv1357[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T25[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 142  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryClose, Ammo_Okay), VeryUndesirable);
+
+	mov	ecx, DWORD PTR _VeryUndesirable$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Ammo_Okay$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Target_VeryClose$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR $T24[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv72[ebp], eax
+	mov	ecx, DWORD PTR tv72[ebp]
+	mov	DWORD PTR tv1359[ebp], ecx
+	mov	BYTE PTR __$EHRec$[ebp+8], 20		; 00000014H
+	mov	edx, DWORD PTR tv1359[ebp]
+	push	edx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T24[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 143  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryClose, Ammo_Low), VeryUndesirable);
+
+	mov	eax, DWORD PTR _VeryUndesirable$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Ammo_Low$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Target_VeryClose$[ebp]
+	push	edx
+	lea	ecx, DWORD PTR $T23[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1404[ebp], eax
+	mov	eax, DWORD PTR tv1404[ebp]
+	mov	DWORD PTR tv1361[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 21		; 00000015H
+	mov	ecx, DWORD PTR tv1361[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T23[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 144  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryClose, Ammo_Empty), VeryUndesirable);
+
+	mov	edx, DWORD PTR _VeryUndesirable$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Ammo_Empty$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Target_VeryClose$[ebp]
+	push	ecx
+	lea	ecx, DWORD PTR $T22[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1405[ebp], eax
+	mov	edx, DWORD PTR tv1405[ebp]
+	mov	DWORD PTR tv1363[ebp], edx
+	mov	BYTE PTR __$EHRec$[ebp+8], 22		; 00000016H
+	mov	eax, DWORD PTR tv1363[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T22[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 145  : 
+; 146  : 	m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Full), Undesirable);
+
+	mov	ecx, DWORD PTR _Undesirable$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Ammo_Full$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Target_Close$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR $T21[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1406[ebp], eax
+	mov	ecx, DWORD PTR tv1406[ebp]
+	mov	DWORD PTR tv1365[ebp], ecx
+	mov	BYTE PTR __$EHRec$[ebp+8], 23		; 00000017H
+	mov	edx, DWORD PTR tv1365[ebp]
+	push	edx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T21[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 147  : 	m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Loads), Undesirable);
 
 	mov	eax, DWORD PTR _Undesirable$[ebp]
 	push	eax
@@ -12246,22 +12710,22 @@ __$EHRec$ = -12						; size = 12
 	push	ecx
 	mov	edx, DWORD PTR _Target_Close$[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T10[ebp]
+	lea	ecx, DWORD PTR $T20[ebp]
 	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
-	mov	DWORD PTR tv254[ebp], eax
-	mov	eax, DWORD PTR tv254[ebp]
-	mov	DWORD PTR tv681[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 12		; 0000000cH
-	mov	ecx, DWORD PTR tv681[ebp]
+	mov	DWORD PTR tv1407[ebp], eax
+	mov	eax, DWORD PTR tv1407[ebp]
+	mov	DWORD PTR tv1367[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 24		; 00000018H
+	mov	ecx, DWORD PTR tv1367[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
-	lea	ecx, DWORD PTR $T10[ebp]
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T20[ebp]
 	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 
-; 108  :   m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Okay), Undesirable);
+; 148  : 	m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Okay), Undesirable);
 
 	mov	edx, DWORD PTR _Undesirable$[ebp]
 	push	edx
@@ -12269,22 +12733,22 @@ __$EHRec$ = -12						; size = 12
 	push	eax
 	mov	ecx, DWORD PTR _Target_Close$[ebp]
 	push	ecx
-	lea	ecx, DWORD PTR $T9[ebp]
+	lea	ecx, DWORD PTR $T19[ebp]
 	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
-	mov	DWORD PTR tv179[ebp], eax
-	mov	edx, DWORD PTR tv179[ebp]
-	mov	DWORD PTR tv683[ebp], edx
-	mov	BYTE PTR __$EHRec$[ebp+8], 13		; 0000000dH
-	mov	eax, DWORD PTR tv683[ebp]
+	mov	DWORD PTR tv1408[ebp], eax
+	mov	edx, DWORD PTR tv1408[ebp]
+	mov	DWORD PTR tv1369[ebp], edx
+	mov	BYTE PTR __$EHRec$[ebp+8], 25		; 00000019H
+	mov	eax, DWORD PTR tv1369[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
-	lea	ecx, DWORD PTR $T9[ebp]
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T19[ebp]
 	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 
-; 109  :   m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Low), Undesirable);
+; 149  : 	m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Low), Undesirable);
 
 	mov	ecx, DWORD PTR _Undesirable$[ebp]
 	push	ecx
@@ -12292,176 +12756,425 @@ __$EHRec$ = -12						; size = 12
 	push	edx
 	mov	eax, DWORD PTR _Target_Close$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T8[ebp]
+	lea	ecx, DWORD PTR $T18[ebp]
 	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
-	mov	DWORD PTR tv72[ebp], eax
-	mov	ecx, DWORD PTR tv72[ebp]
-	mov	DWORD PTR tv685[ebp], ecx
-	mov	BYTE PTR __$EHRec$[ebp+8], 14		; 0000000eH
-	mov	edx, DWORD PTR tv685[ebp]
+	mov	DWORD PTR tv1409[ebp], eax
+	mov	ecx, DWORD PTR tv1409[ebp]
+	mov	DWORD PTR tv1371[ebp], ecx
+	mov	BYTE PTR __$EHRec$[ebp+8], 26		; 0000001aH
+	mov	edx, DWORD PTR tv1371[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
-	lea	ecx, DWORD PTR $T8[ebp]
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T18[ebp]
 	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 
-; 110  : 
-; 111  :   m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Loads), VeryDesirable);
+; 150  : 	m_FuzzyModule.AddRule(FzAND(Target_Close, Ammo_Empty), VeryUndesirable);
 
-	mov	eax, DWORD PTR _VeryDesirable$[ebp]
+	mov	eax, DWORD PTR _VeryUndesirable$[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _Ammo_Loads$[ebp]
+	mov	ecx, DWORD PTR _Ammo_Empty$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _Target_Medium$[ebp]
+	mov	edx, DWORD PTR _Target_Close$[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T7[ebp]
+	lea	ecx, DWORD PTR $T17[ebp]
 	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
-	mov	DWORD PTR tv698[ebp], eax
-	mov	eax, DWORD PTR tv698[ebp]
-	mov	DWORD PTR tv687[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 15		; 0000000fH
-	mov	ecx, DWORD PTR tv687[ebp]
+	mov	DWORD PTR tv1410[ebp], eax
+	mov	eax, DWORD PTR tv1410[ebp]
+	mov	DWORD PTR tv1373[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 27		; 0000001bH
+	mov	ecx, DWORD PTR tv1373[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
-	lea	ecx, DWORD PTR $T7[ebp]
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T17[ebp]
 	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 
-; 112  :   m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Okay), VeryDesirable);
+; 151  : 
+; 152  : 	m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Full), ExtremelyDesirable);
 
-	mov	edx, DWORD PTR _VeryDesirable$[ebp]
+	mov	edx, DWORD PTR _ExtremelyDesirable$[ebp]
 	push	edx
-	mov	eax, DWORD PTR _Ammo_Okay$[ebp]
+	mov	eax, DWORD PTR _Ammo_Full$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _Target_Medium$[ebp]
 	push	ecx
-	lea	ecx, DWORD PTR $T6[ebp]
+	lea	ecx, DWORD PTR $T16[ebp]
 	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
-	mov	DWORD PTR tv699[ebp], eax
-	mov	edx, DWORD PTR tv699[ebp]
-	mov	DWORD PTR tv689[ebp], edx
-	mov	BYTE PTR __$EHRec$[ebp+8], 16		; 00000010H
-	mov	eax, DWORD PTR tv689[ebp]
+	mov	DWORD PTR tv1411[ebp], eax
+	mov	edx, DWORD PTR tv1411[ebp]
+	mov	DWORD PTR tv1375[ebp], edx
+	mov	BYTE PTR __$EHRec$[ebp+8], 28		; 0000001cH
+	mov	eax, DWORD PTR tv1375[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
-	lea	ecx, DWORD PTR $T6[ebp]
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T16[ebp]
 	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 
-; 113  :   m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Low), Desirable);
+; 153  : 	m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Loads), ExtremelyDesirable);
 
-	mov	ecx, DWORD PTR _Desirable$[ebp]
+	mov	ecx, DWORD PTR _ExtremelyDesirable$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _Ammo_Low$[ebp]
+	mov	edx, DWORD PTR _Ammo_Loads$[ebp]
 	push	edx
 	mov	eax, DWORD PTR _Target_Medium$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T5[ebp]
+	lea	ecx, DWORD PTR $T15[ebp]
 	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
-	mov	DWORD PTR tv700[ebp], eax
-	mov	ecx, DWORD PTR tv700[ebp]
-	mov	DWORD PTR tv691[ebp], ecx
-	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
-	mov	edx, DWORD PTR tv691[ebp]
+	mov	DWORD PTR tv1412[ebp], eax
+	mov	ecx, DWORD PTR tv1412[ebp]
+	mov	DWORD PTR tv1377[ebp], ecx
+	mov	BYTE PTR __$EHRec$[ebp+8], 29		; 0000001dH
+	mov	edx, DWORD PTR tv1377[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
-	lea	ecx, DWORD PTR $T5[ebp]
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T15[ebp]
 	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 
-; 114  : 
-; 115  :   m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Loads), Desirable);
+; 154  : 	m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Okay), VeryDesirable);
+
+	mov	eax, DWORD PTR _VeryDesirable$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Ammo_Okay$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Target_Medium$[ebp]
+	push	edx
+	lea	ecx, DWORD PTR $T14[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1413[ebp], eax
+	mov	eax, DWORD PTR tv1413[ebp]
+	mov	DWORD PTR tv1379[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 30		; 0000001eH
+	mov	ecx, DWORD PTR tv1379[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T14[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 155  : 	m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Low), Desirable);
+
+	mov	edx, DWORD PTR _Desirable$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Ammo_Low$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Target_Medium$[ebp]
+	push	ecx
+	lea	ecx, DWORD PTR $T13[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1414[ebp], eax
+	mov	edx, DWORD PTR tv1414[ebp]
+	mov	DWORD PTR tv1381[ebp], edx
+	mov	BYTE PTR __$EHRec$[ebp+8], 31		; 0000001fH
+	mov	eax, DWORD PTR tv1381[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T13[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 156  : 	m_FuzzyModule.AddRule(FzAND(Target_Medium, Ammo_Empty), VeryUndesirable);
+
+	mov	ecx, DWORD PTR _VeryUndesirable$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Ammo_Empty$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Target_Medium$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR $T12[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1415[ebp], eax
+	mov	ecx, DWORD PTR tv1415[ebp]
+	mov	DWORD PTR tv1383[ebp], ecx
+	mov	BYTE PTR __$EHRec$[ebp+8], 32		; 00000020H
+	mov	edx, DWORD PTR tv1383[ebp]
+	push	edx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T12[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 157  : 
+; 158  : 	m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Full), VeryDesirable);
+
+	mov	eax, DWORD PTR _VeryDesirable$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Ammo_Full$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Target_Far$[ebp]
+	push	edx
+	lea	ecx, DWORD PTR $T11[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1416[ebp], eax
+	mov	eax, DWORD PTR tv1416[ebp]
+	mov	DWORD PTR tv1385[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 33		; 00000021H
+	mov	ecx, DWORD PTR tv1385[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T11[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 159  : 	m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Loads), Desirable);
+
+	mov	edx, DWORD PTR _Desirable$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Ammo_Loads$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Target_Far$[ebp]
+	push	ecx
+	lea	ecx, DWORD PTR $T10[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1417[ebp], eax
+	mov	edx, DWORD PTR tv1417[ebp]
+	mov	DWORD PTR tv1387[ebp], edx
+	mov	BYTE PTR __$EHRec$[ebp+8], 34		; 00000022H
+	mov	eax, DWORD PTR tv1387[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T10[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 160  : 	m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Okay), Undesirable);
+
+	mov	ecx, DWORD PTR _Undesirable$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Ammo_Okay$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Target_Far$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR $T9[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1418[ebp], eax
+	mov	ecx, DWORD PTR tv1418[ebp]
+	mov	DWORD PTR tv1389[ebp], ecx
+	mov	BYTE PTR __$EHRec$[ebp+8], 35		; 00000023H
+	mov	edx, DWORD PTR tv1389[ebp]
+	push	edx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T9[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 161  : 	m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Low), Undesirable);
+
+	mov	eax, DWORD PTR _Undesirable$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Ammo_Low$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Target_Far$[ebp]
+	push	edx
+	lea	ecx, DWORD PTR $T8[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1419[ebp], eax
+	mov	eax, DWORD PTR tv1419[ebp]
+	mov	DWORD PTR tv1391[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 36		; 00000024H
+	mov	ecx, DWORD PTR tv1391[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T8[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 162  : 	m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Empty), VeryUndesirable);
+
+	mov	edx, DWORD PTR _VeryUndesirable$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Ammo_Empty$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Target_Far$[ebp]
+	push	ecx
+	lea	ecx, DWORD PTR $T7[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1420[ebp], eax
+	mov	edx, DWORD PTR tv1420[ebp]
+	mov	DWORD PTR tv1393[ebp], edx
+	mov	BYTE PTR __$EHRec$[ebp+8], 37		; 00000025H
+	mov	eax, DWORD PTR tv1393[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T7[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 163  : 
+; 164  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryFar, Ammo_Full), VeryDesirable);
+
+	mov	ecx, DWORD PTR _VeryDesirable$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Ammo_Full$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _Target_VeryFar$[ebp]
+	push	eax
+	lea	ecx, DWORD PTR $T6[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1421[ebp], eax
+	mov	ecx, DWORD PTR tv1421[ebp]
+	mov	DWORD PTR tv1395[ebp], ecx
+	mov	BYTE PTR __$EHRec$[ebp+8], 38		; 00000026H
+	mov	edx, DWORD PTR tv1395[ebp]
+	push	edx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T6[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 165  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryFar, Ammo_Loads), Desirable);
 
 	mov	eax, DWORD PTR _Desirable$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _Ammo_Loads$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _Target_Far$[ebp]
+	mov	edx, DWORD PTR _Target_VeryFar$[ebp]
 	push	edx
-	lea	ecx, DWORD PTR $T4[ebp]
+	lea	ecx, DWORD PTR $T5[ebp]
 	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
-	mov	DWORD PTR tv701[ebp], eax
-	mov	eax, DWORD PTR tv701[ebp]
-	mov	DWORD PTR tv693[ebp], eax
-	mov	BYTE PTR __$EHRec$[ebp+8], 18		; 00000012H
-	mov	ecx, DWORD PTR tv693[ebp]
+	mov	DWORD PTR tv1422[ebp], eax
+	mov	eax, DWORD PTR tv1422[ebp]
+	mov	DWORD PTR tv1397[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 39		; 00000027H
+	mov	ecx, DWORD PTR tv1397[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
-	lea	ecx, DWORD PTR $T4[ebp]
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T5[ebp]
 	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 
-; 116  :   m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Okay), Undesirable);
+; 166  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryFar, Ammo_Okay), Undesirable);
 
 	mov	edx, DWORD PTR _Undesirable$[ebp]
 	push	edx
 	mov	eax, DWORD PTR _Ammo_Okay$[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _Target_Far$[ebp]
+	mov	ecx, DWORD PTR _Target_VeryFar$[ebp]
 	push	ecx
-	lea	ecx, DWORD PTR $T3[ebp]
+	lea	ecx, DWORD PTR $T4[ebp]
 	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
-	mov	DWORD PTR tv702[ebp], eax
-	mov	edx, DWORD PTR tv702[ebp]
-	mov	DWORD PTR tv695[ebp], edx
-	mov	BYTE PTR __$EHRec$[ebp+8], 19		; 00000013H
-	mov	eax, DWORD PTR tv695[ebp]
+	mov	DWORD PTR tv1423[ebp], eax
+	mov	edx, DWORD PTR tv1423[ebp]
+	mov	DWORD PTR tv1399[ebp], edx
+	mov	BYTE PTR __$EHRec$[ebp+8], 40		; 00000028H
+	mov	eax, DWORD PTR tv1399[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
-	lea	ecx, DWORD PTR $T3[ebp]
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T4[ebp]
 	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 
-; 117  :   m_FuzzyModule.AddRule(FzAND(Target_Far, Ammo_Low), Undesirable);
+; 167  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryFar, Ammo_Low), VeryUndesirable);
 
-	mov	ecx, DWORD PTR _Undesirable$[ebp]
+	mov	ecx, DWORD PTR _VeryUndesirable$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _Ammo_Low$[ebp]
 	push	edx
-	mov	eax, DWORD PTR _Target_Far$[ebp]
+	mov	eax, DWORD PTR _Target_VeryFar$[ebp]
 	push	eax
-	lea	ecx, DWORD PTR $T2[ebp]
+	lea	ecx, DWORD PTR $T3[ebp]
 	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
-	mov	DWORD PTR tv703[ebp], eax
-	mov	ecx, DWORD PTR tv703[ebp]
-	mov	DWORD PTR tv697[ebp], ecx
-	mov	BYTE PTR __$EHRec$[ebp+8], 20		; 00000014H
-	mov	edx, DWORD PTR tv697[ebp]
+	mov	DWORD PTR tv1424[ebp], eax
+	mov	ecx, DWORD PTR tv1424[ebp]
+	mov	DWORD PTR tv1401[ebp], ecx
+	mov	BYTE PTR __$EHRec$[ebp+8], 41		; 00000029H
+	mov	edx, DWORD PTR tv1401[ebp]
 	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 16					; 00000010H
 	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
-	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
+	lea	ecx, DWORD PTR $T3[ebp]
+	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+
+; 168  : 	m_FuzzyModule.AddRule(FzAND(Target_VeryFar, Ammo_Empty), VeryUndesirable);
+
+	mov	eax, DWORD PTR _VeryUndesirable$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _Ammo_Empty$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _Target_VeryFar$[ebp]
+	push	edx
+	lea	ecx, DWORD PTR $T2[ebp]
+	call	??0FzAND@@QAE@AAVFuzzyTerm@@0@Z		; FzAND::FzAND
+	mov	DWORD PTR tv1425[ebp], eax
+	mov	eax, DWORD PTR tv1425[ebp]
+	mov	DWORD PTR tv1403[ebp], eax
+	mov	BYTE PTR __$EHRec$[ebp+8], 42		; 0000002aH
+	mov	ecx, DWORD PTR tv1403[ebp]
+	push	ecx
+	mov	ecx, DWORD PTR _this$[ebp]
+	add	ecx, 16					; 00000010H
+	call	?AddRule@FuzzyModule@@QAEXAAVFuzzyTerm@@0@Z ; FuzzyModule::AddRule
+	mov	BYTE PTR __$EHRec$[ebp+8], 17		; 00000011H
 	lea	ecx, DWORD PTR $T2[ebp]
 	call	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 
-; 118  : }
+; 169  : }
 
+	mov	BYTE PTR __$EHRec$[ebp+8], 16		; 00000010H
+	lea	ecx, DWORD PTR _$S15$[ebp]
+	call	??1FzSet@@UAE@XZ
+	mov	BYTE PTR __$EHRec$[ebp+8], 15		; 0000000fH
+	lea	ecx, DWORD PTR _$S14$[ebp]
+	call	??1FzSet@@UAE@XZ
+	mov	BYTE PTR __$EHRec$[ebp+8], 14		; 0000000eH
+	lea	ecx, DWORD PTR _$S13$[ebp]
+	call	??1FzSet@@UAE@XZ
+	mov	BYTE PTR __$EHRec$[ebp+8], 13		; 0000000dH
+	lea	ecx, DWORD PTR _$S12$[ebp]
+	call	??1FzSet@@UAE@XZ
+	mov	BYTE PTR __$EHRec$[ebp+8], 11		; 0000000bH
+	lea	ecx, DWORD PTR _$S11$[ebp]
+	call	??1FzSet@@UAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 10		; 0000000aH
-	lea	ecx, DWORD PTR _$S9$[ebp]
+	lea	ecx, DWORD PTR _$S10$[ebp]
 	call	??1FzSet@@UAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 9
+	lea	ecx, DWORD PTR _$S9$[ebp]
+	call	??1FzSet@@UAE@XZ
+	mov	BYTE PTR __$EHRec$[ebp+8], 8
 	lea	ecx, DWORD PTR _$S8$[ebp]
 	call	??1FzSet@@UAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 7
 	lea	ecx, DWORD PTR _$S7$[ebp]
 	call	??1FzSet@@UAE@XZ
-	mov	BYTE PTR __$EHRec$[ebp+8], 6
+	mov	BYTE PTR __$EHRec$[ebp+8], 5
 	lea	ecx, DWORD PTR _$S6$[ebp]
 	call	??1FzSet@@UAE@XZ
-	mov	BYTE PTR __$EHRec$[ebp+8], 5
+	mov	BYTE PTR __$EHRec$[ebp+8], 4
 	lea	ecx, DWORD PTR _$S5$[ebp]
 	call	??1FzSet@@UAE@XZ
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
@@ -12479,7 +13192,7 @@ __$EHRec$ = -12						; size = 12
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN44@Initialize
+	lea	edx, DWORD PTR $LN78@Initialize
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -12490,85 +13203,139 @@ __$EHRec$ = -12						; size = 12
 	mov	ecx, DWORD PTR __$ArrayPad$[ebp]
 	xor	ecx, ebp
 	call	@__security_check_cookie@4
-	add	esp, 620				; 0000026cH
+	add	esp, 1236				; 000004d4H
 	cmp	ebp, esp
 	call	__RTC_CheckEsp
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-	npad	2
-$LN44@Initialize:
-	DD	9
-	DD	$LN43@Initialize
-$LN43@Initialize:
+	npad	1
+$LN78@Initialize:
+	DD	15					; 0000000fH
+	DD	$LN77@Initialize
+$LN77@Initialize:
 	DD	-68					; ffffffbcH
 	DD	8
-	DD	$LN33@Initialize
+	DD	$LN61@Initialize
 	DD	-88					; ffffffa8H
 	DD	8
-	DD	$LN34@Initialize
+	DD	$LN62@Initialize
 	DD	-108					; ffffff94H
 	DD	8
-	DD	$LN35@Initialize
-	DD	-160					; ffffff60H
+	DD	$LN63@Initialize
+	DD	-128					; ffffff80H
 	DD	8
-	DD	$LN36@Initialize
-	DD	-180					; ffffff4cH
+	DD	$LN64@Initialize
+	DD	-148					; ffffff6cH
 	DD	8
-	DD	$LN37@Initialize
+	DD	$LN65@Initialize
 	DD	-200					; ffffff38H
 	DD	8
-	DD	$LN38@Initialize
-	DD	-252					; ffffff04H
+	DD	$LN66@Initialize
+	DD	-220					; ffffff24H
 	DD	8
-	DD	$LN39@Initialize
-	DD	-272					; fffffef0H
+	DD	$LN67@Initialize
+	DD	-240					; ffffff10H
 	DD	8
-	DD	$LN40@Initialize
-	DD	-292					; fffffedcH
+	DD	$LN68@Initialize
+	DD	-260					; fffffefcH
 	DD	8
-	DD	$LN41@Initialize
-$LN41@Initialize:
+	DD	$LN69@Initialize
+	DD	-280					; fffffee8H
+	DD	8
+	DD	$LN70@Initialize
+	DD	-332					; fffffeb4H
+	DD	8
+	DD	$LN71@Initialize
+	DD	-352					; fffffea0H
+	DD	8
+	DD	$LN72@Initialize
+	DD	-372					; fffffe8cH
+	DD	8
+	DD	$LN73@Initialize
+	DD	-392					; fffffe78H
+	DD	8
+	DD	$LN74@Initialize
+	DD	-412					; fffffe64H
+	DD	8
+	DD	$LN75@Initialize
+$LN75@Initialize:
+	DB	36					; 00000024H
+	DB	83					; 00000053H
+	DB	49					; 00000031H
+	DB	53					; 00000035H
+	DB	0
+$LN74@Initialize:
+	DB	36					; 00000024H
+	DB	83					; 00000053H
+	DB	49					; 00000031H
+	DB	52					; 00000034H
+	DB	0
+$LN73@Initialize:
+	DB	36					; 00000024H
+	DB	83					; 00000053H
+	DB	49					; 00000031H
+	DB	51					; 00000033H
+	DB	0
+$LN72@Initialize:
+	DB	36					; 00000024H
+	DB	83					; 00000053H
+	DB	49					; 00000031H
+	DB	50					; 00000032H
+	DB	0
+$LN71@Initialize:
+	DB	36					; 00000024H
+	DB	83					; 00000053H
+	DB	49					; 00000031H
+	DB	49					; 00000031H
+	DB	0
+$LN70@Initialize:
+	DB	36					; 00000024H
+	DB	83					; 00000053H
+	DB	49					; 00000031H
+	DB	48					; 00000030H
+	DB	0
+$LN69@Initialize:
 	DB	36					; 00000024H
 	DB	83					; 00000053H
 	DB	57					; 00000039H
 	DB	0
-$LN40@Initialize:
+$LN68@Initialize:
 	DB	36					; 00000024H
 	DB	83					; 00000053H
 	DB	56					; 00000038H
 	DB	0
-$LN39@Initialize:
+$LN67@Initialize:
 	DB	36					; 00000024H
 	DB	83					; 00000053H
 	DB	55					; 00000037H
 	DB	0
-$LN38@Initialize:
+$LN66@Initialize:
 	DB	36					; 00000024H
 	DB	83					; 00000053H
 	DB	54					; 00000036H
 	DB	0
-$LN37@Initialize:
+$LN65@Initialize:
 	DB	36					; 00000024H
 	DB	83					; 00000053H
 	DB	53					; 00000035H
 	DB	0
-$LN36@Initialize:
+$LN64@Initialize:
 	DB	36					; 00000024H
 	DB	83					; 00000053H
 	DB	52					; 00000034H
 	DB	0
-$LN35@Initialize:
+$LN63@Initialize:
 	DB	36					; 00000024H
 	DB	83					; 00000053H
 	DB	51					; 00000033H
 	DB	0
-$LN34@Initialize:
+$LN62@Initialize:
 	DB	36					; 00000024H
 	DB	83					; 00000053H
 	DB	50					; 00000032H
 	DB	0
-$LN33@Initialize:
+$LN61@Initialize:
 	DB	36					; 00000024H
 	DB	83					; 00000053H
 	DB	49					; 00000031H
@@ -12576,7 +13343,7 @@ $LN33@Initialize:
 _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$0:
-	lea	ecx, DWORD PTR $T22[ebp]
+	lea	ecx, DWORD PTR $T44[ebp]
 	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 __unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$2:
 	lea	ecx, DWORD PTR _$S1$[ebp]
@@ -12587,61 +13354,127 @@ __unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$4:
 __unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$6:
 	lea	ecx, DWORD PTR _$S3$[ebp]
 	jmp	??1FzSet@@UAE@XZ
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$7:
-	lea	ecx, DWORD PTR $T21[ebp]
-	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$9:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$8:
 	lea	ecx, DWORD PTR _$S4$[ebp]
 	jmp	??1FzSet@@UAE@XZ
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$11:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$10:
 	lea	ecx, DWORD PTR _$S5$[ebp]
 	jmp	??1FzSet@@UAE@XZ
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$11:
+	lea	ecx, DWORD PTR $T43[ebp]
+	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 __unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$13:
 	lea	ecx, DWORD PTR _$S6$[ebp]
 	jmp	??1FzSet@@UAE@XZ
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$14:
-	lea	ecx, DWORD PTR $T20[ebp]
-	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$16:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$15:
 	lea	ecx, DWORD PTR _$S7$[ebp]
 	jmp	??1FzSet@@UAE@XZ
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$18:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$17:
 	lea	ecx, DWORD PTR _$S8$[ebp]
 	jmp	??1FzSet@@UAE@XZ
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$20:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$19:
 	lea	ecx, DWORD PTR _$S9$[ebp]
 	jmp	??1FzSet@@UAE@XZ
 __unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$21:
+	lea	ecx, DWORD PTR _$S10$[ebp]
+	jmp	??1FzSet@@UAE@XZ
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$22:
+	lea	ecx, DWORD PTR $T42[ebp]
+	jmp	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$24:
+	lea	ecx, DWORD PTR _$S11$[ebp]
+	jmp	??1FzSet@@UAE@XZ
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$26:
+	lea	ecx, DWORD PTR _$S12$[ebp]
+	jmp	??1FzSet@@UAE@XZ
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$28:
+	lea	ecx, DWORD PTR _$S13$[ebp]
+	jmp	??1FzSet@@UAE@XZ
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$30:
+	lea	ecx, DWORD PTR _$S14$[ebp]
+	jmp	??1FzSet@@UAE@XZ
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$32:
+	lea	ecx, DWORD PTR _$S15$[ebp]
+	jmp	??1FzSet@@UAE@XZ
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$33:
+	lea	ecx, DWORD PTR $T26[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$34:
+	lea	ecx, DWORD PTR $T25[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$35:
+	lea	ecx, DWORD PTR $T24[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$36:
+	lea	ecx, DWORD PTR $T23[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$37:
+	lea	ecx, DWORD PTR $T22[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$38:
+	lea	ecx, DWORD PTR $T21[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$39:
+	lea	ecx, DWORD PTR $T20[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$40:
+	lea	ecx, DWORD PTR $T19[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$41:
+	lea	ecx, DWORD PTR $T18[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$42:
+	lea	ecx, DWORD PTR $T17[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$43:
+	lea	ecx, DWORD PTR $T16[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$44:
+	lea	ecx, DWORD PTR $T15[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$45:
+	lea	ecx, DWORD PTR $T14[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$46:
+	lea	ecx, DWORD PTR $T13[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$47:
+	lea	ecx, DWORD PTR $T12[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$48:
+	lea	ecx, DWORD PTR $T11[ebp]
+	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$49:
 	lea	ecx, DWORD PTR $T10[ebp]
 	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$22:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$50:
 	lea	ecx, DWORD PTR $T9[ebp]
 	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$23:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$51:
 	lea	ecx, DWORD PTR $T8[ebp]
 	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$24:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$52:
 	lea	ecx, DWORD PTR $T7[ebp]
 	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$25:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$53:
 	lea	ecx, DWORD PTR $T6[ebp]
 	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$26:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$54:
 	lea	ecx, DWORD PTR $T5[ebp]
 	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$27:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$55:
 	lea	ecx, DWORD PTR $T4[ebp]
 	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$28:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$56:
 	lea	ecx, DWORD PTR $T3[ebp]
 	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
-__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$29:
+__unwindfunclet$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ$57:
 	lea	ecx, DWORD PTR $T2[ebp]
 	jmp	??1FzAND@@UAE@XZ			; FzAND::~FzAND
 __ehhandler$?InitializeFuzzyModule@RocketLauncher@@EAEXXZ:
 	mov	edx, DWORD PTR [esp+8]
 	lea	eax, DWORD PTR [edx+12]
-	mov	ecx, DWORD PTR [edx-616]
+	mov	ecx, DWORD PTR [edx-1232]
 	xor	ecx, eax
 	call	@__security_check_cookie@4
 	mov	ecx, DWORD PTR [edx-4]
@@ -19158,7 +19991,7 @@ _this$ = -4						; size = 4
 ?GetWorld@Raven_Bot@@QAEQAVRaven_Game@@XZ PROC		; Raven_Bot::GetWorld, COMDAT
 ; _this$ = ecx
 
-; 204  :   Raven_Game* const                  GetWorld(){return m_pWorld;} 
+; 207  :   Raven_Game* const                  GetWorld(){return m_pWorld;} 
 
 	push	ebp
 	mov	ebp, esp
@@ -19181,7 +20014,7 @@ ___$ReturnUdt$ = 8					; size = 4
 ?Facing@Raven_Bot@@QBE?AUVector2D@@XZ PROC		; Raven_Bot::Facing, COMDAT
 ; _this$ = ecx
 
-; 152  :   Vector2D      Facing()const{return m_vFacing;}
+; 153  :   Vector2D      Facing()const{return m_vFacing;}
 
 	push	ebp
 	mov	ebp, esp
@@ -19189,7 +20022,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 208				; 000000d0H
+	add	eax, 216				; 000000d8H
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	mov	edx, DWORD PTR [eax]
 	mov	DWORD PTR [ecx], edx
@@ -29416,7 +30249,7 @@ ___formal$ = 8						; size = 4
 ___formal$ = 12						; size = 4
 ?__empty_global_delete@@YAXPAXI@Z PROC			; __empty_global_delete, COMDAT
 
-; 135  : }
+; 186  : }
 
 	push	ebp
 	mov	ebp, esp

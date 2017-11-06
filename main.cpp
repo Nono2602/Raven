@@ -53,6 +53,60 @@ int WeaponType(int nbRoulette) {
 	return res;
 }
 
+void choiceWeaponScrollUp(int& armeCourante, int nbArme) {
+	if (armeCourante >= nbArme) {
+		armeCourante = 0;
+	}
+	else {
+		armeCourante++;
+	}
+
+	int i = 0; //permet de savoir si on a fait le tour des armes possibles
+	while (g_pRaven->PossessedBot()->isWeaponChanged() != true && i != nbArme) { //permet d'eviter de faire trop de molette pour passer de l'arme 1 à 3 si le bot n'a pas l'arme 2
+		g_pRaven->ChangeWeaponOfPossessedBot(WeaponType(armeCourante));
+		if (armeCourante == nbArme) {
+			armeCourante = 0;
+		}
+		else {
+			armeCourante++;
+		}
+		i++;
+	}
+	if (armeCourante == 0) {
+		armeCourante = 3;
+	}
+	else {
+		armeCourante--;
+	}
+}
+
+void choiceWeaponScrollDown(int& armeCourante, int nbArme) {
+	if (armeCourante <= 0) {
+		armeCourante = nbArme;
+	}
+	else {
+		armeCourante--;
+	}
+
+	int i = 0; //permet de savoir si on a fait le tour des armes possibles
+	while (g_pRaven->PossessedBot()->isWeaponChanged() != true && i != nbArme) { //permet d'eviter de faire trop de molette pour passer de l'arme 1 à 3 si le bot n'a pas l'arme 2
+		g_pRaven->ChangeWeaponOfPossessedBot(WeaponType(armeCourante));
+		if (armeCourante == 0) {
+			armeCourante = nbArme;
+		}
+		else {
+			armeCourante--;
+		}
+		i++;
+	}
+	if (armeCourante == nbArme) {
+		armeCourante = 0;
+	}
+	else {
+		armeCourante++;
+	}
+}
+
 
 //---------------------------- WindowProc ---------------------------------
 //	
@@ -66,6 +120,7 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 {
 	//numero arme courante
 	static int armeCourante = 0; //type_blaster
+
 	//nombre arme differente possible au total
 	int nbArme = 3;
  
@@ -226,21 +281,12 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 
    case WM_MOUSEWHEEL: //change les armes avec la molette de la souris
    {
+	   g_pRaven->PossessedBot()->SetWeaponChanged(false);
 	   if ((short)HIWORD(wParam)/120 > 0) { //si la roulette est montee
-		   if (armeCourante >= nbArme) {
-			   armeCourante = 0;
-		   } else {
-			   armeCourante++;
-		   }
+		   choiceWeaponScrollUp(armeCourante,nbArme);
 	   } else if ((short)HIWORD(wParam)/120 < 0) { //si la roulette est descendue
-		   if (armeCourante <= 0) {
-			   armeCourante = nbArme;
-		   } else {
-			   armeCourante--;
-		   }
+		   choiceWeaponScrollDown(armeCourante, nbArme);
 	   }
-	   debug_con << "weapon : " << WeaponType(armeCourante) << "";
-	   g_pRaven->ChangeWeaponOfPossessedBot(WeaponType(armeCourante));
    }
    break;
 

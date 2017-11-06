@@ -10,14 +10,14 @@ INCLUDELIB LIBCMTD
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG170279 DB	'Pellet_MaxForce', 00H
-$SG170280 DB	'Pellet_Mass', 00H
-$SG170281 DB	'Pellet_MaxSpeed', 00H
-$SG170282 DB	'Pellet_Scale', 00H
+$SG170289 DB	'Pellet_MaxForce', 00H
+$SG170290 DB	'Pellet_Mass', 00H
+$SG170291 DB	'Pellet_MaxSpeed', 00H
+$SG170292 DB	'Pellet_Scale', 00H
 	ORG $+3
-$SG170283 DB	'Pellet_Damage', 00H
+$SG170293 DB	'Pellet_Damage', 00H
 	ORG $+2
-$SG170284 DB	'Pellet_Persistance', 00H
+$SG170294 DB	'Pellet_Persistance', 00H
 	ORG $+1
 ?colors@@3QBKB DD 0ffH					; colors
 	DD	0ff0000H
@@ -3928,7 +3928,7 @@ _this$ = -4						; size = 4
 ?GetMap@Raven_Game@@QAEQAVRaven_Map@@XZ PROC		; Raven_Game::GetMap, COMDAT
 ; _this$ = ecx
 
-; 163  :   Raven_Map* const                         GetMap(){return m_pMap;}
+; 164  :   Raven_Map* const                         GetMap(){return m_pMap;}
 
 	push	ebp
 	mov	ebp, esp
@@ -4016,7 +4016,7 @@ _this$ = -4						; size = 4
 ?GetWorld@Raven_Bot@@QAEQAVRaven_Game@@XZ PROC		; Raven_Bot::GetWorld, COMDAT
 ; _this$ = ecx
 
-; 204  :   Raven_Game* const                  GetWorld(){return m_pWorld;} 
+; 207  :   Raven_Game* const                  GetWorld(){return m_pWorld;} 
 
 	push	ebp
 	mov	ebp, esp
@@ -4039,7 +4039,7 @@ ___$ReturnUdt$ = 8					; size = 4
 ?Facing@Raven_Bot@@QBE?AUVector2D@@XZ PROC		; Raven_Bot::Facing, COMDAT
 ; _this$ = ecx
 
-; 152  :   Vector2D      Facing()const{return m_vFacing;}
+; 153  :   Vector2D      Facing()const{return m_vFacing;}
 
 	push	ebp
 	mov	ebp, esp
@@ -4047,7 +4047,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 208				; 000000d0H
+	add	eax, 216				; 000000d8H
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	mov	edx, DWORD PTR [eax]
 	mov	DWORD PTR [ecx], edx
@@ -5282,31 +5282,31 @@ _target$ = 12						; size = 16
 
 ; 21   :         Raven_Projectile(target,
 
-	push	OFFSET $SG170279
+	push	OFFSET $SG170289
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG170280
+	push	OFFSET $SG170290
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG170281
+	push	OFFSET $SG170291
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG170282
+	push	OFFSET $SG170292
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
 	sub	esp, 8
 	fstp	QWORD PTR [esp]
-	push	OFFSET $SG170283
+	push	OFFSET $SG170293
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetInt@Scriptor@@QAEHPAD@Z		; Scriptor::GetInt
@@ -5376,7 +5376,7 @@ _target$ = 12						; size = 16
 ; 31   : 
 ; 32   :         m_dTimeShotIsVisible(script->GetDouble("Pellet_Persistance"))
 
-	push	OFFSET $SG170284
+	push	OFFSET $SG170294
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -13533,8 +13533,6 @@ _TEXT	SEGMENT
 ___formal$ = 8						; size = 4
 ___formal$ = 12						; size = 4
 ?__empty_global_delete@@YAXPAXI@Z PROC			; __empty_global_delete, COMDAT
-
-; 121  : }
 
 	push	ebp
 	mov	ebp, esp

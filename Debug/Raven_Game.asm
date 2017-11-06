@@ -10,7 +10,7 @@ INCLUDELIB LIBCMTD
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG187069 DB	'Queuing', 00H
+$SG187077 DB	'Queuing', 00H
 ?colors@@3QBKB DD 0ffH					; colors
 	DD	0ff0000H
 	DD	0ff00H
@@ -26,15 +26,15 @@ $SG187069 DB	'Queuing', 00H
 	DD	0ffff00H
 	DD	0c8c8c8H
 	DD	0e6e6ffH
-$SG185470 DB	'Map has no spawn points!', 00H
+$SG185478 DB	'Map has no spawn points!', 00H
 	ORG $+3
-$SG183500 DB	'StartMap', 00H
+$SG183508 DB	'StartMap', 00H
 	ORG $+3
-$SG185649 DB	'GraveLifetime', 00H
+$SG185657 DB	'GraveLifetime', 00H
 	ORG $+2
-$SG185651 DB	'MaxSearchCyclesPerUpdateStep', 00H
+$SG185659 DB	'MaxSearchCyclesPerUpdateStep', 00H
 	ORG $+3
-$SG185654 DB	'NumBots', 00H
+$SG185662 DB	'NumBots', 00H
 CONST	ENDS
 PUBLIC	?__empty_global_delete@@YAXPAX@Z		; __empty_global_delete
 PUBLIC	?__empty_global_delete@@YAXPAXI@Z		; __empty_global_delete
@@ -29463,7 +29463,7 @@ $LN2@AddBots:
 ; 263  :     //not be rendered until it is spawned)
 ; 264  :     Raven_Bot* rb = new Raven_Bot(this, Vector2D());
 
-	push	272					; 00000110H
+	push	280					; 00000118H
 	call	??2@YAPAXI@Z				; operator new
 	add	esp, 4
 	mov	DWORD PTR $T3[ebp], eax
@@ -29585,7 +29585,7 @@ $LN8@AddBots:
 _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?AddBots@Raven_Game@@QAEXI@Z$0:
-	push	272					; 00000110H
+	push	280					; 00000118H
 	mov	eax, DWORD PTR $T3[ebp]
 	push	eax
 	call	??3@YAXPAXI@Z				; operator delete
@@ -29785,7 +29785,7 @@ $LN9@LoadMap:
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	cmp	DWORD PTR $T6[ebp], 0
 	je	SHORT $LN10@LoadMap
-	push	OFFSET $SG185649
+	push	OFFSET $SG185657
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -29814,7 +29814,7 @@ $LN11@LoadMap:
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 	cmp	DWORD PTR $T4[ebp], 0
 	je	SHORT $LN12@LoadMap
-	push	OFFSET $SG185651
+	push	OFFSET $SG185659
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetInt@Scriptor@@QAEHPAD@Z		; Scriptor::GetInt
@@ -29881,7 +29881,7 @@ $LN15@LoadMap:
 ; 413  :   { 
 ; 414  :     AddBots(script->GetInt("NumBots"));
 
-	push	OFFSET $SG185654
+	push	OFFSET $SG185662
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetInt@Scriptor@@QAEHPAD@Z		; Scriptor::GetInt
@@ -31376,7 +31376,7 @@ $LN23@Render:
 
 ; 816  :       gdi->TextAtPos(GetClientCursorPosition(), "Queuing");
 
-	push	OFFSET $SG187069
+	push	OFFSET $SG187077
 	lea	ecx, DWORD PTR $T16[ebp]
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 7
@@ -31743,7 +31743,7 @@ __$EHRec$ = -12						; size = 12
 ; 44   :   //load in the default map
 ; 45   :   LoadMap(script->GetString("StartMap"));
 
-	push	OFFSET $SG183500
+	push	OFFSET $SG183508
 	lea	eax, DWORD PTR $T2[ebp]
 	push	eax
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
@@ -32024,7 +32024,7 @@ _pBot$ = 8						; size = 4
 ; 205  :   {
 ; 206  :     ErrorBox("Map has no spawn points!"); return false;
 
-	push	OFFSET $SG185470
+	push	OFFSET $SG185478
 	call	?ErrorBox@@YAXPAD@Z			; ErrorBox
 	add	esp, 4
 	xor	al, al
@@ -38259,7 +38259,7 @@ _this$ = -4						; size = 4
 ?GetSensoryMem@Raven_Bot@@QBEQAVRaven_SensoryMemory@@XZ PROC ; Raven_Bot::GetSensoryMem, COMDAT
 ; _this$ = ecx
 
-; 212  :   Raven_SensoryMemory* const         GetSensoryMem()const{return m_pSensoryMem;}
+; 215  :   Raven_SensoryMemory* const         GetSensoryMem()const{return m_pSensoryMem;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38281,7 +38281,7 @@ _this$ = -4						; size = 4
 ?GetWeaponSys@Raven_Bot@@QBEQAVRaven_WeaponSystem@@XZ PROC ; Raven_Bot::GetWeaponSys, COMDAT
 ; _this$ = ecx
 
-; 211  :   Raven_WeaponSystem* const          GetWeaponSys()const{return m_pWeaponSys;}
+; 214  :   Raven_WeaponSystem* const          GetWeaponSys()const{return m_pWeaponSys;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38303,7 +38303,7 @@ _this$ = -4						; size = 4
 ?GetTargetBot@Raven_Bot@@QBEQAV1@XZ PROC		; Raven_Bot::GetTargetBot, COMDAT
 ; _this$ = ecx
 
-; 210  :   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
+; 213  :   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
 
 	push	ebp
 	mov	ebp, esp
@@ -38329,7 +38329,7 @@ _this$ = -4						; size = 4
 ?GetBrain@Raven_Bot@@QAEQAVGoal_Think@@XZ PROC		; Raven_Bot::GetBrain, COMDAT
 ; _this$ = ecx
 
-; 207  :   Goal_Think* const                  GetBrain(){return m_pBrain;}
+; 210  :   Goal_Think* const                  GetBrain(){return m_pBrain;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38351,7 +38351,7 @@ _this$ = -4						; size = 4
 ?GetSteering@Raven_Bot@@QAEQAVRaven_Steering@@XZ PROC	; Raven_Bot::GetSteering, COMDAT
 ; _this$ = ecx
 
-; 205  :   Raven_Steering* const              GetSteering(){return m_pSteering;}
+; 208  :   Raven_Steering* const              GetSteering(){return m_pSteering;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38374,7 +38374,7 @@ _poss$ = 8						; size = 1
 ?SetIsPossessed@Raven_Bot@@QAEX_N@Z PROC		; Raven_Bot::SetIsPossessed, COMDAT
 ; _this$ = ecx
 
-; 163  :   void          SetIsPossessed(bool poss) { m_bPossessed = poss; }
+; 165  :   void          SetIsPossessed(bool poss) { m_bPossessed = poss; }
 
 	push	ebp
 	mov	ebp, esp
@@ -38383,7 +38383,7 @@ _poss$ = 8						; size = 1
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	cl, BYTE PTR _poss$[ebp]
-	mov	BYTE PTR [eax+237], cl
+	mov	BYTE PTR [eax+245], cl
 	mov	esp, ebp
 	pop	ebp
 	ret	4
@@ -38397,7 +38397,7 @@ _this$ = -4						; size = 4
 ?SetSpawning@Raven_Bot@@QAEXXZ PROC			; Raven_Bot::SetSpawning, COMDAT
 ; _this$ = ecx
 
-; 160  :   void          SetSpawning(){m_Status = spawning;}
+; 162  :   void          SetSpawning(){m_Status = spawning;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38420,7 +38420,7 @@ _this$ = -4						; size = 4
 ?isSpawning@Raven_Bot@@QBE_NXZ PROC			; Raven_Bot::isSpawning, COMDAT
 ; _this$ = ecx
 
-; 158  :   bool          isSpawning()const{return m_Status == spawning;}
+; 159  :   bool          isSpawning()const{return m_Status == spawning;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38451,7 +38451,7 @@ _this$ = -4						; size = 4
 ?isAlive@Raven_Bot@@QBE_NXZ PROC			; Raven_Bot::isAlive, COMDAT
 ; _this$ = ecx
 
-; 157  :   bool          isAlive()const{return m_Status == alive;}
+; 158  :   bool          isAlive()const{return m_Status == alive;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38482,7 +38482,7 @@ _this$ = -4						; size = 4
 ?isDead@Raven_Bot@@QBE_NXZ PROC				; Raven_Bot::isDead, COMDAT
 ; _this$ = ecx
 
-; 156  :   bool          isDead()const{return m_Status == dead;}
+; 157  :   bool          isDead()const{return m_Status == dead;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38512,7 +38512,7 @@ _this$ = -4						; size = 4
 ?isPossessed@Raven_Bot@@QBE_NXZ PROC			; Raven_Bot::isPossessed, COMDAT
 ; _this$ = ecx
 
-; 155  :   bool          isPossessed()const{return m_bPossessed;}
+; 156  :   bool          isPossessed()const{return m_bPossessed;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38520,7 +38520,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	al, BYTE PTR [eax+237]
+	mov	al, BYTE PTR [eax+245]
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -38534,7 +38534,7 @@ _this$ = -4						; size = 4
 ?FieldOfView@Raven_Bot@@QBENXZ PROC			; Raven_Bot::FieldOfView, COMDAT
 ; _this$ = ecx
 
-; 153  :   double        FieldOfView()const{return m_dFieldOfView;}
+; 154  :   double        FieldOfView()const{return m_dFieldOfView;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38542,7 +38542,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	fld	QWORD PTR [eax+224]
+	fld	QWORD PTR [eax+232]
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -38557,7 +38557,7 @@ ___$ReturnUdt$ = 8					; size = 4
 ?Facing@Raven_Bot@@QBE?AUVector2D@@XZ PROC		; Raven_Bot::Facing, COMDAT
 ; _this$ = ecx
 
-; 152  :   Vector2D      Facing()const{return m_vFacing;}
+; 153  :   Vector2D      Facing()const{return m_vFacing;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38565,7 +38565,7 @@ ___$ReturnUdt$ = 8					; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	add	eax, 208				; 000000d0H
+	add	eax, 216				; 000000d8H
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	mov	edx, DWORD PTR [eax]
 	mov	DWORD PTR [ecx], edx

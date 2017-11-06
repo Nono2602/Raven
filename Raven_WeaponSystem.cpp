@@ -165,7 +165,10 @@ void Raven_WeaponSystem::ChangeWeapon(unsigned int type)
 {
   Raven_Weapon* w = GetWeaponFromInventory(type);
 
-  if (w) m_pCurrentWeapon = w;
+  if (w) {
+	  m_pCurrentWeapon = w;
+	  m_pOwner->SetWeaponChanged(true);
+  }
 }
 
 //--------------------------- TakeAimAndShoot ---------------------------------

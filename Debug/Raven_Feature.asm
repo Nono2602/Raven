@@ -27,12 +27,12 @@ CONST	SEGMENT
 	DD	0ffff00H
 	DD	0c8c8c8H
 	DD	0e6e6ffH
-$SG177153 DB	'RailGun_MaxRoundsCarried', 00H
+$SG177161 DB	'RailGun_MaxRoundsCarried', 00H
 	ORG $+3
-$SG177155 DB	'RocketLauncher_MaxRoundsCarried', 00H
-$SG177157 DB	'ShotGun_MaxRoundsCarried', 00H
+$SG177163 DB	'RocketLauncher_MaxRoundsCarried', 00H
+$SG177165 DB	'ShotGun_MaxRoundsCarried', 00H
 	ORG $+3
-$SG177160 DB	'trying to calculate  of unknown weapon', 00H
+$SG177168 DB	'trying to calculate  of unknown weapon', 00H
 CONST	ENDS
 PUBLIC	?__empty_global_delete@@YAXPAX@Z		; __empty_global_delete
 PUBLIC	?__empty_global_delete@@YAXPAXI@Z		; __empty_global_delete
@@ -2371,7 +2371,7 @@ $LN4@GetMaxRoun:
 ; 40   : 
 ; 41   :     return script->GetDouble("RailGun_MaxRoundsCarried");
 
-	push	OFFSET $SG177153
+	push	OFFSET $SG177161
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -2383,7 +2383,7 @@ $LN5@GetMaxRoun:
 ; 44   : 
 ; 45   :     return script->GetDouble("RocketLauncher_MaxRoundsCarried");
 
-	push	OFFSET $SG177155
+	push	OFFSET $SG177163
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -2395,7 +2395,7 @@ $LN6@GetMaxRoun:
 ; 48   : 
 ; 49   :     return script->GetDouble("ShotGun_MaxRoundsCarried");
 
-	push	OFFSET $SG177157
+	push	OFFSET $SG177165
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -2407,7 +2407,7 @@ $LN7@GetMaxRoun:
 ; 52   : 
 ; 53   :     throw std::runtime_error("trying to calculate  of unknown weapon");
 
-	push	OFFSET $SG177160
+	push	OFFSET $SG177168
 	lea	ecx, DWORD PTR $T1[ebp]
 	call	??0runtime_error@std@@QAE@PBD@Z		; std::runtime_error::runtime_error
 	push	OFFSET __TI2?AVruntime_error@std@@
@@ -2913,7 +2913,7 @@ _this$ = -4						; size = 4
 ?GetWeaponSys@Raven_Bot@@QBEQAVRaven_WeaponSystem@@XZ PROC ; Raven_Bot::GetWeaponSys, COMDAT
 ; _this$ = ecx
 
-; 211  :   Raven_WeaponSystem* const          GetWeaponSys()const{return m_pWeaponSys;}
+; 214  :   Raven_WeaponSystem* const          GetWeaponSys()const{return m_pWeaponSys;}
 
 	push	ebp
 	mov	ebp, esp
@@ -2935,7 +2935,7 @@ _this$ = -4						; size = 4
 ?GetPathPlanner@Raven_Bot@@QAEQAVRaven_PathPlanner@@XZ PROC ; Raven_Bot::GetPathPlanner, COMDAT
 ; _this$ = ecx
 
-; 206  :   Raven_PathPlanner* const           GetPathPlanner(){return m_pPathPlanner;}
+; 209  :   Raven_PathPlanner* const           GetPathPlanner(){return m_pPathPlanner;}
 
 	push	ebp
 	mov	ebp, esp
@@ -2957,7 +2957,7 @@ _this$ = -4						; size = 4
 ?MaxHealth@Raven_Bot@@QBEHXZ PROC			; Raven_Bot::MaxHealth, COMDAT
 ; _this$ = ecx
 
-; 144  :   int           MaxHealth()const{return m_iMaxHealth;}
+; 145  :   int           MaxHealth()const{return m_iMaxHealth;}
 
 	push	ebp
 	mov	ebp, esp
@@ -2965,7 +2965,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [eax+200]
+	mov	eax, DWORD PTR [eax+204]
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2979,7 +2979,7 @@ _this$ = -4						; size = 4
 ?Health@Raven_Bot@@QBEHXZ PROC				; Raven_Bot::Health, COMDAT
 ; _this$ = ecx
 
-; 143  :   int           Health()const{return m_iHealth;}
+; 144  :   int           Health()const{return m_iHealth;}
 
 	push	ebp
 	mov	ebp, esp
@@ -2987,7 +2987,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	eax, DWORD PTR [eax+196]
+	mov	eax, DWORD PTR [eax+200]
 	mov	esp, ebp
 	pop	ebp
 	ret	0
