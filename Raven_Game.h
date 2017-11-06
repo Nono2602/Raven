@@ -47,6 +47,9 @@ private:
   //the user may select a bot to control manually. This is a pointer to that
   //bot
   Raven_Bot*                       m_pSelectedBot;
+
+  //check if there is a human in the game
+  bool							   m_thereIsAHuman;
   
   //this list contains any active projectiles (slugs, rockets,
   //shotgun pellets, etc)
@@ -93,6 +96,7 @@ public:
   //loads an environment from a file
   bool LoadMap(const std::string& FileName); 
 
+  void CreateHumanBot(Raven_Bot* rb);
   void AddBots(unsigned int NumBotsToAdd);
   void AddRocket(Raven_Bot* shooter, Vector2D target);
   void AddRailGunSlug(Raven_Bot* shooter, Vector2D target);
@@ -101,6 +105,8 @@ public:
 
   //removes the last bot to be added
   void RemoveBot();
+
+  bool         isThereAHuman()const { return m_thereIsAHuman; }
 
   //returns true if a bot of size BoundingRadius cannot move from A to B
   //without bumping into world geometry
