@@ -99,6 +99,7 @@ void Raven_Game::Clear()
 
 
 }
+// bool test = true;
 
 //-------------------------------- Update -------------------------------------
 //
@@ -106,6 +107,10 @@ void Raven_Game::Clear()
 //-----------------------------------------------------------------------------
 void Raven_Game::Update()
 { 
+	/*if (test) {
+		ExorciseAnyPossessedBot();
+		test = !test;
+	}*/
   //don't update if the user has paused the game
   if (m_bPaused) return;
 
@@ -113,6 +118,7 @@ void Raven_Game::Update()
 
   //get any player keyboard input
   GetPlayerInput();
+
   
   //update all the queued searches in the path manager
   m_pPathManager->UpdateSearches();

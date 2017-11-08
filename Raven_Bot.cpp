@@ -438,7 +438,7 @@ bool Raven_Bot::canWalkBetween(Vector2D from, Vector2D to)const
 //-----------------------------------------------------------------------------
 bool Raven_Bot::canStepLeft(Vector2D& PositionOfStep)const
 {
-  static const double StepDistance = BRadius() * 2;
+  static const double StepDistance = BRadius() * script->GetDouble("Bot_Strafe_Ratio");
 
   PositionOfStep = Pos() - Facing().Perp() * StepDistance - Facing().Perp() * BRadius();
 
@@ -447,7 +447,7 @@ bool Raven_Bot::canStepLeft(Vector2D& PositionOfStep)const
 
 bool Raven_Bot::canStepRight(Vector2D& PositionOfStep)const
 {
-  static const double StepDistance = BRadius() * 2;
+  static const double StepDistance = BRadius() * script->GetDouble("Bot_Strafe_Ratio");
 
   PositionOfStep = Pos() + Facing().Perp() * StepDistance + Facing().Perp() * BRadius();
 
@@ -456,7 +456,7 @@ bool Raven_Bot::canStepRight(Vector2D& PositionOfStep)const
 
 bool Raven_Bot::canStepForward(Vector2D& PositionOfStep)const
 {
-  static const double StepDistance = BRadius() * 2;
+  static const double StepDistance = BRadius() * script->GetDouble("Bot_Strafe_Ratio");
 
   PositionOfStep = Pos() + Facing() * StepDistance + Facing() * BRadius();
 
@@ -465,7 +465,7 @@ bool Raven_Bot::canStepForward(Vector2D& PositionOfStep)const
 
 bool Raven_Bot::canStepBackward(Vector2D& PositionOfStep)const
 {
-  static const double StepDistance = BRadius() * 2;
+  static const double StepDistance = BRadius() * script->GetDouble("Bot_Strafe_Ratio");
 
   PositionOfStep = Pos() - Facing() * StepDistance - Facing() * BRadius();
 

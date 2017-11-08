@@ -30,6 +30,7 @@ Bot_Mass      = 1
 Bot_MaxForce  = 1.0
 Bot_MaxHeadTurnRate = 0.2
 Bot_Scale       = 0.8
+Bot_Strafe_Ratio = 2
 
 --special movement speeds (unused)
 Bot_MaxSwimmingSpeed = Bot_MaxSpeed * 0.2
