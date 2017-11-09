@@ -77,6 +77,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{f3f5ab42-49d8-4348-aa63-66655abd9be1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\Team Management">
+      <UniqueIdentifier>{af85dcab-e175-470b-8a44-294f2c9a3744}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -270,6 +273,12 @@
     </ClCompile>
     <ClCompile Include="goals\Goal_SafeDodge.cpp">
       <Filter>AI\goals\atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="Raven_TeamManager.cpp">
+      <Filter>AI\Team Management</Filter>
+    </ClCompile>
+    <ClCompile Include="Raven_Teammate.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -611,6 +620,12 @@
     </ClInclude>
     <ClInclude Include="goals\Goal_SafeDodge.h">
       <Filter>AI\goals\atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="Raven_TeamManager.h">
+      <Filter>AI\Team Management</Filter>
+    </ClInclude>
+    <ClInclude Include="Raven_Teammate.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
