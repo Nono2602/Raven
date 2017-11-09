@@ -15,6 +15,7 @@
 //-----------------------------------------------------------------------------
 void Goal_SafeDodge::Activate()
 {
+  static const double StepDistance = m_pOwner->BRadius()*3;
   m_iStatus = active;
 
   m_pOwner->GetSteering()->SeekOn();
@@ -22,7 +23,8 @@ void Goal_SafeDodge::Activate()
   
     if (m_bClockwise)
     {
-      if (m_pOwner->canStepRight(m_vStrafeTarget))
+		m_vStrafeTarget = m_pOwner->Pos() + m_pOwner->Facing().Perp() * StepDistance + m_pOwner->Facing() * m_pOwner->BRadius()*2;
+		if (m_pOwner->canWalkTo (m_vStrafeTarget))
       {
         m_pOwner->GetSteering()->SetTarget(m_vStrafeTarget);
       }
@@ -36,7 +38,8 @@ void Goal_SafeDodge::Activate()
 
     else
     {
-      if (m_pOwner->canStepLeft(m_vStrafeTarget))
+		m_vStrafeTarget = m_pOwner->Pos() - m_pOwner->Facing().Perp() * StepDistance + m_pOwner->Facing() * m_pOwner->BRadius()*2;
+      if (m_pOwner->canWalkTo(m_vStrafeTarget))
       {
         m_pOwner->GetSteering()->SetTarget(m_vStrafeTarget);
       }

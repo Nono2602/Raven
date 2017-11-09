@@ -99,7 +99,7 @@ void Raven_Game::Clear()
 
 
 }
-// bool test = true;
+ bool test = true;
 
 //-------------------------------- Update -------------------------------------
 //
@@ -107,10 +107,10 @@ void Raven_Game::Clear()
 //-----------------------------------------------------------------------------
 void Raven_Game::Update()
 { 
-	/*if (test) {
+	if (test) {
 		ExorciseAnyPossessedBot();
 		test = !test;
-	}*/
+	}
   //don't update if the user has paused the game
   if (m_bPaused) return;
 
