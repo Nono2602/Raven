@@ -1,7 +1,7 @@
 #include "Goal_FollowPath.h"
 #include "../Raven_Bot.h"
 #include "../Raven_Game.h"
-
+#include "Goal_SafeDodge.h"
 #include "Goal_TraverseEdge.h"
 #include "Goal_NegotiateDoor.h"
 #include "misc/cgdi.h"
@@ -23,7 +23,7 @@ Goal_FollowPath(Raven_Bot*          pBot,
 void Goal_FollowPath::Activate()
 {
   m_iStatus = active;
-  
+
   //get a reference to the next edge
   PathEdge edge = m_Path.front();
 
@@ -37,6 +37,13 @@ void Goal_FollowPath::Activate()
   {
   case NavGraphEdge::normal:
     {
+	  //if the bot has space to strafe then do so
+	  Vector2D dummy;
+	  int random_strafe = RandInt(0, 1);
+	  if (random_strafe ==0)
+	  {
+		  AddSubgoal(new Goal_SafeDodge(m_pOwner));
+	  }
       AddSubgoal(new Goal_TraverseEdge(m_pOwner, edge, m_Path.empty()));
     }
 
@@ -69,6 +76,8 @@ void Goal_FollowPath::Activate()
 
     throw std::runtime_error("<Goal_FollowPath::Activate>: Unrecognized edge type");
   }
+
+ 
 }
 
 

@@ -32,11 +32,11 @@ class Raven_SensoryMemory;
 
 class Raven_Bot : public MovingEntity
 {
-private:
+protected:
 
   enum Status{alive, dead, spawning};
 
-private:
+protected:
 
   //alive, dead or spawning?
   Status                             m_Status;
@@ -130,11 +130,11 @@ public:
   virtual ~Raven_Bot();
 
   //the usual suspects
-  void         Render();
-  void         Update();
-  bool         HandleMessage(const Telegram& msg);
-  void         Write(std::ostream&  os)const{/*not implemented*/}
-  void         Read (std::ifstream& is){/*not implemented*/}
+  void			Render();
+  virtual void	Update();
+  virtual bool	HandleMessage(const Telegram& msg);
+  void			Write(std::ostream&  os)const{/*not implemented*/}
+  void			Read (std::ifstream& is){/*not implemented*/}
 
   //this rotates the bot's heading until it is facing directly at the target
   //position. Returns false if not facing at the target.

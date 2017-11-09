@@ -11,6 +11,7 @@
 //-----------------------------------------------------------------------------
 #include "Goals/Goal_Composite.h"
 #include "Raven_Goal_Types.h"
+#include "Goal_DodgeSideToSide.h"
 #include "../Raven_Bot.h"
 #include "../navigation/Raven_PathPlanner.h"
 #include "../navigation/PathEdge.h"

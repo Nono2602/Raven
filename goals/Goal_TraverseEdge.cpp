@@ -10,7 +10,7 @@
 
 
 #include "debug/DebugConsole.h"
-
+#include "Goal_DodgeSideToSide.h"
 
 
 //---------------------------- ctor -------------------------------------------
@@ -91,13 +91,11 @@ int Goal_TraverseEdge::Process()
 {
   //if status is inactive, call Activate()
   ActivateIfInactive();
-  
   //if the bot has become stuck return failure
   if (isStuck())
   {
     m_iStatus = failed;
   }
-  
   //if the bot has reached the end of the edge return completed
   else
   { 

@@ -44,6 +44,7 @@ Raven_Game::Raven_Game():m_pSelectedBot(NULL),
 {
   //load in the default map
   LoadMap(script->GetString("StartMap"));
+  m_Team = new Raven_TeamManager(Vector2D());
 }
 
 
@@ -53,6 +54,7 @@ Raven_Game::~Raven_Game()
 {
   Clear();
   delete m_pPathManager;
+  delete m_Team;
   delete m_pMap;
   
   delete m_pGraveMarkers;
@@ -100,6 +102,7 @@ void Raven_Game::Clear()
 
 
 }
+// bool test = true;
 
 //-------------------------------- Update -------------------------------------
 //
@@ -107,6 +110,10 @@ void Raven_Game::Clear()
 //-----------------------------------------------------------------------------
 void Raven_Game::Update()
 { 
+	/*if (test) {
+		ExorciseAnyPossessedBot();
+		test = !test;
+	}*/
   //don't update if the user has paused the game
   if (m_bPaused) return;
 
@@ -114,6 +121,7 @@ void Raven_Game::Update()
 
   //get any player keyboard input
   GetPlayerInput();
+
   
   //update all the queued searches in the path manager
   m_pPathManager->UpdateSearches();
@@ -286,6 +294,11 @@ void Raven_Game::AddBots(unsigned int NumBotsToAdd)
   }
 }
 
+void Raven_Game::AddTeammates(unsigned int NumBotsToAdd)
+{
+	/*** TO DO ***/
+}
+
 //---------------------------- NotifyAllBotsOfRemoval -------------------------
 //
 //  when a bot is removed from the game by a user all remianing bots
@@ -312,6 +325,11 @@ void Raven_Game::NotifyAllBotsOfRemoval(Raven_Bot* pRemovedBot)const
 void Raven_Game::RemoveBot()
 {
   m_bRemoveABot = true;
+}
+
+void Raven_Game::RemoveTeammate()
+{
+	/*** TO DO ***/
 }
 
 //--------------------------- AddBolt -----------------------------------------
