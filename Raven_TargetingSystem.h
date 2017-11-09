@@ -39,33 +39,36 @@ public:
   //if there are no opponents that have had their memory records updated
   //within the memory span of the owner then the current target is set
   //to null
-  void       Update();
+  void			Update();
 
   //returns true if there is a currently assigned target
-  bool       isTargetPresent()const{return m_pCurrentTarget != 0;}
+  bool			isTargetPresent()const{return m_pCurrentTarget != 0;}
 
   //returns true if the target is within the field of view of the owner
-  bool       isTargetWithinFOV()const;
+  bool			isTargetWithinFOV()const;
 
   //returns true if there is unobstructed line of sight between the target
   //and the owner
-  bool       isTargetShootable()const;
+  bool			isTargetShootable()const;
 
   //returns the position the target was last seen. Throws an exception if
   //there is no target currently assigned
-  Vector2D   GetLastRecordedPosition()const;
+  Vector2D		GetLastRecordedPosition()const;
 
   //returns the amount of time the target has been in the field of view
-  double      GetTimeTargetHasBeenVisible()const;
+  double		GetTimeTargetHasBeenVisible()const;
 
   //returns the amount of time the target has been out of view
-  double      GetTimeTargetHasBeenOutOfView()const;
+  double		GetTimeTargetHasBeenOutOfView()const;
+
+  //sets a specific target.
+  void			SetTarget(Raven_Bot* pNewTarget) { m_pCurrentTarget = pNewTarget; }
   
   //returns a pointer to the target. null if no target current.
-  Raven_Bot* GetTarget()const{return m_pCurrentTarget;}
+  Raven_Bot*	GetTarget()const{return m_pCurrentTarget;}
 
   //sets the target pointer to null
-  void       ClearTarget(){m_pCurrentTarget=0;}
+  void			ClearTarget(){m_pCurrentTarget=0;}
 };
 
 

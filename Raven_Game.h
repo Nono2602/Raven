@@ -24,6 +24,7 @@
 #include "misc/utils.h"
 #include "game/EntityFunctionTemplates.h"
 #include "Raven_Bot.h"
+#include "Raven_TeamManager.h"
 #include "navigation/pathmanager.h"
 
 
@@ -39,35 +40,38 @@ class Raven_Game
 private:
 
   //the current game map
-  Raven_Map*                       m_pMap;
+  Raven_Map*						m_pMap;
  
   //a list of all the bots that are inhabiting the map
-  std::list<Raven_Bot*>            m_Bots;
+  std::list<Raven_Bot*>				m_Bots;
+
+  //the user can create a Raven bots team that will target an enemy bot
+  Raven_TeamManager*				m_Team;
 
   //the user may select a bot to control manually. This is a pointer to that
   //bot
-  Raven_Bot*                       m_pSelectedBot;
+  Raven_Bot*						m_pSelectedBot;
 
   //check if there is a human in the game
-  bool							   m_thereIsAHuman;
+  bool								m_thereIsAHuman;
   
   //this list contains any active projectiles (slugs, rockets,
   //shotgun pellets, etc)
-  std::list<Raven_Projectile*>     m_Projectiles;
+  std::list<Raven_Projectile*>		m_Projectiles;
 
   //this class manages all the path planning requests
-  PathManager<Raven_PathPlanner>*  m_pPathManager;
+  PathManager<Raven_PathPlanner>*	m_pPathManager;
 
 
   //if true the game will be paused
-  bool                             m_bPaused;
+  bool								m_bPaused;
 
   //if true a bot is removed from the game
-  bool                             m_bRemoveABot;
+  bool								m_bRemoveABot;
 
   //when a bot is killed a "grave" is displayed for a few seconds. This
   //class manages the graves
-  GraveMarkers*                    m_pGraveMarkers;
+  GraveMarkers*						m_pGraveMarkers;
 
   //this iterates through each trigger, testing each one against each bot
   void  UpdateTriggers();
@@ -98,6 +102,7 @@ public:
 
   void CreateHumanBot(Raven_Bot* rb);
   void AddBots(unsigned int NumBotsToAdd);
+  void AddTeammates(unsigned int NumBotsToAdd);
   void AddRocket(Raven_Bot* shooter, Vector2D target);
   void AddRailGunSlug(Raven_Bot* shooter, Vector2D target);
   void AddShotGunPellet(Raven_Bot* shooter, Vector2D target);
@@ -105,6 +110,7 @@ public:
 
   //removes the last bot to be added
   void RemoveBot();
+  void RemoveTeammate();
 
   bool         isThereAHuman()const { return m_thereIsAHuman; }
 
