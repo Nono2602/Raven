@@ -10,7 +10,7 @@ INCLUDELIB LIBCMTD
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG187077 DB	'Queuing', 00H
+$SG187102 DB	'Queuing', 00H
 ?colors@@3QBKB DD 0ffH					; colors
 	DD	0ff0000H
 	DD	0ff00H
@@ -26,15 +26,15 @@ $SG187077 DB	'Queuing', 00H
 	DD	0ffff00H
 	DD	0c8c8c8H
 	DD	0e6e6ffH
-$SG185478 DB	'Map has no spawn points!', 00H
+$SG185482 DB	'Map has no spawn points!', 00H
 	ORG $+3
-$SG183508 DB	'StartMap', 00H
+$SG183512 DB	'StartMap', 00H
 	ORG $+3
-$SG185657 DB	'GraveLifetime', 00H
+$SG185661 DB	'GraveLifetime', 00H
 	ORG $+2
-$SG185659 DB	'MaxSearchCyclesPerUpdateStep', 00H
+$SG185663 DB	'MaxSearchCyclesPerUpdateStep', 00H
 	ORG $+3
-$SG185662 DB	'NumBots', 00H
+$SG185666 DB	'NumBots', 00H
 CONST	ENDS
 PUBLIC	?__empty_global_delete@@YAXPAX@Z		; __empty_global_delete
 PUBLIC	?__empty_global_delete@@YAXPAXI@Z		; __empty_global_delete
@@ -190,6 +190,7 @@ PUBLIC	?isPossessed@Raven_Bot@@QBE_NXZ			; Raven_Bot::isPossessed
 PUBLIC	?isDead@Raven_Bot@@QBE_NXZ			; Raven_Bot::isDead
 PUBLIC	?isAlive@Raven_Bot@@QBE_NXZ			; Raven_Bot::isAlive
 PUBLIC	?isSpawning@Raven_Bot@@QBE_NXZ			; Raven_Bot::isSpawning
+PUBLIC	?isPathPlanner@Raven_Bot@@QBEPAVRaven_PathPlanner@@XZ ; Raven_Bot::isPathPlanner
 PUBLIC	?SetSpawning@Raven_Bot@@QAEXXZ			; Raven_Bot::SetSpawning
 PUBLIC	?SetIsPossessed@Raven_Bot@@QAEX_N@Z		; Raven_Bot::SetIsPossessed
 PUBLIC	?GetSteering@Raven_Bot@@QAEQAVRaven_Steering@@XZ ; Raven_Bot::GetSteering
@@ -318,6 +319,7 @@ PUBLIC	?isLOSOkay@Raven_Game@@QBE_NUVector2D@@0@Z	; Raven_Game::isLOSOkay
 PUBLIC	?GetPosOfClosestSwitch@Raven_Game@@QBE?AUVector2D@@U2@I@Z ; Raven_Game::GetPosOfClosestSwitch
 PUBLIC	?GetBotAtPosition@Raven_Game@@QBEPAVRaven_Bot@@UVector2D@@@Z ; Raven_Game::GetBotAtPosition
 PUBLIC	?ClickRightMouseButton@Raven_Game@@QAEXUtagPOINTS@@@Z ; Raven_Game::ClickRightMouseButton
+PUBLIC	?ChangePositionHumanBot@Raven_Game@@QAEXXZ	; Raven_Game::ChangePositionHumanBot
 PUBLIC	?ClickLeftMouseButton@Raven_Game@@QAEXUtagPOINTS@@@Z ; Raven_Game::ClickLeftMouseButton
 PUBLIC	?ExorciseAnyPossessedBot@Raven_Game@@QAEXXZ	; Raven_Game::ExorciseAnyPossessedBot
 PUBLIC	?GetPlayerInput@Raven_Game@@QBEXXZ		; Raven_Game::GetPlayerInput
@@ -897,6 +899,7 @@ PUBLIC	__real@4000000000000000
 PUBLIC	__real@4049000000000000
 PUBLIC	__real@7f7fffff
 PUBLIC	__real@7fefffffffffffff
+PUBLIC	__real@bff0000000000000
 EXTRN	??2@YAPAXI@Z:PROC				; operator new
 EXTRN	??3@YAXPAX@Z:PROC				; operator delete
 EXTRN	??3@YAXPAXI@Z:PROC				; operator delete
@@ -948,6 +951,7 @@ EXTRN	??1Raven_Map@@QAE@XZ:PROC			; Raven_Map::~Raven_Map
 EXTRN	?Render@Raven_Map@@QAEXXZ:PROC			; Raven_Map::Render
 EXTRN	?LoadMap@Raven_Map@@QAE_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z:PROC ; Raven_Map::LoadMap
 EXTRN	?UpdateTriggerSystem@Raven_Map@@QAEXAAV?$list@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@@Z:PROC ; Raven_Map::UpdateTriggerSystem
+EXTRN	?RequestPathToPosition@Raven_PathPlanner@@QAE_NUVector2D@@@Z:PROC ; Raven_PathPlanner::RequestPathToPosition
 EXTRN	?CycleOnce@Raven_PathPlanner@@QBEHXZ:PROC	; Raven_PathPlanner::CycleOnce
 EXTRN	?Instance@EntityManager@@SAPAV1@XZ:PROC		; EntityManager::Instance
 EXTRN	?RegisterEntity@EntityManager@@QAEXPAVBaseGameEntity@@@Z:PROC ; EntityManager::RegisterEntity
@@ -1008,6 +1012,10 @@ _BSS	ENDS
 CRT$XCU	SEGMENT
 ?MaxInt$initializer$@@3P6AXXZA DD FLAT:??__EMaxInt@@YAXXZ ; MaxInt$initializer$
 CRT$XCU	ENDS
+;	COMDAT __real@bff0000000000000
+CONST	SEGMENT
+__real@bff0000000000000 DQ 0bff0000000000000r	; -1
+CONST	ENDS
 ;	COMDAT __real@7fefffffffffffff
 CONST	SEGMENT
 __real@7fefffffffffffff DQ 07fefffffffffffffr	; 1.79769e+308
@@ -26928,7 +26936,7 @@ _weapon$ = 8						; size = 4
 ?ChangeWeaponOfPossessedBot@Raven_Game@@QBEXI@Z PROC	; Raven_Game::ChangeWeaponOfPossessedBot
 ; _this$ = ecx
 
-; 525  : {
+; 551  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -26937,15 +26945,15 @@ _weapon$ = 8						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 526  :   //ensure one of the bots has been possessed
-; 527  :   if (m_pSelectedBot)
+; 552  :   //ensure one of the bots has been possessed
+; 553  :   if (m_pSelectedBot)
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+16], 0
 	je	SHORT $LN1@ChangeWeap
 
-; 528  :   {
-; 529  :     switch(weapon)
+; 554  :   {
+; 555  :     switch(weapon)
 
 	mov	ecx, DWORD PTR _weapon$[ebp]
 	mov	DWORD PTR tv66[ebp], ecx
@@ -26958,10 +26966,10 @@ _weapon$ = 8						; size = 4
 	jmp	DWORD PTR $LN10@ChangeWeap[eax*4]
 $LN5@ChangeWeap:
 
-; 530  :     {
-; 531  :     case type_blaster:
-; 532  :       
-; 533  :       PossessedBot()->ChangeWeapon(type_blaster); return;
+; 556  :     {
+; 557  :     case type_blaster:
+; 558  :       
+; 559  :       PossessedBot()->ChangeWeapon(type_blaster); return;
 
 	push	9
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -26971,10 +26979,10 @@ $LN5@ChangeWeap:
 	jmp	SHORT $LN1@ChangeWeap
 $LN6@ChangeWeap:
 
-; 534  : 
-; 535  :     case type_shotgun:
-; 536  :       
-; 537  :       PossessedBot()->ChangeWeapon(type_shotgun); return;
+; 560  : 
+; 561  :     case type_shotgun:
+; 562  :       
+; 563  :       PossessedBot()->ChangeWeapon(type_shotgun); return;
 
 	push	8
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -26984,10 +26992,10 @@ $LN6@ChangeWeap:
 	jmp	SHORT $LN1@ChangeWeap
 $LN7@ChangeWeap:
 
-; 538  : 
-; 539  :     case type_rocket_launcher:
-; 540  :       
-; 541  :       PossessedBot()->ChangeWeapon(type_rocket_launcher); return;
+; 564  : 
+; 565  :     case type_rocket_launcher:
+; 566  :       
+; 567  :       PossessedBot()->ChangeWeapon(type_rocket_launcher); return;
 
 	push	7
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -26997,10 +27005,10 @@ $LN7@ChangeWeap:
 	jmp	SHORT $LN1@ChangeWeap
 $LN8@ChangeWeap:
 
-; 542  : 
-; 543  :     case type_rail_gun:
-; 544  :       
-; 545  :       PossessedBot()->ChangeWeapon(type_rail_gun); return;
+; 568  : 
+; 569  :     case type_rail_gun:
+; 570  :       
+; 571  :       PossessedBot()->ChangeWeapon(type_rail_gun); return;
 
 	push	6
 	mov	ecx, DWORD PTR _this$[ebp]
@@ -27009,10 +27017,10 @@ $LN8@ChangeWeap:
 	call	?ChangeWeapon@Raven_Bot@@QAEXI@Z	; Raven_Bot::ChangeWeapon
 $LN1@ChangeWeap:
 
-; 546  : 
-; 547  :     }
-; 548  :   }
-; 549  : }
+; 572  : 
+; 573  :     }
+; 574  :   }
+; 575  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -27036,7 +27044,7 @@ _this$ = -4						; size = 4
 ?PossessedBot@Raven_Game@@QBEPAVRaven_Bot@@XZ PROC	; Raven_Game::PossessedBot, COMDAT
 ; _this$ = ecx
 
-; 159  :   Raven_Bot*  PossessedBot()const{return m_pSelectedBot;}
+; 161  :   Raven_Bot*  PossessedBot()const{return m_pSelectedBot;}
 
 	push	ebp
 	mov	ebp, esp
@@ -27058,7 +27066,7 @@ _this$ = -4						; size = 4
 ?GetPlayerInput@Raven_Game@@QBEXXZ PROC			; Raven_Game::GetPlayerInput
 ; _this$ = ecx
 
-; 512  : {
+; 538  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -27071,7 +27079,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 513  :   if (m_pSelectedBot && m_pSelectedBot->isPossessed())
+; 539  :   if (m_pSelectedBot && m_pSelectedBot->isPossessed())
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+16], 0
@@ -27083,8 +27091,8 @@ _this$ = -4						; size = 4
 	test	edx, edx
 	je	SHORT $LN1@GetPlayerI
 
-; 514  :   {
-; 515  :       m_pSelectedBot->RotateFacingTowardPosition(GetClientCursorPosition());
+; 540  :   {
+; 541  :       m_pSelectedBot->RotateFacingTowardPosition(GetClientCursorPosition());
 
 	lea	eax, DWORD PTR $T1[ebp]
 	push	eax
@@ -27104,8 +27112,8 @@ _this$ = -4						; size = 4
 	call	?RotateFacingTowardPosition@Raven_Bot@@QAE_NUVector2D@@@Z ; Raven_Bot::RotateFacingTowardPosition
 $LN1@GetPlayerI:
 
-; 516  :    }
-; 517  : }
+; 542  :    }
+; 543  : }
 
 	add	esp, 20					; 00000014H
 	cmp	ebp, esp
@@ -27122,7 +27130,7 @@ _this$ = -4						; size = 4
 ?ExorciseAnyPossessedBot@Raven_Game@@QAEXXZ PROC	; Raven_Game::ExorciseAnyPossessedBot
 ; _this$ = ecx
 
-; 431  : {
+; 434  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -27130,7 +27138,7 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 432  :   if (m_pSelectedBot) m_pSelectedBot->Exorcise();
+; 435  :   if (m_pSelectedBot) m_pSelectedBot->Exorcise();
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+16], 0
@@ -27140,7 +27148,7 @@ _this$ = -4						; size = 4
 	call	?Exorcise@Raven_Bot@@QAEXXZ		; Raven_Bot::Exorcise
 $LN1@ExorciseAn:
 
-; 433  : }
+; 436  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -27159,7 +27167,7 @@ _p$ = 8							; size = 4
 ?ClickLeftMouseButton@Raven_Game@@QAEXUtagPOINTS@@@Z PROC ; Raven_Game::ClickLeftMouseButton
 ; _this$ = ecx
 
-; 499  : {
+; 525  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -27172,7 +27180,7 @@ _p$ = 8							; size = 4
 	mov	DWORD PTR [ebp-4], eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 500  :   if (m_pSelectedBot && m_pSelectedBot->isPossessed())
+; 526  :   if (m_pSelectedBot && m_pSelectedBot->isPossessed())
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+16], 0
@@ -27184,8 +27192,8 @@ _p$ = 8							; size = 4
 	test	edx, edx
 	je	SHORT $LN1@ClickLeftM
 
-; 501  :   {
-; 502  :     m_pSelectedBot->FireWeapon(POINTStoVector(p));
+; 527  :   {
+; 528  :     m_pSelectedBot->FireWeapon(POINTStoVector(p));
 
 	lea	eax, DWORD PTR _p$[ebp]
 	push	eax
@@ -27207,8 +27215,8 @@ _p$ = 8							; size = 4
 	call	?FireWeapon@Raven_Bot@@QAEXUVector2D@@@Z ; Raven_Bot::FireWeapon
 $LN1@ClickLeftM:
 
-; 503  :   }
-; 504  : }
+; 529  :   }
+; 530  : }
 
 	add	esp, 20					; 00000014H
 	cmp	ebp, esp
@@ -27217,6 +27225,301 @@ $LN1@ClickLeftM:
 	pop	ebp
 	ret	4
 ?ClickLeftMouseButton@Raven_Game@@QAEXUtagPOINTS@@@Z ENDP ; Raven_Game::ClickLeftMouseButton
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\mes documents\git\projet-ia-raven\raven\raven_game.cpp
+_TEXT	SEGMENT
+tv182 = -216						; size = 4
+tv159 = -212						; size = 4
+tv136 = -208						; size = 4
+tv81 = -204						; size = 4
+$T1 = -200						; size = 16
+$T2 = -184						; size = 16
+$T3 = -168						; size = 16
+$T4 = -152						; size = 16
+$T5 = -136						; size = 16
+$T6 = -120						; size = 16
+$T7 = -104						; size = 16
+$T8 = -88						; size = 16
+$T9 = -72						; size = 16
+$T10 = -56						; size = 16
+$T11 = -40						; size = 16
+$T12 = -24						; size = 16
+_trig$13 = -8						; size = 4
+_this$ = -4						; size = 4
+?ChangePositionHumanBot@Raven_Game@@QAEXXZ PROC		; Raven_Game::ChangePositionHumanBot
+; _this$ = ecx
+
+; 499  : void Raven_Game::ChangePositionHumanBot() {
+
+	push	ebp
+	mov	ebp, esp
+	sub	esp, 216				; 000000d8H
+	push	esi
+	push	edi
+	push	ecx
+	lea	edi, DWORD PTR [ebp-216]
+	mov	ecx, 54					; 00000036H
+	mov	eax, -858993460				; ccccccccH
+	rep stosd
+	pop	ecx
+	mov	DWORD PTR _this$[ebp], ecx
+
+; 500  : 	if (m_pSelectedBot && m_pSelectedBot->isPossessed())
+
+	mov	eax, DWORD PTR _this$[ebp]
+	cmp	DWORD PTR [eax+16], 0
+	je	$LN6@ChangePosi
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+16]
+	call	?isPossessed@Raven_Bot@@QBE_NXZ		; Raven_Bot::isPossessed
+	movzx	edx, al
+	test	edx, edx
+	je	$LN6@ChangePosi
+
+; 501  : 	{
+; 502  : 		BaseGameEntity* trig = m_pSelectedBot;
+
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [eax+16]
+	mov	DWORD PTR _trig$13[ebp], ecx
+
+; 503  : 		if (KEYDOWN('Z')) {
+
+	mov	esi, esp
+	push	90					; 0000005aH
+	call	DWORD PTR __imp__GetAsyncKeyState@4
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	movsx	edx, ax
+	and	edx, 32768				; 00008000H
+	je	SHORT $LN8@ChangePosi
+	mov	DWORD PTR tv81[ebp], 1
+	jmp	SHORT $LN9@ChangePosi
+$LN8@ChangePosi:
+	mov	DWORD PTR tv81[ebp], 0
+$LN9@ChangePosi:
+	cmp	DWORD PTR tv81[ebp], 0
+	je	SHORT $LN3@ChangePosi
+
+; 504  : 			//trig->SetPos(trig->Pos() + Vector2D(0,-1));
+; 505  : 			m_pSelectedBot->isPathPlanner()->RequestPathToPosition(trig->Pos() + Vector2D(0, -1));
+
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@bff0000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	xorps	xmm0, xmm0
+	movsd	QWORD PTR [esp], xmm0
+	lea	ecx, DWORD PTR $T12[ebp]
+	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
+	push	eax
+	lea	eax, DWORD PTR $T11[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _trig$13[ebp]
+	call	?Pos@BaseGameEntity@@QBE?AUVector2D@@XZ	; BaseGameEntity::Pos
+	push	eax
+	lea	ecx, DWORD PTR $T10[ebp]
+	push	ecx
+	call	??H@YA?AUVector2D@@ABU0@0@Z		; operator+
+	add	esp, -4					; fffffffcH
+	mov	edx, esp
+	mov	ecx, DWORD PTR [eax]
+	mov	DWORD PTR [edx], ecx
+	mov	ecx, DWORD PTR [eax+4]
+	mov	DWORD PTR [edx+4], ecx
+	mov	ecx, DWORD PTR [eax+8]
+	mov	DWORD PTR [edx+8], ecx
+	mov	eax, DWORD PTR [eax+12]
+	mov	DWORD PTR [edx+12], eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+16]
+	call	?isPathPlanner@Raven_Bot@@QBEPAVRaven_PathPlanner@@XZ ; Raven_Bot::isPathPlanner
+	mov	ecx, eax
+	call	?RequestPathToPosition@Raven_PathPlanner@@QAE_NUVector2D@@@Z ; Raven_PathPlanner::RequestPathToPosition
+$LN3@ChangePosi:
+
+; 506  : 		}
+; 507  : 		if (KEYDOWN('Q')) {
+
+	mov	esi, esp
+	push	81					; 00000051H
+	call	DWORD PTR __imp__GetAsyncKeyState@4
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	movsx	edx, ax
+	and	edx, 32768				; 00008000H
+	je	SHORT $LN10@ChangePosi
+	mov	DWORD PTR tv136[ebp], 1
+	jmp	SHORT $LN11@ChangePosi
+$LN10@ChangePosi:
+	mov	DWORD PTR tv136[ebp], 0
+$LN11@ChangePosi:
+	cmp	DWORD PTR tv136[ebp], 0
+	je	SHORT $LN4@ChangePosi
+
+; 508  : 			//trig->SetPos(trig->Pos() + Vector2D(-1, 0));
+; 509  : 			m_pSelectedBot->isPathPlanner()->RequestPathToPosition(trig->Pos() + Vector2D(-1, 0));
+
+	sub	esp, 8
+	xorps	xmm0, xmm0
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@bff0000000000000
+	movsd	QWORD PTR [esp], xmm0
+	lea	ecx, DWORD PTR $T9[ebp]
+	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
+	push	eax
+	lea	eax, DWORD PTR $T8[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _trig$13[ebp]
+	call	?Pos@BaseGameEntity@@QBE?AUVector2D@@XZ	; BaseGameEntity::Pos
+	push	eax
+	lea	ecx, DWORD PTR $T7[ebp]
+	push	ecx
+	call	??H@YA?AUVector2D@@ABU0@0@Z		; operator+
+	add	esp, -4					; fffffffcH
+	mov	edx, esp
+	mov	ecx, DWORD PTR [eax]
+	mov	DWORD PTR [edx], ecx
+	mov	ecx, DWORD PTR [eax+4]
+	mov	DWORD PTR [edx+4], ecx
+	mov	ecx, DWORD PTR [eax+8]
+	mov	DWORD PTR [edx+8], ecx
+	mov	eax, DWORD PTR [eax+12]
+	mov	DWORD PTR [edx+12], eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+16]
+	call	?isPathPlanner@Raven_Bot@@QBEPAVRaven_PathPlanner@@XZ ; Raven_Bot::isPathPlanner
+	mov	ecx, eax
+	call	?RequestPathToPosition@Raven_PathPlanner@@QAE_NUVector2D@@@Z ; Raven_PathPlanner::RequestPathToPosition
+$LN4@ChangePosi:
+
+; 510  : 		}
+; 511  : 		if (KEYDOWN('S')) {
+
+	mov	esi, esp
+	push	83					; 00000053H
+	call	DWORD PTR __imp__GetAsyncKeyState@4
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	movsx	edx, ax
+	and	edx, 32768				; 00008000H
+	je	SHORT $LN12@ChangePosi
+	mov	DWORD PTR tv159[ebp], 1
+	jmp	SHORT $LN13@ChangePosi
+$LN12@ChangePosi:
+	mov	DWORD PTR tv159[ebp], 0
+$LN13@ChangePosi:
+	cmp	DWORD PTR tv159[ebp], 0
+	je	SHORT $LN5@ChangePosi
+
+; 512  : 			//trig->SetPos(trig->Pos() + Vector2D(0, 1));
+; 513  : 			m_pSelectedBot->isPathPlanner()->RequestPathToPosition(trig->Pos() + Vector2D(0, 1));
+
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@3ff0000000000000
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	xorps	xmm0, xmm0
+	movsd	QWORD PTR [esp], xmm0
+	lea	ecx, DWORD PTR $T6[ebp]
+	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
+	push	eax
+	lea	eax, DWORD PTR $T5[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _trig$13[ebp]
+	call	?Pos@BaseGameEntity@@QBE?AUVector2D@@XZ	; BaseGameEntity::Pos
+	push	eax
+	lea	ecx, DWORD PTR $T4[ebp]
+	push	ecx
+	call	??H@YA?AUVector2D@@ABU0@0@Z		; operator+
+	add	esp, -4					; fffffffcH
+	mov	edx, esp
+	mov	ecx, DWORD PTR [eax]
+	mov	DWORD PTR [edx], ecx
+	mov	ecx, DWORD PTR [eax+4]
+	mov	DWORD PTR [edx+4], ecx
+	mov	ecx, DWORD PTR [eax+8]
+	mov	DWORD PTR [edx+8], ecx
+	mov	eax, DWORD PTR [eax+12]
+	mov	DWORD PTR [edx+12], eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+16]
+	call	?isPathPlanner@Raven_Bot@@QBEPAVRaven_PathPlanner@@XZ ; Raven_Bot::isPathPlanner
+	mov	ecx, eax
+	call	?RequestPathToPosition@Raven_PathPlanner@@QAE_NUVector2D@@@Z ; Raven_PathPlanner::RequestPathToPosition
+$LN5@ChangePosi:
+
+; 514  : 		}
+; 515  : 		if (KEYDOWN('D')) {
+
+	mov	esi, esp
+	push	68					; 00000044H
+	call	DWORD PTR __imp__GetAsyncKeyState@4
+	cmp	esi, esp
+	call	__RTC_CheckEsp
+	movsx	edx, ax
+	and	edx, 32768				; 00008000H
+	je	SHORT $LN14@ChangePosi
+	mov	DWORD PTR tv182[ebp], 1
+	jmp	SHORT $LN15@ChangePosi
+$LN14@ChangePosi:
+	mov	DWORD PTR tv182[ebp], 0
+$LN15@ChangePosi:
+	cmp	DWORD PTR tv182[ebp], 0
+	je	SHORT $LN6@ChangePosi
+
+; 516  : 			//trig->SetPos(trig->Pos() + Vector2D(1, 0));
+; 517  : 			m_pSelectedBot->isPathPlanner()->RequestPathToPosition(trig->Pos() + Vector2D(1, 0));
+
+	sub	esp, 8
+	xorps	xmm0, xmm0
+	movsd	QWORD PTR [esp], xmm0
+	sub	esp, 8
+	movsd	xmm0, QWORD PTR __real@3ff0000000000000
+	movsd	QWORD PTR [esp], xmm0
+	lea	ecx, DWORD PTR $T3[ebp]
+	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
+	push	eax
+	lea	eax, DWORD PTR $T2[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _trig$13[ebp]
+	call	?Pos@BaseGameEntity@@QBE?AUVector2D@@XZ	; BaseGameEntity::Pos
+	push	eax
+	lea	ecx, DWORD PTR $T1[ebp]
+	push	ecx
+	call	??H@YA?AUVector2D@@ABU0@0@Z		; operator+
+	add	esp, -4					; fffffffcH
+	mov	edx, esp
+	mov	ecx, DWORD PTR [eax]
+	mov	DWORD PTR [edx], ecx
+	mov	ecx, DWORD PTR [eax+4]
+	mov	DWORD PTR [edx+4], ecx
+	mov	ecx, DWORD PTR [eax+8]
+	mov	DWORD PTR [edx+8], ecx
+	mov	eax, DWORD PTR [eax+12]
+	mov	DWORD PTR [edx+12], eax
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+16]
+	call	?isPathPlanner@Raven_Bot@@QBEPAVRaven_PathPlanner@@XZ ; Raven_Bot::isPathPlanner
+	mov	ecx, eax
+	call	?RequestPathToPosition@Raven_PathPlanner@@QAE_NUVector2D@@@Z ; Raven_PathPlanner::RequestPathToPosition
+$LN6@ChangePosi:
+
+; 518  : 		}
+; 519  : 	}
+; 520  : }
+
+	pop	edi
+	pop	esi
+	add	esp, 216				; 000000d8H
+	cmp	ebp, esp
+	call	__RTC_CheckEsp
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?ChangePositionHumanBot@Raven_Game@@QAEXXZ ENDP		; Raven_Game::ChangePositionHumanBot
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\mes documents\git\projet-ia-raven\raven\raven_game.cpp
@@ -27230,7 +27533,7 @@ _p$ = 8							; size = 4
 ?ClickRightMouseButton@Raven_Game@@QAEXUtagPOINTS@@@Z PROC ; Raven_Game::ClickRightMouseButton
 ; _this$ = ecx
 
-; 447  : {
+; 450  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -27245,15 +27548,15 @@ _p$ = 8							; size = 4
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 448  : 	//If a bot is not human from the beginning
-; 449  : 	if (!m_thereIsAHuman) {
+; 451  : 	//If a bot is not human from the beginning
+; 452  : 	if (!m_thereIsAHuman) {
 
 	mov	eax, DWORD PTR _this$[ebp]
 	movzx	ecx, BYTE PTR [eax+20]
 	test	ecx, ecx
 	jne	$LN2@ClickRight
 
-; 450  : 		Raven_Bot* pBot = GetBotAtPosition(POINTStoVector(p));
+; 453  : 		Raven_Bot* pBot = GetBotAtPosition(POINTStoVector(p));
 
 	lea	edx, DWORD PTR _p$[ebp]
 	push	edx
@@ -27274,9 +27577,9 @@ _p$ = 8							; size = 4
 	call	?GetBotAtPosition@Raven_Game@@QBEPAVRaven_Bot@@UVector2D@@@Z ; Raven_Game::GetBotAtPosition
 	mov	DWORD PTR _pBot$4[ebp], eax
 
-; 451  : 
-; 452  : 		//if there is no selected bot just return;
-; 453  : 		if (!pBot && m_pSelectedBot == NULL) return;
+; 454  : 
+; 455  : 		//if there is no selected bot just return;
+; 456  : 		if (!pBot && m_pSelectedBot == NULL) return;
 
 	cmp	DWORD PTR _pBot$4[ebp], 0
 	jne	SHORT $LN3@ClickRight
@@ -27286,10 +27589,10 @@ _p$ = 8							; size = 4
 	jmp	$LN1@ClickRight
 $LN3@ClickRight:
 
-; 454  : 
-; 455  : 		//if the cursor is over a different bot to the existing selection,
-; 456  : 		//change selection
-; 457  : 		if (pBot && pBot != m_pSelectedBot)
+; 457  : 
+; 458  : 		//if the cursor is over a different bot to the existing selection,
+; 459  : 		//change selection
+; 460  : 		if (pBot && pBot != m_pSelectedBot)
 
 	cmp	DWORD PTR _pBot$4[ebp], 0
 	je	SHORT $LN4@ClickRight
@@ -27298,8 +27601,8 @@ $LN3@ClickRight:
 	cmp	eax, DWORD PTR [edx+16]
 	je	SHORT $LN4@ClickRight
 
-; 458  : 		{
-; 459  : 			if (m_pSelectedBot) m_pSelectedBot->Exorcise();
+; 461  : 		{
+; 462  : 			if (m_pSelectedBot) m_pSelectedBot->Exorcise();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [ecx+16], 0
@@ -27309,23 +27612,23 @@ $LN3@ClickRight:
 	call	?Exorcise@Raven_Bot@@QAEXXZ		; Raven_Bot::Exorcise
 $LN5@ClickRight:
 
-; 460  : 			m_pSelectedBot = pBot;
+; 463  : 			m_pSelectedBot = pBot;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR _pBot$4[ebp]
 	mov	DWORD PTR [eax+16], ecx
 
-; 461  : 
-; 462  : 			return;
+; 464  : 
+; 465  : 			return;
 
 	jmp	$LN1@ClickRight
 $LN4@ClickRight:
 
-; 463  : 		}
-; 464  : 
-; 465  : 		//if the user clicks on a selected bot twice it becomes possessed(under
-; 466  : 		//the player's control)
-; 467  : 		if (pBot && pBot == m_pSelectedBot)
+; 466  : 		}
+; 467  : 
+; 468  : 		//if the user clicks on a selected bot twice it becomes possessed(under
+; 469  : 		//the player's control)
+; 470  : 		if (pBot && pBot == m_pSelectedBot)
 
 	cmp	DWORD PTR _pBot$4[ebp], 0
 	je	SHORT $LN2@ClickRight
@@ -27334,16 +27637,16 @@ $LN4@ClickRight:
 	cmp	eax, DWORD PTR [edx+16]
 	jne	SHORT $LN2@ClickRight
 
-; 468  : 		{
-; 469  : 			m_pSelectedBot->TakePossession();
+; 471  : 		{
+; 472  : 			m_pSelectedBot->TakePossession();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+16]
 	call	?TakePossession@Raven_Bot@@QAEXXZ	; Raven_Bot::TakePossession
 
-; 470  : 
-; 471  : 			//clear any current goals
-; 472  : 			m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
+; 473  : 
+; 474  : 			//clear any current goals
+; 475  : 			m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx+16]
@@ -27352,67 +27655,70 @@ $LN4@ClickRight:
 	call	?RemoveAllSubgoals@?$Goal_Composite@VRaven_Bot@@@@QAEXXZ ; Goal_Composite<Raven_Bot>::RemoveAllSubgoals
 $LN2@ClickRight:
 
-; 473  : 		}
-; 474  : 	}
-; 475  : 
-; 476  :   //if the bot is possessed then a right click moves the bot to the cursor
-; 477  :   //position
-; 478  :   if (m_pSelectedBot->isPossessed())
+; 476  : 		}
+; 477  : 	}
+; 478  : 
+; 479  :   //if the bot is possessed then a right click moves the bot to the cursor
+; 480  :   //position
+; 481  :   if (m_pSelectedBot && m_pSelectedBot->isPossessed())
 
 	mov	eax, DWORD PTR _this$[ebp]
-	mov	ecx, DWORD PTR [eax+16]
+	cmp	DWORD PTR [eax+16], 0
+	je	$LN1@ClickRight
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	ecx, DWORD PTR [ecx+16]
 	call	?isPossessed@Raven_Bot@@QBE_NXZ		; Raven_Bot::isPossessed
-	movzx	ecx, al
-	test	ecx, ecx
+	movzx	edx, al
+	test	edx, edx
 	je	$LN1@ClickRight
 
-; 479  :   {
-; 480  :     //if the shift key is pressed down at the same time as clicking then the
-; 481  :     //movement command will be queued
-; 482  :     if (IS_KEY_PRESSED('Q'))
+; 482  :   {
+; 483  :     //if the shift key is pressed down at the same time as clicking then the
+; 484  :     //movement command will be queued
+; 485  :     if (IS_KEY_PRESSED('Q'))
 
 	mov	esi, esp
 	push	81					; 00000051H
 	call	DWORD PTR __imp__GetAsyncKeyState@4
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	movsx	edx, ax
-	and	edx, 32768				; 00008000H
+	cwde
+	and	eax, 32768				; 00008000H
 	je	SHORT $LN8@ClickRight
 
-; 483  :     {
-; 484  :       m_pSelectedBot->GetBrain()->QueueGoal_MoveToPosition(POINTStoVector(p));
+; 486  :     {
+; 487  :       m_pSelectedBot->GetBrain()->QueueGoal_MoveToPosition(POINTStoVector(p));
 
-	lea	eax, DWORD PTR _p$[ebp]
-	push	eax
-	lea	ecx, DWORD PTR $T2[ebp]
+	lea	ecx, DWORD PTR _p$[ebp]
 	push	ecx
+	lea	edx, DWORD PTR $T2[ebp]
+	push	edx
 	call	?POINTStoVector@@YA?AUVector2D@@ABUtagPOINTS@@@Z ; POINTStoVector
 	add	esp, -8					; fffffff8H
-	mov	edx, esp
-	mov	ecx, DWORD PTR [eax]
-	mov	DWORD PTR [edx], ecx
-	mov	ecx, DWORD PTR [eax+4]
-	mov	DWORD PTR [edx+4], ecx
-	mov	ecx, DWORD PTR [eax+8]
-	mov	DWORD PTR [edx+8], ecx
+	mov	ecx, esp
+	mov	edx, DWORD PTR [eax]
+	mov	DWORD PTR [ecx], edx
+	mov	edx, DWORD PTR [eax+4]
+	mov	DWORD PTR [ecx+4], edx
+	mov	edx, DWORD PTR [eax+8]
+	mov	DWORD PTR [ecx+8], edx
 	mov	eax, DWORD PTR [eax+12]
-	mov	DWORD PTR [edx+12], eax
+	mov	DWORD PTR [ecx+12], eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+16]
 	call	?GetBrain@Raven_Bot@@QAEQAVGoal_Think@@XZ ; Raven_Bot::GetBrain
 	mov	ecx, eax
 	call	?QueueGoal_MoveToPosition@Goal_Think@@QAEXUVector2D@@@Z ; Goal_Think::QueueGoal_MoveToPosition
 
-; 485  :     }
-; 486  :     else
+; 488  :     }
+; 489  :     else
 
 	jmp	SHORT $LN1@ClickRight
 $LN8@ClickRight:
 
-; 487  :     {
-; 488  :       //clear any current goals
-; 489  :       m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
+; 490  :     {
+; 491  :       //clear any current goals
+; 492  :       m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx+16]
@@ -27420,8 +27726,8 @@ $LN8@ClickRight:
 	mov	ecx, eax
 	call	?RemoveAllSubgoals@?$Goal_Composite@VRaven_Bot@@@@QAEXXZ ; Goal_Composite<Raven_Bot>::RemoveAllSubgoals
 
-; 490  : 
-; 491  :       m_pSelectedBot->GetBrain()->AddGoal_MoveToPosition(POINTStoVector(p));
+; 493  : 
+; 494  :       m_pSelectedBot->GetBrain()->AddGoal_MoveToPosition(POINTStoVector(p));
 
 	lea	eax, DWORD PTR _p$[ebp]
 	push	eax
@@ -27445,9 +27751,9 @@ $LN8@ClickRight:
 	call	?AddGoal_MoveToPosition@Goal_Think@@QAEXUVector2D@@@Z ; Goal_Think::AddGoal_MoveToPosition
 $LN1@ClickRight:
 
-; 492  :     }
-; 493  :   }
-; 494  : }
+; 495  :     }
+; 496  :   }
+; 497  : }
 
 	pop	edi
 	pop	esi
@@ -27479,7 +27785,7 @@ _CursorPos$ = 8						; size = 16
 ?GetBotAtPosition@Raven_Game@@QBEPAVRaven_Bot@@UVector2D@@@Z PROC ; Raven_Game::GetBotAtPosition
 ; _this$ = ecx
 
-; 371  : {
+; 374  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -27502,7 +27808,7 @@ _CursorPos$ = 8						; size = 16
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 372  :   std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+; 375  :   std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
 
 	lea	eax, DWORD PTR _curBot$[ebp]
 	push	eax
@@ -27513,8 +27819,8 @@ _CursorPos$ = 8						; size = 16
 	jmp	SHORT $LN4@GetBotAtPo
 $LN2@GetBotAtPo:
 
-; 373  : 
-; 374  :   for (curBot; curBot != m_Bots.end(); ++curBot)
+; 376  : 
+; 377  :   for (curBot; curBot != m_Bots.end(); ++curBot)
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??E?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator++
@@ -27540,8 +27846,8 @@ $LN4@GetBotAtPo:
 	test	ecx, ecx
 	je	$LN3@GetBotAtPo
 
-; 375  :   {
-; 376  :     if (Vec2DDistance((*curBot)->Pos(), CursorPos) < (*curBot)->BRadius())
+; 378  :   {
+; 379  :     if (Vec2DDistance((*curBot)->Pos(), CursorPos) < (*curBot)->BRadius())
 
 	lea	edx, DWORD PTR _CursorPos$[ebp]
 	push	edx
@@ -27567,8 +27873,8 @@ $LN4@GetBotAtPo:
 	comisd	xmm0, xmm1
 	jbe	SHORT $LN6@GetBotAtPo
 
-; 377  :     {
-; 378  :       if ((*curBot)->isAlive())
+; 380  :     {
+; 381  :       if ((*curBot)->isAlive())
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEABQAVRaven_Bot@@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -27578,8 +27884,8 @@ $LN4@GetBotAtPo:
 	test	ecx, ecx
 	je	SHORT $LN6@GetBotAtPo
 
-; 379  :       {
-; 380  :         return *curBot;
+; 382  :       {
+; 383  :         return *curBot;
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEABQAVRaven_Bot@@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -27592,15 +27898,15 @@ $LN4@GetBotAtPo:
 	jmp	SHORT $LN1@GetBotAtPo
 $LN6@GetBotAtPo:
 
-; 381  :       }
-; 382  :     }
-; 383  :   }
+; 384  :       }
+; 385  :     }
+; 386  :   }
 
 	jmp	$LN2@GetBotAtPo
 $LN3@GetBotAtPo:
 
-; 384  : 
-; 385  :   return NULL;
+; 387  : 
+; 388  :   return NULL;
 
 	mov	DWORD PTR $T2[ebp], 0
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
@@ -27609,7 +27915,7 @@ $LN3@GetBotAtPo:
 	mov	eax, DWORD PTR $T2[ebp]
 $LN1@GetBotAtPo:
 
-; 386  : }
+; 389  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -27697,7 +28003,7 @@ _doorID$ = 28						; size = 4
 ?GetPosOfClosestSwitch@Raven_Game@@QBE?AUVector2D@@U2@I@Z PROC ; Raven_Game::GetPosOfClosestSwitch
 ; _this$ = ecx
 
-; 665  : {
+; 691  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -27720,21 +28026,21 @@ _doorID$ = 28						; size = 4
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 666  :   std::vector<unsigned int> SwitchIDs;
+; 692  :   std::vector<unsigned int> SwitchIDs;
 
 	lea	ecx, DWORD PTR _SwitchIDs$[ebp]
 	call	??0?$vector@IV?$allocator@I@std@@@std@@QAE@XZ ; std::vector<unsigned int,std::allocator<unsigned int> >::vector<unsigned int,std::allocator<unsigned int> >
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 
-; 667  :   
-; 668  :   //first we need to get the ids of the switches attached to this door
-; 669  :   std::vector<Raven_Door*>::const_iterator curDoor;
+; 693  :   
+; 694  :   //first we need to get the ids of the switches attached to this door
+; 695  :   std::vector<Raven_Door*>::const_iterator curDoor;
 
 	lea	ecx, DWORD PTR _curDoor$[ebp]
 	call	??0?$_Vector_const_iterator@V?$_Vector_val@U?$_Simple_types@PAVRaven_Door@@@std@@@std@@@std@@QAE@XZ ; std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<Raven_Door *> > >::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<Raven_Door *> > >
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 
-; 670  :   for (curDoor = m_pMap->GetDoors().begin();
+; 696  :   for (curDoor = m_pMap->GetDoors().begin();
 
 	lea	eax, DWORD PTR $T11[ebp]
 	push	eax
@@ -27753,13 +28059,13 @@ _doorID$ = 28						; size = 4
 	jmp	SHORT $LN4@GetPosOfCl
 $LN2@GetPosOfCl:
 
-; 672  :        ++curDoor)
+; 698  :        ++curDoor)
 
 	lea	ecx, DWORD PTR _curDoor$[ebp]
 	call	??E?$_Vector_const_iterator@V?$_Vector_val@U?$_Simple_types@PAVRaven_Door@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<Raven_Door *> > >::operator++
 $LN4@GetPosOfCl:
 
-; 671  :        curDoor != m_pMap->GetDoors().end();
+; 697  :        curDoor != m_pMap->GetDoors().end();
 
 	lea	eax, DWORD PTR $T9[ebp]
 	push	eax
@@ -27784,8 +28090,8 @@ $LN4@GetPosOfCl:
 	test	ecx, ecx
 	je	SHORT $LN3@GetPosOfCl
 
-; 673  :   {
-; 674  :     if ((*curDoor)->ID() == doorID)
+; 699  :   {
+; 700  :     if ((*curDoor)->ID() == doorID)
 
 	lea	ecx, DWORD PTR _curDoor$[ebp]
 	call	??D?$_Vector_const_iterator@V?$_Vector_val@U?$_Simple_types@PAVRaven_Door@@@std@@@std@@@std@@QBEABQAVRaven_Door@@XZ ; std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<Raven_Door *> > >::operator*
@@ -27794,8 +28100,8 @@ $LN4@GetPosOfCl:
 	cmp	eax, DWORD PTR _doorID$[ebp]
 	jne	SHORT $LN8@GetPosOfCl
 
-; 675  :     {
-; 676  :        SwitchIDs = (*curDoor)->GetSwitchIDs(); break;
+; 701  :     {
+; 702  :        SwitchIDs = (*curDoor)->GetSwitchIDs(); break;
 
 	lea	edx, DWORD PTR $T8[ebp]
 	push	edx
@@ -27813,32 +28119,32 @@ $LN4@GetPosOfCl:
 	jmp	SHORT $LN3@GetPosOfCl
 $LN8@GetPosOfCl:
 
-; 677  :     }
-; 678  :   }
+; 703  :     }
+; 704  :   }
 
 	jmp	$LN2@GetPosOfCl
 $LN3@GetPosOfCl:
 
-; 679  : 
-; 680  :   Vector2D closest;
+; 705  : 
+; 706  :   Vector2D closest;
 
 	lea	ecx, DWORD PTR _closest$[ebp]
 	call	??0Vector2D@@QAE@XZ			; Vector2D::Vector2D
 
-; 681  :   double ClosestDist = MaxDouble;
+; 707  :   double ClosestDist = MaxDouble;
 
 	movsd	xmm0, QWORD PTR __real@7fefffffffffffff
 	movsd	QWORD PTR _ClosestDist$[ebp], xmm0
 
-; 682  :   
-; 683  :   //now test to see which one is closest and visible
-; 684  :   std::vector<unsigned int>::iterator it;
+; 708  :   
+; 709  :   //now test to see which one is closest and visible
+; 710  :   std::vector<unsigned int>::iterator it;
 
 	lea	ecx, DWORD PTR _it$[ebp]
 	call	??0?$_Vector_iterator@V?$_Vector_val@U?$_Simple_types@I@std@@@std@@@std@@QAE@XZ ; std::_Vector_iterator<std::_Vector_val<std::_Simple_types<unsigned int> > >::_Vector_iterator<std::_Vector_val<std::_Simple_types<unsigned int> > >
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
 
-; 685  :   for (it = SwitchIDs.begin(); it != SwitchIDs.end(); ++it)
+; 711  :   for (it = SwitchIDs.begin(); it != SwitchIDs.end(); ++it)
 
 	lea	ecx, DWORD PTR $T7[ebp]
 	push	ecx
@@ -27876,8 +28182,8 @@ $LN7@GetPosOfCl:
 	test	eax, eax
 	je	$LN6@GetPosOfCl
 
-; 686  :   {
-; 687  :     BaseGameEntity* trig = EntityMgr->GetEntityFromID(*it);
+; 712  :   {
+; 713  :     BaseGameEntity* trig = EntityMgr->GetEntityFromID(*it);
 
 	lea	ecx, DWORD PTR _it$[ebp]
 	call	??D?$_Vector_iterator@V?$_Vector_val@U?$_Simple_types@I@std@@@std@@@std@@QBEAAIXZ ; std::_Vector_iterator<std::_Vector_val<std::_Simple_types<unsigned int> > >::operator*
@@ -27888,8 +28194,8 @@ $LN7@GetPosOfCl:
 	call	?GetEntityFromID@EntityManager@@QBEPAVBaseGameEntity@@H@Z ; EntityManager::GetEntityFromID
 	mov	DWORD PTR _trig$13[ebp], eax
 
-; 688  : 
-; 689  :     if (isLOSOkay(botPos, trig->Pos()))
+; 714  : 
+; 715  :     if (isLOSOkay(botPos, trig->Pos()))
 
 	lea	edx, DWORD PTR $T4[ebp]
 	push	edx
@@ -27921,8 +28227,8 @@ $LN7@GetPosOfCl:
 	test	ecx, ecx
 	je	SHORT $LN10@GetPosOfCl
 
-; 690  :     {
-; 691  :       double dist = Vec2DDistanceSq(botPos, trig->Pos());
+; 716  :     {
+; 717  :       double dist = Vec2DDistanceSq(botPos, trig->Pos());
 
 	lea	edx, DWORD PTR $T3[ebp]
 	push	edx
@@ -27935,20 +28241,20 @@ $LN7@GetPosOfCl:
 	add	esp, 8
 	fstp	QWORD PTR _dist$12[ebp]
 
-; 692  : 
-; 693  :       if ( dist < ClosestDist)
+; 718  : 
+; 719  :       if ( dist < ClosestDist)
 
 	movsd	xmm0, QWORD PTR _ClosestDist$[ebp]
 	comisd	xmm0, QWORD PTR _dist$12[ebp]
 	jbe	SHORT $LN10@GetPosOfCl
 
-; 694  :       {
-; 695  :         ClosestDist = dist;
+; 720  :       {
+; 721  :         ClosestDist = dist;
 
 	movsd	xmm0, QWORD PTR _dist$12[ebp]
 	movsd	QWORD PTR _ClosestDist$[ebp], xmm0
 
-; 696  :         closest = trig->Pos();
+; 722  :         closest = trig->Pos();
 
 	lea	ecx, DWORD PTR $T2[ebp]
 	push	ecx
@@ -27964,15 +28270,15 @@ $LN7@GetPosOfCl:
 	mov	DWORD PTR _closest$[ebp+12], eax
 $LN10@GetPosOfCl:
 
-; 697  :       }
-; 698  :     }
-; 699  :   }
+; 723  :       }
+; 724  :     }
+; 725  :   }
 
 	jmp	$LN5@GetPosOfCl
 $LN6@GetPosOfCl:
 
-; 700  : 
-; 701  :   return closest;
+; 726  : 
+; 727  :   return closest;
 
 	mov	ecx, DWORD PTR ___$ReturnUdt$[ebp]
 	mov	edx, DWORD PTR _closest$[ebp]
@@ -27994,7 +28300,7 @@ $LN6@GetPosOfCl:
 	call	??1?$vector@IV?$allocator@I@std@@@std@@QAE@XZ ; std::vector<unsigned int,std::allocator<unsigned int> >::~vector<unsigned int,std::allocator<unsigned int> >
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
-; 702  : }
+; 728  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -28099,7 +28405,7 @@ _B$ = 24						; size = 16
 ?isLOSOkay@Raven_Game@@QBE_NUVector2D@@0@Z PROC		; Raven_Game::isLOSOkay
 ; _this$ = ecx
 
-; 558  : {
+; 584  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -28108,7 +28414,7 @@ _B$ = 24						; size = 16
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 559  :   return !doWallsObstructLineSegment(A, B, m_pMap->GetWalls());
+; 585  :   return !doWallsObstructLineSegment(A, B, m_pMap->GetWalls());
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax]
@@ -28146,7 +28452,7 @@ $LN3@isLOSOkay:
 $LN4@isLOSOkay:
 	mov	al, BYTE PTR tv73[ebp]
 
-; 560  : }
+; 586  : }
 
 	add	esp, 8
 	cmp	ebp, esp
@@ -28170,7 +28476,7 @@ _pSecond$ = 12						; size = 4
 ?isSecondVisibleToFirst@Raven_Game@@QBE_NPBVRaven_Bot@@0@Z PROC ; Raven_Game::isSecondVisibleToFirst
 ; _this$ = ecx
 
-; 634  : {
+; 660  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -28184,8 +28490,8 @@ _pSecond$ = 12						; size = 4
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 635  :   //if the two bots are equal or if one of them is not alive return false
-; 636  :   if ( !(pFirst == pSecond) && pSecond->isAlive())
+; 661  :   //if the two bots are equal or if one of them is not alive return false
+; 662  :   if ( !(pFirst == pSecond) && pSecond->isAlive())
 
 	mov	eax, DWORD PTR _pFirst$[ebp]
 	cmp	eax, DWORD PTR _pSecond$[ebp]
@@ -28196,9 +28502,9 @@ _pSecond$ = 12						; size = 4
 	test	ecx, ecx
 	je	$LN4@isSecondVi
 
-; 637  :   {
-; 638  :     //first of all test to see if this bot is within the FOV
-; 639  :     if (isSecondInFOVOfFirst(pFirst->Pos(),
+; 663  :   {
+; 664  :     //first of all test to see if this bot is within the FOV
+; 665  :     if (isSecondInFOVOfFirst(pFirst->Pos(),
 
 	mov	ecx, DWORD PTR _pFirst$[ebp]
 	call	?FieldOfView@Raven_Bot@@QBENXZ		; Raven_Bot::FieldOfView
@@ -28252,13 +28558,13 @@ _pSecond$ = 12						; size = 4
 	test	ecx, ecx
 	je	SHORT $LN4@isSecondVi
 
-; 640  :                              pFirst->Facing(),
-; 641  :                              pSecond->Pos(),
-; 642  :                              pFirst->FieldOfView()))
-; 643  :     {
-; 644  :       //test the line segment connecting the bot's positions against the walls.
-; 645  :       //If the bot is visible add it to the vector
-; 646  :       if (!doWallsObstructLineSegment(pFirst->Pos(),
+; 666  :                              pFirst->Facing(),
+; 667  :                              pSecond->Pos(),
+; 668  :                              pFirst->FieldOfView()))
+; 669  :     {
+; 670  :       //test the line segment connecting the bot's positions against the walls.
+; 671  :       //If the bot is visible add it to the vector
+; 672  :       if (!doWallsObstructLineSegment(pFirst->Pos(),
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx]
@@ -28298,25 +28604,25 @@ _pSecond$ = 12						; size = 4
 	test	ecx, ecx
 	jne	SHORT $LN4@isSecondVi
 
-; 647  :                                       pSecond->Pos(),
-; 648  :                                       m_pMap->GetWalls()))
-; 649  :       {
-; 650  :         return true;
+; 673  :                                       pSecond->Pos(),
+; 674  :                                       m_pMap->GetWalls()))
+; 675  :       {
+; 676  :         return true;
 
 	mov	al, 1
 	jmp	SHORT $LN1@isSecondVi
 $LN4@isSecondVi:
 
-; 651  :       }
-; 652  :     }
-; 653  :   }
-; 654  : 
-; 655  :   return false;
+; 677  :       }
+; 678  :     }
+; 679  :   }
+; 680  : 
+; 681  :   return false;
 
 	xor	al, al
 $LN1@isSecondVi:
 
-; 656  : }
+; 682  : }
 
 	pop	edi
 	add	esp, 84					; 00000054H
@@ -28349,7 +28655,7 @@ _pBot$ = 12						; size = 4
 ?GetAllBotsInFOV@Raven_Game@@QBE?AV?$vector@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@PBVRaven_Bot@@@Z PROC ; Raven_Game::GetAllBotsInFOV
 ; _this$ = ecx
 
-; 599  : {
+; 625  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -28373,14 +28679,14 @@ _pBot$ = 12						; size = 4
 	mov	DWORD PTR _this$[ebp], ecx
 	mov	DWORD PTR $T2[ebp], 0
 
-; 600  :   std::vector<Raven_Bot*> VisibleBots;
+; 626  :   std::vector<Raven_Bot*> VisibleBots;
 
 	lea	ecx, DWORD PTR _VisibleBots$[ebp]
 	call	??0?$vector@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@QAE@XZ ; std::vector<Raven_Bot *,std::allocator<Raven_Bot *> >::vector<Raven_Bot *,std::allocator<Raven_Bot *> >
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 
-; 601  : 
-; 602  :   std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+; 627  : 
+; 628  :   std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
 
 	lea	eax, DWORD PTR _curBot$[ebp]
 	push	eax
@@ -28391,7 +28697,7 @@ _pBot$ = 12						; size = 4
 	jmp	SHORT $LN4@GetAllBots
 $LN2@GetAllBots:
 
-; 603  :   for (curBot; curBot != m_Bots.end(); ++curBot)
+; 629  :   for (curBot; curBot != m_Bots.end(); ++curBot)
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??E?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator++
@@ -28417,10 +28723,10 @@ $LN4@GetAllBots:
 	test	ecx, ecx
 	je	$LN3@GetAllBots
 
-; 604  :   {
-; 605  :     //make sure time is not wasted checking against the same bot or against a
-; 606  :     // bot that is dead or re-spawning
-; 607  :     if (*curBot == pBot ||  !(*curBot)->isAlive()) continue;
+; 630  :   {
+; 631  :     //make sure time is not wasted checking against the same bot or against a
+; 632  :     // bot that is dead or re-spawning
+; 633  :     if (*curBot == pBot ||  !(*curBot)->isAlive()) continue;
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEABQAVRaven_Bot@@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -28438,9 +28744,9 @@ $LN6@GetAllBots:
 	jmp	SHORT $LN2@GetAllBots
 $LN5@GetAllBots:
 
-; 608  : 
-; 609  :     //first of all test to see if this bot is within the FOV
-; 610  :     if (isSecondInFOVOfFirst(pBot->Pos(),
+; 634  : 
+; 635  :     //first of all test to see if this bot is within the FOV
+; 636  :     if (isSecondInFOVOfFirst(pBot->Pos(),
 
 	mov	ecx, DWORD PTR _pBot$[ebp]
 	call	?FieldOfView@Raven_Bot@@QBENXZ		; Raven_Bot::FieldOfView
@@ -28496,13 +28802,13 @@ $LN5@GetAllBots:
 	test	ecx, ecx
 	je	$LN8@GetAllBots
 
-; 611  :                              pBot->Facing(),
-; 612  :                              (*curBot)->Pos(),
-; 613  :                              pBot->FieldOfView()))
-; 614  :     {
-; 615  :       //cast a ray from between the bots to test visibility. If the bot is
-; 616  :       //visible add it to the vector
-; 617  :       if (!doWallsObstructLineSegment(pBot->Pos(),
+; 637  :                              pBot->Facing(),
+; 638  :                              (*curBot)->Pos(),
+; 639  :                              pBot->FieldOfView()))
+; 640  :     {
+; 641  :       //cast a ray from between the bots to test visibility. If the bot is
+; 642  :       //visible add it to the vector
+; 643  :       if (!doWallsObstructLineSegment(pBot->Pos(),
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx]
@@ -28544,10 +28850,10 @@ $LN5@GetAllBots:
 	test	ecx, ecx
 	jne	SHORT $LN8@GetAllBots
 
-; 618  :                               (*curBot)->Pos(),
-; 619  :                               m_pMap->GetWalls()))
-; 620  :       {
-; 621  :         VisibleBots.push_back(*curBot);
+; 644  :                               (*curBot)->Pos(),
+; 645  :                               m_pMap->GetWalls()))
+; 646  :       {
+; 647  :         VisibleBots.push_back(*curBot);
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEABQAVRaven_Bot@@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -28556,15 +28862,15 @@ $LN5@GetAllBots:
 	call	?push_back@?$vector@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@QAEXABQAVRaven_Bot@@@Z ; std::vector<Raven_Bot *,std::allocator<Raven_Bot *> >::push_back
 $LN8@GetAllBots:
 
-; 622  :       }
-; 623  :     }
-; 624  :   }
+; 648  :       }
+; 649  :     }
+; 650  :   }
 
 	jmp	$LN2@GetAllBots
 $LN3@GetAllBots:
 
-; 625  : 
-; 626  :   return VisibleBots;
+; 651  : 
+; 652  :   return VisibleBots;
 
 	lea	edx, DWORD PTR _VisibleBots$[ebp]
 	push	edx
@@ -28581,7 +28887,7 @@ $LN3@GetAllBots:
 	call	??1?$vector@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@QAE@XZ ; std::vector<Raven_Bot *,std::allocator<Raven_Bot *> >::~vector<Raven_Bot *,std::allocator<Raven_Bot *> >
 	mov	eax, DWORD PTR ___$ReturnUdt$[ebp]
 
-; 627  : }
+; 653  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -28669,7 +28975,7 @@ _BoundingRadius$ = 40					; size = 8
 ?isPathObstructed@Raven_Game@@QBE_NUVector2D@@0N@Z PROC	; Raven_Game::isPathObstructed
 ; _this$ = ecx
 
-; 572  : {
+; 598  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -28683,7 +28989,7 @@ _BoundingRadius$ = 40					; size = 8
 	pop	ecx
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 573  :   Vector2D ToB = Vec2DNormalize(B-A);
+; 599  :   Vector2D ToB = Vec2DNormalize(B-A);
 
 	lea	eax, DWORD PTR _A$[ebp]
 	push	eax
@@ -28699,8 +29005,8 @@ _BoundingRadius$ = 40					; size = 8
 	call	?Vec2DNormalize@@YA?AUVector2D@@ABU1@@Z	; Vec2DNormalize
 	add	esp, 8
 
-; 574  : 
-; 575  :   Vector2D curPos = A;
+; 600  : 
+; 601  :   Vector2D curPos = A;
 
 	mov	ecx, DWORD PTR _A$[ebp]
 	mov	DWORD PTR _curPos$[ebp], ecx
@@ -28712,8 +29018,8 @@ _BoundingRadius$ = 40					; size = 8
 	mov	DWORD PTR _curPos$[ebp+12], ecx
 $LN2@isPathObst:
 
-; 576  : 
-; 577  :   while (Vec2DDistanceSq(curPos, B) > BoundingRadius*BoundingRadius)
+; 602  : 
+; 603  :   while (Vec2DDistanceSq(curPos, B) > BoundingRadius*BoundingRadius)
 
 	lea	edx, DWORD PTR _B$[ebp]
 	push	edx
@@ -28728,9 +29034,9 @@ $LN2@isPathObst:
 	comisd	xmm0, xmm1
 	jbe	$LN3@isPathObst
 
-; 578  :   {   
-; 579  :     //advance curPos one step
-; 580  :     curPos += ToB * 0.5 * BoundingRadius;
+; 604  :   {   
+; 605  :     //advance curPos one step
+; 606  :     curPos += ToB * 0.5 * BoundingRadius;
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR _BoundingRadius$[ebp]
@@ -28753,9 +29059,9 @@ $LN2@isPathObst:
 	lea	ecx, DWORD PTR _curPos$[ebp]
 	call	??YVector2D@@QAEABU0@ABU0@@Z		; Vector2D::operator+=
 
-; 581  :     
-; 582  :     //test all walls against the new position
-; 583  :     if (doWallsIntersectCircle(m_pMap->GetWalls(), curPos, BoundingRadius))
+; 607  :     
+; 608  :     //test all walls against the new position
+; 609  :     if (doWallsIntersectCircle(m_pMap->GetWalls(), curPos, BoundingRadius))
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR _BoundingRadius$[ebp]
@@ -28780,26 +29086,26 @@ $LN2@isPathObst:
 	test	edx, edx
 	je	SHORT $LN4@isPathObst
 
-; 584  :     {
-; 585  :       return true;
+; 610  :     {
+; 611  :       return true;
 
 	mov	al, 1
 	jmp	SHORT $LN1@isPathObst
 $LN4@isPathObst:
 
-; 586  :     }
-; 587  :   }
+; 612  :     }
+; 613  :   }
 
 	jmp	$LN2@isPathObst
 $LN3@isPathObst:
 
-; 588  : 
-; 589  :   return false;
+; 614  : 
+; 615  :   return false;
 
 	xor	al, al
 $LN1@isPathObst:
 
-; 590  : }
+; 616  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -28848,7 +29154,7 @@ _this$ = -4						; size = 4
 ?RemoveBot@Raven_Game@@QAEXXZ PROC			; Raven_Game::RemoveBot
 ; _this$ = ecx
 
-; 310  : {
+; 313  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -28856,12 +29162,12 @@ _this$ = -4						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 311  :   m_bRemoveABot = true;
+; 314  :   m_bRemoveABot = true;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	BYTE PTR [eax+41], 1
 
-; 312  : }
+; 315  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -28882,7 +29188,7 @@ _target$ = 12						; size = 16
 ?AddBolt@Raven_Game@@QAEXPAVRaven_Bot@@UVector2D@@@Z PROC ; Raven_Game::AddBolt
 ; _this$ = ecx
 
-; 317  : {
+; 320  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -28906,7 +29212,7 @@ _target$ = 12						; size = 16
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 318  :   Raven_Projectile* rp = new Bolt(shooter, target);
+; 321  :   Raven_Projectile* rp = new Bolt(shooter, target);
 
 	push	224					; 000000e0H
 	call	??2@YAPAXI@Z				; operator new
@@ -28940,8 +29246,8 @@ $LN4@AddBolt:
 	mov	edx, DWORD PTR $T3[ebp]
 	mov	DWORD PTR _rp$[ebp], edx
 
-; 319  : 
-; 320  :   m_Projectiles.push_back(rp);
+; 322  : 
+; 323  :   m_Projectiles.push_back(rp);
 
 	lea	eax, DWORD PTR _rp$[ebp]
 	push	eax
@@ -28949,11 +29255,11 @@ $LN4@AddBolt:
 	add	ecx, 24					; 00000018H
 	call	?push_back@?$list@PAVRaven_Projectile@@V?$allocator@PAVRaven_Projectile@@@std@@@std@@QAEXABQAVRaven_Projectile@@@Z ; std::list<Raven_Projectile *,std::allocator<Raven_Projectile *> >::push_back
 
-; 321  :   
-; 322  :   #ifdef LOG_CREATIONAL_STUFF
-; 323  :   debug_con << "Adding a bolt " << rp->ID() << " at pos " << rp->Pos() << "";
-; 324  :   #endif
-; 325  : }
+; 324  :   
+; 325  :   #ifdef LOG_CREATIONAL_STUFF
+; 326  :   debug_con << "Adding a bolt " << rp->ID() << " at pos " << rp->Pos() << "";
+; 327  :   #endif
+; 328  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -29016,7 +29322,7 @@ _target$ = 12						; size = 16
 ?AddShotGunPellet@Raven_Game@@QAEXPAVRaven_Bot@@UVector2D@@@Z PROC ; Raven_Game::AddShotGunPellet
 ; _this$ = ecx
 
-; 353  : {
+; 356  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -29040,7 +29346,7 @@ _target$ = 12						; size = 16
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 354  :   Raven_Projectile* rp = new Pellet(shooter, target);
+; 357  :   Raven_Projectile* rp = new Pellet(shooter, target);
 
 	push	232					; 000000e8H
 	call	??2@YAPAXI@Z				; operator new
@@ -29074,8 +29380,8 @@ $LN4@AddShotGun:
 	mov	edx, DWORD PTR $T3[ebp]
 	mov	DWORD PTR _rp$[ebp], edx
 
-; 355  : 
-; 356  :   m_Projectiles.push_back(rp);
+; 358  : 
+; 359  :   m_Projectiles.push_back(rp);
 
 	lea	eax, DWORD PTR _rp$[ebp]
 	push	eax
@@ -29083,11 +29389,11 @@ $LN4@AddShotGun:
 	add	ecx, 24					; 00000018H
 	call	?push_back@?$list@PAVRaven_Projectile@@V?$allocator@PAVRaven_Projectile@@@std@@@std@@QAEXABQAVRaven_Projectile@@@Z ; std::list<Raven_Projectile *,std::allocator<Raven_Projectile *> >::push_back
 
-; 357  :   
-; 358  :   #ifdef LOG_CREATIONAL_STUFF
-; 359  :   debug_con << "Adding a shotgun shell " << rp->ID() << " at pos " << rp->Pos() << "";
-; 360  : #endif
-; 361  : }
+; 360  :   
+; 361  :   #ifdef LOG_CREATIONAL_STUFF
+; 362  :   debug_con << "Adding a shotgun shell " << rp->ID() << " at pos " << rp->Pos() << "";
+; 363  : #endif
+; 364  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -29150,7 +29456,7 @@ _target$ = 12						; size = 16
 ?AddRailGunSlug@Raven_Game@@QAEXPAVRaven_Bot@@UVector2D@@@Z PROC ; Raven_Game::AddRailGunSlug
 ; _this$ = ecx
 
-; 341  : {
+; 344  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -29174,7 +29480,7 @@ _target$ = 12						; size = 16
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 342  :   Raven_Projectile* rp = new Slug(shooter, target);
+; 345  :   Raven_Projectile* rp = new Slug(shooter, target);
 
 	push	232					; 000000e8H
 	call	??2@YAPAXI@Z				; operator new
@@ -29208,8 +29514,8 @@ $LN4@AddRailGun:
 	mov	edx, DWORD PTR $T3[ebp]
 	mov	DWORD PTR _rp$[ebp], edx
 
-; 343  : 
-; 344  :   m_Projectiles.push_back(rp);
+; 346  : 
+; 347  :   m_Projectiles.push_back(rp);
 
 	lea	eax, DWORD PTR _rp$[ebp]
 	push	eax
@@ -29217,11 +29523,11 @@ $LN4@AddRailGun:
 	add	ecx, 24					; 00000018H
 	call	?push_back@?$list@PAVRaven_Projectile@@V?$allocator@PAVRaven_Projectile@@@std@@@std@@QAEXABQAVRaven_Projectile@@@Z ; std::list<Raven_Projectile *,std::allocator<Raven_Projectile *> >::push_back
 
-; 345  :   
-; 346  :   #ifdef LOG_CREATIONAL_STUFF
-; 347  :   debug_con << "Adding a rail gun slug" << rp->ID() << " at pos " << rp->Pos() << "";
-; 348  : #endif
-; 349  : }
+; 348  :   
+; 349  :   #ifdef LOG_CREATIONAL_STUFF
+; 350  :   debug_con << "Adding a rail gun slug" << rp->ID() << " at pos " << rp->Pos() << "";
+; 351  : #endif
+; 352  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -29284,7 +29590,7 @@ _target$ = 12						; size = 16
 ?AddRocket@Raven_Game@@QAEXPAVRaven_Bot@@UVector2D@@@Z PROC ; Raven_Game::AddRocket
 ; _this$ = ecx
 
-; 329  : {
+; 332  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -29308,7 +29614,7 @@ _target$ = 12						; size = 16
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 330  :   Raven_Projectile* rp = new Rocket(shooter, target);
+; 333  :   Raven_Projectile* rp = new Rocket(shooter, target);
 
 	push	240					; 000000f0H
 	call	??2@YAPAXI@Z				; operator new
@@ -29342,8 +29648,8 @@ $LN4@AddRocket:
 	mov	edx, DWORD PTR $T3[ebp]
 	mov	DWORD PTR _rp$[ebp], edx
 
-; 331  : 
-; 332  :   m_Projectiles.push_back(rp);
+; 334  : 
+; 335  :   m_Projectiles.push_back(rp);
 
 	lea	eax, DWORD PTR _rp$[ebp]
 	push	eax
@@ -29351,11 +29657,11 @@ $LN4@AddRocket:
 	add	ecx, 24					; 00000018H
 	call	?push_back@?$list@PAVRaven_Projectile@@V?$allocator@PAVRaven_Projectile@@@std@@@std@@QAEXABQAVRaven_Projectile@@@Z ; std::list<Raven_Projectile *,std::allocator<Raven_Projectile *> >::push_back
 
-; 333  :   
-; 334  :   #ifdef LOG_CREATIONAL_STUFF
-; 335  :   debug_con << "Adding a rocket " << rp->ID() << " at pos " << rp->Pos() << "";
-; 336  :   #endif
-; 337  : }
+; 336  :   
+; 337  :   #ifdef LOG_CREATIONAL_STUFF
+; 338  :   debug_con << "Adding a rocket " << rp->ID() << " at pos " << rp->Pos() << "";
+; 339  :   #endif
+; 340  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -29407,8 +29713,8 @@ text$x	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\mes documents\git\projet-ia-raven\raven\raven_game.cpp
 _TEXT	SEGMENT
-tv83 = -60						; size = 4
-tv66 = -56						; size = 4
+tv82 = -60						; size = 4
+tv65 = -56						; size = 4
 $T2 = -52						; size = 16
 $T3 = -36						; size = 4
 $T4 = -32						; size = 4
@@ -29419,7 +29725,7 @@ _NumBotsToAdd$ = 8					; size = 4
 ?AddBots@Raven_Game@@QAEXI@Z PROC			; Raven_Game::AddBots
 ; _this$ = ecx
 
-; 258  : {
+; 262  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -29441,27 +29747,22 @@ _NumBotsToAdd$ = 8					; size = 4
 	lea	eax, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
-
-; 259  :   m_thereIsAHuman = false;
-
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+20], 0
 $LN2@AddBots:
 
-; 260  :   while (NumBotsToAdd--)
+; 263  :   while (NumBotsToAdd--)
 
+	mov	eax, DWORD PTR _NumBotsToAdd$[ebp]
+	mov	DWORD PTR tv65[ebp], eax
 	mov	ecx, DWORD PTR _NumBotsToAdd$[ebp]
-	mov	DWORD PTR tv66[ebp], ecx
-	mov	edx, DWORD PTR _NumBotsToAdd$[ebp]
-	sub	edx, 1
-	mov	DWORD PTR _NumBotsToAdd$[ebp], edx
-	cmp	DWORD PTR tv66[ebp], 0
+	sub	ecx, 1
+	mov	DWORD PTR _NumBotsToAdd$[ebp], ecx
+	cmp	DWORD PTR tv65[ebp], 0
 	je	$LN1@AddBots
 
-; 261  :   {
-; 262  :     //create a bot. (its position is irrelevant at this point because it will
-; 263  :     //not be rendered until it is spawned)
-; 264  :     Raven_Bot* rb = new Raven_Bot(this, Vector2D());
+; 264  :   {
+; 265  :     //create a bot. (its position is irrelevant at this point because it will
+; 266  :     //not be rendered until it is spawned)
+; 267  :     Raven_Bot* rb = new Raven_Bot(this, Vector2D());
 
 	push	280					; 00000118H
 	call	??2@YAPAXI@Z				; operator new
@@ -29473,48 +29774,48 @@ $LN2@AddBots:
 	lea	ecx, DWORD PTR $T2[ebp]
 	call	??0Vector2D@@QAE@XZ			; Vector2D::Vector2D
 	sub	esp, 16					; 00000010H
-	mov	ecx, esp
-	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR [ecx], edx
-	mov	edx, DWORD PTR [eax+4]
-	mov	DWORD PTR [ecx+4], edx
-	mov	edx, DWORD PTR [eax+8]
-	mov	DWORD PTR [ecx+8], edx
+	mov	edx, esp
+	mov	ecx, DWORD PTR [eax]
+	mov	DWORD PTR [edx], ecx
+	mov	ecx, DWORD PTR [eax+4]
+	mov	DWORD PTR [edx+4], ecx
+	mov	ecx, DWORD PTR [eax+8]
+	mov	DWORD PTR [edx+8], ecx
 	mov	eax, DWORD PTR [eax+12]
-	mov	DWORD PTR [ecx+12], eax
+	mov	DWORD PTR [edx+12], eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	push	ecx
 	mov	ecx, DWORD PTR $T3[ebp]
 	call	??0Raven_Bot@@QAE@PAVRaven_Game@@UVector2D@@@Z ; Raven_Bot::Raven_Bot
-	mov	DWORD PTR tv83[ebp], eax
+	mov	DWORD PTR tv82[ebp], eax
 	jmp	SHORT $LN6@AddBots
 $LN5@AddBots:
-	mov	DWORD PTR tv83[ebp], 0
+	mov	DWORD PTR tv82[ebp], 0
 $LN6@AddBots:
-	mov	edx, DWORD PTR tv83[ebp]
+	mov	edx, DWORD PTR tv82[ebp]
 	mov	DWORD PTR $T4[ebp], edx
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	eax, DWORD PTR $T4[ebp]
 	mov	DWORD PTR _rb$5[ebp], eax
 
-; 265  : 	
-; 266  : 	//switch the default steering behaviors on
-; 267  : 	rb->GetSteering()->WallAvoidanceOn();
+; 268  : 	
+; 269  : 	//switch the default steering behaviors on
+; 270  : 	rb->GetSteering()->WallAvoidanceOn();
 
 	mov	ecx, DWORD PTR _rb$5[ebp]
 	call	?GetSteering@Raven_Bot@@QAEQAVRaven_Steering@@XZ ; Raven_Bot::GetSteering
 	mov	ecx, eax
 	call	?WallAvoidanceOn@Raven_Steering@@QAEXXZ	; Raven_Steering::WallAvoidanceOn
 
-; 268  : 	rb->GetSteering()->SeparationOn();
+; 271  : 	rb->GetSteering()->SeparationOn();
 
 	mov	ecx, DWORD PTR _rb$5[ebp]
 	call	?GetSteering@Raven_Bot@@QAEQAVRaven_Steering@@XZ ; Raven_Bot::GetSteering
 	mov	ecx, eax
 	call	?SeparationOn@Raven_Steering@@QAEXXZ	; Raven_Steering::SeparationOn
 
-; 269  : 
-; 270  :     m_Bots.push_back(rb);
+; 272  : 
+; 273  :     m_Bots.push_back(rb);
 
 	lea	ecx, DWORD PTR _rb$5[ebp]
 	push	ecx
@@ -29522,9 +29823,9 @@ $LN6@AddBots:
 	add	ecx, 4
 	call	?push_back@?$list@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@QAEXABQAVRaven_Bot@@@Z ; std::list<Raven_Bot *,std::allocator<Raven_Bot *> >::push_back
 
-; 271  : 
-; 272  :     //register the bot with the entity manager
-; 273  :     EntityMgr->RegisterEntity(rb);
+; 274  : 
+; 275  :     //register the bot with the entity manager
+; 276  :     EntityMgr->RegisterEntity(rb);
 
 	mov	edx, DWORD PTR _rb$5[ebp]
 	push	edx
@@ -29532,27 +29833,27 @@ $LN6@AddBots:
 	mov	ecx, eax
 	call	?RegisterEntity@EntityManager@@QAEXPAVBaseGameEntity@@@Z ; EntityManager::RegisterEntity
 
-; 274  : 
-; 275  : 	////////////////////////////////	HUMAN BOT	//////////////////////////////////////////////
-; 276  : 	//if you don't want human bot, comment this line
-; 277  : 	CreateHumanBot(rb);
+; 277  : 
+; 278  : 	////////////////////////////////	HUMAN BOT	//////////////////////////////////////////////
+; 279  : 	//if you don't want human bot, comment this line
+; 280  : 	CreateHumanBot(rb);
 
 	mov	eax, DWORD PTR _rb$5[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?CreateHumanBot@Raven_Game@@QAEXPAVRaven_Bot@@@Z ; Raven_Game::CreateHumanBot
 
-; 278  : 
-; 279  :     
-; 280  : #ifdef LOG_CREATIONAL_STUFF
-; 281  :   debug_con << "Adding bot with ID " << ttos(rb->ID()) << "";
-; 282  : #endif
-; 283  :   }
+; 281  : 
+; 282  :     
+; 283  : #ifdef LOG_CREATIONAL_STUFF
+; 284  :   debug_con << "Adding bot with ID " << ttos(rb->ID()) << "";
+; 285  : #endif
+; 286  :   }
 
 	jmp	$LN2@AddBots
 $LN1@AddBots:
 
-; 284  : }
+; 287  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -29571,6 +29872,7 @@ $LN1@AddBots:
 	mov	esp, ebp
 	pop	ebp
 	ret	4
+	npad	3
 $LN11@AddBots:
 	DD	1
 	DD	$LN10@AddBots
@@ -29609,7 +29911,7 @@ _rb$ = 8						; size = 4
 ?CreateHumanBot@Raven_Game@@QAEXPAVRaven_Bot@@@Z PROC	; Raven_Game::CreateHumanBot
 ; _this$ = ecx
 
-; 247  : void Raven_Game::CreateHumanBot(Raven_Bot* rb) {
+; 251  : void Raven_Game::CreateHumanBot(Raven_Bot* rb) {
 
 	push	ebp
 	mov	ebp, esp
@@ -29617,27 +29919,27 @@ _rb$ = 8						; size = 4
 	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 248  : 	if (!m_thereIsAHuman) {
+; 252  : 	if (!m_thereIsAHuman) {
 
 	mov	eax, DWORD PTR _this$[ebp]
 	movzx	ecx, BYTE PTR [eax+20]
 	test	ecx, ecx
 	jne	SHORT $LN1@CreateHuma
 
-; 249  : 		m_pSelectedBot = rb;
+; 253  : 		m_pSelectedBot = rb;
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	eax, DWORD PTR _rb$[ebp]
 	mov	DWORD PTR [edx+16], eax
 
-; 250  : 		m_pSelectedBot->SetIsPossessed(true);
+; 254  : 		m_pSelectedBot->SetIsPossessed(true);
 
 	push	1
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+16]
 	call	?SetIsPossessed@Raven_Bot@@QAEX_N@Z	; Raven_Bot::SetIsPossessed
 
-; 251  : 		m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
+; 255  : 		m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx+16]
@@ -29645,14 +29947,14 @@ _rb$ = 8						; size = 4
 	mov	ecx, eax
 	call	?RemoveAllSubgoals@?$Goal_Composite@VRaven_Bot@@@@QAEXXZ ; Goal_Composite<Raven_Bot>::RemoveAllSubgoals
 
-; 252  : 		m_thereIsAHuman = true;
+; 256  : 		m_thereIsAHuman = true;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	BYTE PTR [eax+20], 1
 $LN1@CreateHuma:
 
-; 253  : 	}
-; 254  : }
+; 257  : 	}
+; 258  : }
 
 	add	esp, 4
 	cmp	ebp, esp
@@ -29689,7 +29991,7 @@ _filename$ = 8						; size = 4
 ?LoadMap@Raven_Game@@QAE_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z PROC ; Raven_Game::LoadMap
 ; _this$ = ecx
 
-; 393  : {  
+; 396  : {  
 
 	push	ebp
 	mov	ebp, esp
@@ -29712,15 +30014,15 @@ _filename$ = 8						; size = 4
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 394  :   //clear any current bots and projectiles
-; 395  :   Clear();
+; 397  :   //clear any current bots and projectiles
+; 398  :   Clear();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Clear@Raven_Game@@AAEXXZ		; Raven_Game::Clear
 
-; 396  :   
-; 397  :   //out with the old
-; 398  :   delete m_pMap;
+; 399  :   
+; 400  :   //out with the old
+; 401  :   delete m_pMap;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax]
@@ -29738,7 +30040,7 @@ $LN4@LoadMap:
 	mov	DWORD PTR tv70[ebp], 0
 $LN5@LoadMap:
 
-; 399  :   delete m_pGraveMarkers;
+; 402  :   delete m_pGraveMarkers;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+44]
@@ -29756,7 +30058,7 @@ $LN6@LoadMap:
 	mov	DWORD PTR tv76[ebp], 0
 $LN7@LoadMap:
 
-; 400  :   delete m_pPathManager;
+; 403  :   delete m_pPathManager;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+36]
@@ -29774,9 +30076,9 @@ $LN8@LoadMap:
 	mov	DWORD PTR tv82[ebp], 0
 $LN9@LoadMap:
 
-; 401  : 
-; 402  :   //in with the new
-; 403  :   m_pGraveMarkers = new GraveMarkers(script->GetDouble("GraveLifetime"));
+; 404  : 
+; 405  :   //in with the new
+; 406  :   m_pGraveMarkers = new GraveMarkers(script->GetDouble("GraveLifetime"));
 
 	push	56					; 00000038H
 	call	??2@YAPAXI@Z				; operator new
@@ -29785,7 +30087,7 @@ $LN9@LoadMap:
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	cmp	DWORD PTR $T6[ebp], 0
 	je	SHORT $LN10@LoadMap
-	push	OFFSET $SG185657
+	push	OFFSET $SG185661
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -29805,7 +30107,7 @@ $LN11@LoadMap:
 	mov	edx, DWORD PTR $T7[ebp]
 	mov	DWORD PTR [ecx+44], edx
 
-; 404  :   m_pPathManager = new PathManager<Raven_PathPlanner>(script->GetInt("MaxSearchCyclesPerUpdateStep"));
+; 407  :   m_pPathManager = new PathManager<Raven_PathPlanner>(script->GetInt("MaxSearchCyclesPerUpdateStep"));
 
 	push	16					; 00000010H
 	call	??2@YAPAXI@Z				; operator new
@@ -29814,7 +30116,7 @@ $LN11@LoadMap:
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
 	cmp	DWORD PTR $T4[ebp], 0
 	je	SHORT $LN12@LoadMap
-	push	OFFSET $SG185659
+	push	OFFSET $SG185663
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetInt@Scriptor@@QAEHPAD@Z		; Scriptor::GetInt
@@ -29833,7 +30135,7 @@ $LN13@LoadMap:
 	mov	edx, DWORD PTR $T5[ebp]
 	mov	DWORD PTR [ecx+36], edx
 
-; 405  :   m_pMap = new Raven_Map();
+; 408  :   m_pMap = new Raven_Map();
 
 	push	104					; 00000068H
 	call	??2@YAPAXI@Z				; operator new
@@ -29856,18 +30158,18 @@ $LN15@LoadMap:
 	mov	edx, DWORD PTR $T3[ebp]
 	mov	DWORD PTR [ecx], edx
 
-; 406  : 
-; 407  :   //make sure the entity manager is reset
-; 408  :   EntityMgr->Reset();
+; 409  : 
+; 410  :   //make sure the entity manager is reset
+; 411  :   EntityMgr->Reset();
 
 	call	?Instance@EntityManager@@SAPAV1@XZ	; EntityManager::Instance
 	mov	ecx, eax
 	call	?Reset@EntityManager@@QAEXXZ		; EntityManager::Reset
 
-; 409  : 
-; 410  : 
-; 411  :   //load the new map data
-; 412  :   if (m_pMap->LoadMap(filename))
+; 412  : 
+; 413  : 
+; 414  :   //load the new map data
+; 415  :   if (m_pMap->LoadMap(filename))
 
 	mov	eax, DWORD PTR _filename$[ebp]
 	push	eax
@@ -29878,10 +30180,10 @@ $LN15@LoadMap:
 	test	edx, edx
 	je	SHORT $LN2@LoadMap
 
-; 413  :   { 
-; 414  :     AddBots(script->GetInt("NumBots"));
+; 416  :   { 
+; 417  :     AddBots(script->GetInt("NumBots"));
 
-	push	OFFSET $SG185662
+	push	OFFSET $SG185666
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetInt@Scriptor@@QAEHPAD@Z		; Scriptor::GetInt
@@ -29889,21 +30191,21 @@ $LN15@LoadMap:
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?AddBots@Raven_Game@@QAEXI@Z		; Raven_Game::AddBots
 
-; 415  :   
-; 416  :     return true;
+; 418  :   
+; 419  :     return true;
 
 	mov	al, 1
 	jmp	SHORT $LN1@LoadMap
 $LN2@LoadMap:
 
-; 417  :   }
-; 418  : 
-; 419  :   return false;
+; 420  :   }
+; 421  : 
+; 422  :   return false;
 
 	xor	al, al
 $LN1@LoadMap:
 
-; 420  : }
+; 423  : }
 
 	mov	ecx, DWORD PTR __$EHRec$[ebp]
 	mov	DWORD PTR fs:0, ecx
@@ -29951,18 +30253,18 @@ text$x	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\mes documents\git\projet-ia-raven\raven\raven_game.cpp
 _TEXT	SEGMENT
-tv334 = -240						; size = 4
+tv335 = -240						; size = 4
 tv298 = -236						; size = 4
-tv352 = -232						; size = 4
+tv353 = -232						; size = 4
 tv227 = -228						; size = 4
-tv349 = -224						; size = 4
-tv347 = -220						; size = 4
+tv350 = -224						; size = 4
+tv348 = -220						; size = 4
 tv198 = -216						; size = 4
 tv182 = -212						; size = 4
-tv344 = -208						; size = 4
+tv345 = -208						; size = 4
 tv146 = -204						; size = 4
 tv141 = -200						; size = 4
-tv341 = -196						; size = 4
+tv342 = -196						; size = 4
 tv76 = -192						; size = 4
 $T2 = -188						; size = 4
 $T3 = -184						; size = 4
@@ -29987,7 +30289,7 @@ __$EHRec$ = -12						; size = 12
 ?Update@Raven_Game@@QAEXXZ PROC				; Raven_Game::Update
 ; _this$ = ecx
 
-; 108  : { 
+; 109  : { 
 
 	push	ebp
 	mov	ebp, esp
@@ -30011,8 +30313,8 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 109  :   //don't update if the user has paused the game
-; 110  :   if (m_bPaused) return;
+; 110  :   //don't update if the user has paused the game
+; 111  :   if (m_bPaused) return;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	movzx	ecx, BYTE PTR [eax+40]
@@ -30021,31 +30323,31 @@ __$EHRec$ = -12						; size = 12
 	jmp	$LN1@Update
 $LN10@Update:
 
-; 111  : 
-; 112  :   m_pGraveMarkers->Update();
+; 112  : 
+; 113  :   m_pGraveMarkers->Update();
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx+44]
 	call	?Update@GraveMarkers@@QAEXXZ		; GraveMarkers::Update
 
-; 113  : 
-; 114  :   //get any player keyboard input
-; 115  :   GetPlayerInput();
+; 114  : 
+; 115  :   //get any player keyboard input
+; 116  :   GetPlayerInput();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?GetPlayerInput@Raven_Game@@QBEXXZ	; Raven_Game::GetPlayerInput
 
-; 116  :   
-; 117  :   //update all the queued searches in the path manager
-; 118  :   m_pPathManager->UpdateSearches();
+; 117  :   
+; 118  :   //update all the queued searches in the path manager
+; 119  :   m_pPathManager->UpdateSearches();
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+36]
 	call	?UpdateSearches@?$PathManager@VRaven_PathPlanner@@@@QAEXXZ ; PathManager<Raven_PathPlanner>::UpdateSearches
 
-; 119  : 
-; 120  :   //update any doors
-; 121  :   std::vector<Raven_Door*>::iterator curDoor =m_pMap->GetDoors().begin();
+; 120  : 
+; 121  :   //update any doors
+; 122  :   std::vector<Raven_Door*>::iterator curDoor =m_pMap->GetDoors().begin();
 
 	lea	ecx, DWORD PTR _curDoor$[ebp]
 	push	ecx
@@ -30058,7 +30360,7 @@ $LN10@Update:
 	jmp	SHORT $LN4@Update
 $LN2@Update:
 
-; 122  :   for (curDoor; curDoor != m_pMap->GetDoors().end(); ++curDoor)
+; 123  :   for (curDoor; curDoor != m_pMap->GetDoors().end(); ++curDoor)
 
 	lea	ecx, DWORD PTR _curDoor$[ebp]
 	call	??E?$_Vector_iterator@V?$_Vector_val@U?$_Simple_types@PAVRaven_Door@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_Vector_iterator<std::_Vector_val<std::_Simple_types<Raven_Door *> > >::operator++
@@ -30072,9 +30374,9 @@ $LN4@Update:
 	call	?end@?$vector@PAVRaven_Door@@V?$allocator@PAVRaven_Door@@@std@@@std@@QAE?AV?$_Vector_iterator@V?$_Vector_val@U?$_Simple_types@PAVRaven_Door@@@std@@@std@@@2@XZ ; std::vector<Raven_Door *,std::allocator<Raven_Door *> >::end
 	mov	DWORD PTR tv76[ebp], eax
 	mov	edx, DWORD PTR tv76[ebp]
-	mov	DWORD PTR tv341[ebp], edx
+	mov	DWORD PTR tv342[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
-	mov	eax, DWORD PTR tv341[ebp]
+	mov	eax, DWORD PTR tv342[ebp]
 	push	eax
 	lea	ecx, DWORD PTR _curDoor$[ebp]
 	call	??9?$_Vector_const_iterator@V?$_Vector_val@U?$_Simple_types@PAVRaven_Door@@@std@@@std@@@std@@QBE_NABV01@@Z ; std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<Raven_Door *> > >::operator!=
@@ -30086,8 +30388,8 @@ $LN4@Update:
 	test	ecx, ecx
 	je	SHORT $LN3@Update
 
-; 123  :   {
-; 124  :     (*curDoor)->Update();
+; 124  :   {
+; 125  :     (*curDoor)->Update();
 
 	lea	ecx, DWORD PTR _curDoor$[ebp]
 	call	??D?$_Vector_iterator@V?$_Vector_val@U?$_Simple_types@PAVRaven_Door@@@std@@@std@@@std@@QBEAAPAVRaven_Door@@XZ ; std::_Vector_iterator<std::_Vector_val<std::_Simple_types<Raven_Door *> > >::operator*
@@ -30102,14 +30404,14 @@ $LN4@Update:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 125  :   }
+; 126  :   }
 
 	jmp	$LN2@Update
 $LN3@Update:
 
-; 126  : 
-; 127  :   //update any current projectiles
-; 128  :   std::list<Raven_Projectile*>::iterator curW = m_Projectiles.begin();
+; 127  : 
+; 128  :   //update any current projectiles
+; 129  :   std::list<Raven_Projectile*>::iterator curW = m_Projectiles.begin();
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	push	ecx
@@ -30119,7 +30421,7 @@ $LN3@Update:
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 $LN5@Update:
 
-; 129  :   while (curW != m_Projectiles.end())
+; 130  :   while (curW != m_Projectiles.end())
 
 	lea	edx, DWORD PTR $T11[ebp]
 	push	edx
@@ -30128,9 +30430,9 @@ $LN5@Update:
 	call	?end@?$list@PAVRaven_Projectile@@V?$allocator@PAVRaven_Projectile@@@std@@@std@@QAE?AV?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@2@XZ ; std::list<Raven_Projectile *,std::allocator<Raven_Projectile *> >::end
 	mov	DWORD PTR tv146[ebp], eax
 	mov	eax, DWORD PTR tv146[ebp]
-	mov	DWORD PTR tv344[ebp], eax
+	mov	DWORD PTR tv345[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 3
-	mov	ecx, DWORD PTR tv344[ebp]
+	mov	ecx, DWORD PTR tv345[ebp]
 	push	ecx
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??9?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QBE_NABV01@@Z ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Projectile *> > >::operator!=
@@ -30142,9 +30444,9 @@ $LN5@Update:
 	test	edx, edx
 	je	$LN6@Update
 
-; 130  :   {
-; 131  :     //test for any dead projectiles and remove them if necessary
-; 132  :     if (!(*curW)->isDead())
+; 131  :   {
+; 132  :     //test for any dead projectiles and remove them if necessary
+; 133  :     if (!(*curW)->isDead())
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QBEAAPAVRaven_Projectile@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Projectile *> > >::operator*
@@ -30154,8 +30456,8 @@ $LN5@Update:
 	test	eax, eax
 	jne	SHORT $LN11@Update
 
-; 133  :     {
-; 134  :       (*curW)->Update();
+; 134  :     {
+; 135  :       (*curW)->Update();
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QBEAAPAVRaven_Projectile@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Projectile *> > >::operator*
@@ -30170,20 +30472,20 @@ $LN5@Update:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 135  : 
-; 136  :       ++curW;
+; 136  : 
+; 137  :       ++curW;
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??E?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Projectile *> > >::operator++
 
-; 137  :     }
-; 138  :     else
+; 138  :     }
+; 139  :     else
 
 	jmp	$LN12@Update
 $LN11@Update:
 
-; 139  :     {    
-; 140  :       delete *curW;
+; 140  :     {    
+; 141  :       delete *curW;
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QBEAAPAVRaven_Projectile@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Projectile *> > >::operator*
@@ -30208,8 +30510,8 @@ $LN22@Update:
 	mov	DWORD PTR tv198[ebp], 0
 $LN23@Update:
 
-; 141  : 
-; 142  :       curW = m_Projectiles.erase(curW);
+; 142  : 
+; 143  :       curW = m_Projectiles.erase(curW);
 
 	sub	esp, 12					; 0000000cH
 	mov	ecx, esp
@@ -30222,10 +30524,10 @@ $LN23@Update:
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 24					; 00000018H
 	call	?erase@?$list@PAVRaven_Projectile@@V?$allocator@PAVRaven_Projectile@@@std@@@std@@QAE?AV?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@2@V?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@2@@Z ; std::list<Raven_Projectile *,std::allocator<Raven_Projectile *> >::erase
-	mov	DWORD PTR tv347[ebp], eax
-	mov	edx, DWORD PTR tv347[ebp]
-	mov	DWORD PTR tv349[ebp], edx
-	mov	eax, DWORD PTR tv349[ebp]
+	mov	DWORD PTR tv348[ebp], eax
+	mov	edx, DWORD PTR tv348[ebp]
+	mov	DWORD PTR tv350[ebp], edx
+	mov	eax, DWORD PTR tv350[ebp]
 	push	eax
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??4?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QAEAAV01@$$QAV01@@Z
@@ -30233,20 +30535,20 @@ $LN23@Update:
 	call	??1?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QAE@XZ
 $LN12@Update:
 
-; 143  :     }   
-; 144  :   }
+; 144  :     }   
+; 145  :   }
 
 	jmp	$LN5@Update
 $LN6@Update:
 
-; 145  :   
-; 146  :   //update the bots
-; 147  :   bool bSpawnPossible = true;
+; 146  :   
+; 147  :   //update the bots
+; 148  :   bool bSpawnPossible = true;
 
 	mov	BYTE PTR _bSpawnPossible$[ebp], 1
 
-; 148  :   
-; 149  :   std::list<Raven_Bot*>::iterator curBot = m_Bots.begin();
+; 149  :   
+; 150  :   std::list<Raven_Bot*>::iterator curBot = m_Bots.begin();
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	push	ecx
@@ -30257,7 +30559,7 @@ $LN6@Update:
 	jmp	SHORT $LN9@Update
 $LN7@Update:
 
-; 150  :   for (curBot; curBot != m_Bots.end(); ++curBot)
+; 151  :   for (curBot; curBot != m_Bots.end(); ++curBot)
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??E?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator++
@@ -30269,9 +30571,9 @@ $LN9@Update:
 	call	?end@?$list@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@QAE?AV?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@2@XZ ; std::list<Raven_Bot *,std::allocator<Raven_Bot *> >::end
 	mov	DWORD PTR tv227[ebp], eax
 	mov	eax, DWORD PTR tv227[ebp]
-	mov	DWORD PTR tv352[ebp], eax
+	mov	DWORD PTR tv353[ebp], eax
 	mov	BYTE PTR __$EHRec$[ebp+8], 5
-	mov	ecx, DWORD PTR tv352[ebp]
+	mov	ecx, DWORD PTR tv353[ebp]
 	push	ecx
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??9?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBE_NABV01@@Z ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator!=
@@ -30283,10 +30585,10 @@ $LN9@Update:
 	test	edx, edx
 	je	$LN8@Update
 
-; 151  :   {
-; 152  :     //if this bot's status is 'respawning' attempt to resurrect it from
-; 153  :     //an unoccupied spawn point
-; 154  :     if ((*curBot)->isSpawning() && bSpawnPossible)
+; 152  :   {
+; 153  :     //if this bot's status is 'respawning' attempt to resurrect it from
+; 154  :     //an unoccupied spawn point
+; 155  :     if ((*curBot)->isSpawning() && bSpawnPossible)
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEAAPAVRaven_Bot@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -30299,8 +30601,8 @@ $LN9@Update:
 	test	ecx, ecx
 	je	SHORT $LN13@Update
 
-; 155  :     {
-; 156  :       bSpawnPossible = AttemptToAddBot(*curBot);
+; 156  :     {
+; 157  :       bSpawnPossible = AttemptToAddBot(*curBot);
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEAAPAVRaven_Bot@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -30312,11 +30614,11 @@ $LN9@Update:
 	jmp	$LN14@Update
 $LN13@Update:
 
-; 157  :     }
-; 158  :     
-; 159  :     //if this bot's status is 'dead' add a grave at its current location 
-; 160  :     //then change its status to 'respawning'
-; 161  :     else if ((*curBot)->isDead())
+; 158  :     }
+; 159  :     
+; 160  :     //if this bot's status is 'dead' add a grave at its current location 
+; 161  :     //then change its status to 'respawning'
+; 162  :     else if ((*curBot)->isDead())
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEAAPAVRaven_Bot@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -30326,9 +30628,9 @@ $LN13@Update:
 	test	eax, eax
 	je	SHORT $LN15@Update
 
-; 162  :     {
-; 163  :       //create a grave
-; 164  :       m_pGraveMarkers->AddGrave((*curBot)->Pos());
+; 163  :     {
+; 164  :       //create a grave
+; 165  :       m_pGraveMarkers->AddGrave((*curBot)->Pos());
 
 	lea	ecx, DWORD PTR $T4[ebp]
 	push	ecx
@@ -30350,9 +30652,9 @@ $LN13@Update:
 	mov	ecx, DWORD PTR [ecx+44]
 	call	?AddGrave@GraveMarkers@@QAEXUVector2D@@@Z ; GraveMarkers::AddGrave
 
-; 165  : 
-; 166  :       //change its status to spawning
-; 167  :       (*curBot)->SetSpawning();
+; 166  : 
+; 167  :       //change its status to spawning
+; 168  :       (*curBot)->SetSpawning();
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEAAPAVRaven_Bot@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -30361,10 +30663,10 @@ $LN13@Update:
 	jmp	SHORT $LN14@Update
 $LN15@Update:
 
-; 168  :     }
-; 169  : 
-; 170  :     //if this bot is alive update it.
-; 171  :     else if ( (*curBot)->isAlive())
+; 169  :     }
+; 170  : 
+; 171  :     //if this bot is alive update it.
+; 172  :     else if ( (*curBot)->isAlive())
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEAAPAVRaven_Bot@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -30374,8 +30676,8 @@ $LN15@Update:
 	test	edx, edx
 	je	SHORT $LN14@Update
 
-; 172  :     {
-; 173  :       (*curBot)->Update();
+; 173  :     {
+; 174  :       (*curBot)->Update();
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEAAPAVRaven_Bot@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -30391,15 +30693,15 @@ $LN15@Update:
 	call	__RTC_CheckEsp
 $LN14@Update:
 
-; 174  :     }  
-; 175  :   } 
+; 175  :     }  
+; 176  :   } 
 
 	jmp	$LN7@Update
 $LN8@Update:
 
-; 176  : 
-; 177  :   //update the triggers
-; 178  :   m_pMap->UpdateTriggerSystem(m_Bots);
+; 177  : 
+; 178  :   //update the triggers
+; 179  :   m_pMap->UpdateTriggerSystem(m_Bots);
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
@@ -30408,18 +30710,18 @@ $LN8@Update:
 	mov	ecx, DWORD PTR [edx]
 	call	?UpdateTriggerSystem@Raven_Map@@QAEXAAV?$list@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@@Z ; Raven_Map::UpdateTriggerSystem
 
-; 179  : 
-; 180  :   //if the user has requested that the number of bots be decreased, remove
-; 181  :   //one
-; 182  :   if (m_bRemoveABot)
+; 180  : 
+; 181  :   //if the user has requested that the number of bots be decreased, remove
+; 182  :   //one
+; 183  :   if (m_bRemoveABot)
 
 	mov	eax, DWORD PTR _this$[ebp]
 	movzx	ecx, BYTE PTR [eax+41]
 	test	ecx, ecx
 	je	$LN18@Update
 
-; 183  :   { 
-; 184  :     if (!m_Bots.empty())
+; 184  :   { 
+; 185  :     if (!m_Bots.empty())
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
@@ -30428,8 +30730,8 @@ $LN8@Update:
 	test	edx, edx
 	jne	$LN19@Update
 
-; 185  :     {
-; 186  :       Raven_Bot* pBot = m_Bots.back();
+; 186  :     {
+; 187  :       Raven_Bot* pBot = m_Bots.back();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
@@ -30437,72 +30739,81 @@ $LN8@Update:
 	mov	eax, DWORD PTR [eax]
 	mov	DWORD PTR _pBot$15[ebp], eax
 
-; 187  :       if (pBot == m_pSelectedBot)m_pSelectedBot=0;
+; 188  : 	  if (pBot == m_pSelectedBot) {
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR _pBot$15[ebp]
 	cmp	edx, DWORD PTR [ecx+16]
 	jne	SHORT $LN20@Update
+
+; 189  : 		  m_pSelectedBot = 0;
+
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+16], 0
+
+; 190  : 		  m_thereIsAHuman = false;
+
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+20], 0
 $LN20@Update:
 
-; 188  :       NotifyAllBotsOfRemoval(pBot);
+; 191  : 	  }
+; 192  :       NotifyAllBotsOfRemoval(pBot);
 
-	mov	ecx, DWORD PTR _pBot$15[ebp]
-	push	ecx
+	mov	edx, DWORD PTR _pBot$15[ebp]
+	push	edx
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?NotifyAllBotsOfRemoval@Raven_Game@@ABEXPAVRaven_Bot@@@Z ; Raven_Game::NotifyAllBotsOfRemoval
 
-; 189  :       delete m_Bots.back();
+; 193  :       delete m_Bots.back();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
 	call	?back@?$list@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@QAEAAPAVRaven_Bot@@XZ ; std::list<Raven_Bot *,std::allocator<Raven_Bot *> >::back
-	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR $T2[ebp], edx
-	mov	eax, DWORD PTR $T2[ebp]
-	mov	DWORD PTR $T3[ebp], eax
+	mov	eax, DWORD PTR [eax]
+	mov	DWORD PTR $T2[ebp], eax
+	mov	ecx, DWORD PTR $T2[ebp]
+	mov	DWORD PTR $T3[ebp], ecx
 	cmp	DWORD PTR $T3[ebp], 0
 	je	SHORT $LN24@Update
 	mov	esi, esp
 	push	1
-	mov	ecx, DWORD PTR $T3[ebp]
-	mov	edx, DWORD PTR [ecx]
-	mov	ecx, DWORD PTR $T3[ebp]
+	mov	edx, DWORD PTR $T3[ebp]
 	mov	eax, DWORD PTR [edx]
-	call	eax
+	mov	ecx, DWORD PTR $T3[ebp]
+	mov	edx, DWORD PTR [eax]
+	call	edx
 	cmp	esi, esp
 	call	__RTC_CheckEsp
-	mov	DWORD PTR tv334[ebp], eax
+	mov	DWORD PTR tv335[ebp], eax
 	jmp	SHORT $LN25@Update
 $LN24@Update:
-	mov	DWORD PTR tv334[ebp], 0
+	mov	DWORD PTR tv335[ebp], 0
 $LN25@Update:
 
-; 190  :       m_Bots.remove(pBot);
+; 194  :       m_Bots.remove(pBot);
 
-	lea	ecx, DWORD PTR _pBot$15[ebp]
-	push	ecx
+	lea	eax, DWORD PTR _pBot$15[ebp]
+	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
 	call	?remove@?$list@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@QAEXABQAVRaven_Bot@@@Z ; std::list<Raven_Bot *,std::allocator<Raven_Bot *> >::remove
 
-; 191  :       pBot = 0;
+; 195  :       pBot = 0;
 
 	mov	DWORD PTR _pBot$15[ebp], 0
 $LN19@Update:
 
-; 192  :     }
-; 193  : 
-; 194  :     m_bRemoveABot = false;
+; 196  :     }
+; 197  : 
+; 198  :     m_bRemoveABot = false;
 
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [edx+41], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+41], 0
 $LN18@Update:
 
-; 195  :   }
-; 196  : }
+; 199  :   }
+; 200  : }
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
 	lea	ecx, DWORD PTR _curBot$[ebp]
@@ -30532,7 +30843,7 @@ $LN1@Update:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-	npad	1
+	npad	2
 $LN40@Update:
 	DD	4
 	DD	$LN39@Update
@@ -30655,7 +30966,7 @@ __$EHRec$ = -12						; size = 12
 ?Render@Raven_Game@@QAEXXZ PROC				; Raven_Game::Render
 ; _this$ = ecx
 
-; 711  : {
+; 737  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -30680,24 +30991,24 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 712  :   m_pGraveMarkers->Render();
+; 738  :   m_pGraveMarkers->Render();
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+44]
 	call	?Render@GraveMarkers@@QAEXXZ		; GraveMarkers::Render
 
-; 713  :   
-; 714  :   //render the map
-; 715  :   m_pMap->Render();
+; 739  :   
+; 740  :   //render the map
+; 741  :   m_pMap->Render();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx]
 	call	?Render@Raven_Map@@QAEXXZ		; Raven_Map::Render
 
-; 716  : 
-; 717  :   //render all the bots unless the user has selected the option to only 
-; 718  :   //render those bots that are in the fov of the selected bot
-; 719  :   if (m_pSelectedBot && UserOptions->m_bOnlyShowBotsInTargetsFOV)
+; 742  : 
+; 743  :   //render all the bots unless the user has selected the option to only 
+; 744  :   //render those bots that are in the fov of the selected bot
+; 745  :   if (m_pSelectedBot && UserOptions->m_bOnlyShowBotsInTargetsFOV)
 
 	mov	edx, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [edx+16], 0
@@ -30707,9 +31018,9 @@ __$EHRec$ = -12						; size = 12
 	test	eax, eax
 	je	$LN11@Render
 
-; 720  :   {
-; 721  :     std::vector<Raven_Bot*> 
-; 722  :     VisibleBots = GetAllBotsInFOV(m_pSelectedBot);
+; 746  :   {
+; 747  :     std::vector<Raven_Bot*> 
+; 748  :     VisibleBots = GetAllBotsInFOV(m_pSelectedBot);
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	edx, DWORD PTR [ecx+16]
@@ -30720,8 +31031,8 @@ __$EHRec$ = -12						; size = 12
 	call	?GetAllBotsInFOV@Raven_Game@@QBE?AV?$vector@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@PBVRaven_Bot@@@Z ; Raven_Game::GetAllBotsInFOV
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 
-; 723  : 
-; 724  :     std::vector<Raven_Bot*>::const_iterator it = VisibleBots.begin();
+; 749  : 
+; 750  :     std::vector<Raven_Bot*>::const_iterator it = VisibleBots.begin();
 
 	lea	ecx, DWORD PTR $T15[ebp]
 	push	ecx
@@ -30738,7 +31049,7 @@ __$EHRec$ = -12						; size = 12
 	jmp	SHORT $LN4@Render
 $LN2@Render:
 
-; 725  :     for (it; it != VisibleBots.end(); ++it) (*it)->Render();
+; 751  :     for (it; it != VisibleBots.end(); ++it) (*it)->Render();
 
 	lea	ecx, DWORD PTR _it$21[ebp]
 	call	??E?$_Vector_const_iterator@V?$_Vector_val@U?$_Simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<Raven_Bot *> > >::operator++
@@ -30777,8 +31088,8 @@ $LN4@Render:
 	jmp	$LN2@Render
 $LN3@Render:
 
-; 726  : 
-; 727  :     if (m_pSelectedBot) m_pSelectedBot->Render();
+; 752  : 
+; 753  :     if (m_pSelectedBot) m_pSelectedBot->Render();
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+16], 0
@@ -30795,7 +31106,7 @@ $LN3@Render:
 	call	__RTC_CheckEsp
 $LN13@Render:
 
-; 728  :   }
+; 754  :   }
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR _it$21[ebp]
@@ -30804,15 +31115,15 @@ $LN13@Render:
 	lea	ecx, DWORD PTR _VisibleBots$22[ebp]
 	call	??1?$vector@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@QAE@XZ ; std::vector<Raven_Bot *,std::allocator<Raven_Bot *> >::~vector<Raven_Bot *,std::allocator<Raven_Bot *> >
 
-; 729  : 
-; 730  :   else
+; 755  : 
+; 756  :   else
 
 	jmp	$LN12@Render
 $LN11@Render:
 
-; 731  :   {
-; 732  :     //render all the entities
-; 733  :     std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+; 757  :   {
+; 758  :     //render all the entities
+; 759  :     std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
 
 	lea	ecx, DWORD PTR $T12[ebp]
 	push	ecx
@@ -30830,7 +31141,7 @@ $LN11@Render:
 	jmp	SHORT $LN7@Render
 $LN5@Render:
 
-; 734  :     for (curBot; curBot != m_Bots.end(); ++curBot)
+; 760  :     for (curBot; curBot != m_Bots.end(); ++curBot)
 
 	lea	ecx, DWORD PTR _curBot$20[ebp]
 	call	??E?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator++
@@ -30856,8 +31167,8 @@ $LN7@Render:
 	test	eax, eax
 	je	SHORT $LN6@Render
 
-; 735  :     {
-; 736  :       if ((*curBot)->isAlive())
+; 761  :     {
+; 762  :       if ((*curBot)->isAlive())
 
 	lea	ecx, DWORD PTR _curBot$20[ebp]
 	call	??D?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEABQAVRaven_Bot@@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -30867,8 +31178,8 @@ $LN7@Render:
 	test	ecx, ecx
 	je	SHORT $LN14@Render
 
-; 737  :       {
-; 738  :         (*curBot)->Render();
+; 763  :       {
+; 764  :         (*curBot)->Render();
 
 	lea	ecx, DWORD PTR _curBot$20[ebp]
 	call	??D?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEABQAVRaven_Bot@@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -30884,22 +31195,22 @@ $LN7@Render:
 	call	__RTC_CheckEsp
 $LN14@Render:
 
-; 739  :       }
-; 740  :     }
+; 765  :       }
+; 766  :     }
 
 	jmp	$LN5@Render
 $LN6@Render:
 
-; 741  :   }
+; 767  :   }
 
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR _curBot$20[ebp]
 	call	??1?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAE@XZ
 $LN12@Render:
 
-; 742  :   
-; 743  :   //render any projectiles
-; 744  :   std::list<Raven_Projectile*>::const_iterator curW = m_Projectiles.begin();
+; 768  :   
+; 769  :   //render any projectiles
+; 770  :   std::list<Raven_Projectile*>::const_iterator curW = m_Projectiles.begin();
 
 	lea	ecx, DWORD PTR $T9[ebp]
 	push	ecx
@@ -30917,7 +31228,7 @@ $LN12@Render:
 	jmp	SHORT $LN10@Render
 $LN8@Render:
 
-; 745  :   for (curW; curW != m_Projectiles.end(); ++curW)
+; 771  :   for (curW; curW != m_Projectiles.end(); ++curW)
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??E?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Projectile *> > >::operator++
@@ -30943,8 +31254,8 @@ $LN10@Render:
 	test	eax, eax
 	je	SHORT $LN9@Render
 
-; 746  :   {
-; 747  :     (*curW)->Render();
+; 772  :   {
+; 773  :     (*curW)->Render();
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??D?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QBEABQAVRaven_Projectile@@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Projectile *> > >::operator*
@@ -30959,23 +31270,23 @@ $LN10@Render:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 748  :   }
+; 774  :   }
 
 	jmp	$LN8@Render
 $LN9@Render:
 
-; 749  : 
-; 750  :  // gdi->TextAtPos(300, WindowHeight - 70, "Num Current Searches: " + ttos(m_pPathManager->GetNumActiveSearches()));
-; 751  : 
-; 752  :   //render a red circle around the selected bot (blue if possessed)
-; 753  :   if (m_pSelectedBot)
+; 775  : 
+; 776  :  // gdi->TextAtPos(300, WindowHeight - 70, "Num Current Searches: " + ttos(m_pPathManager->GetNumActiveSearches()));
+; 777  : 
+; 778  :   //render a red circle around the selected bot (blue if possessed)
+; 779  :   if (m_pSelectedBot)
 
 	mov	eax, DWORD PTR _this$[ebp]
 	cmp	DWORD PTR [eax+16], 0
 	je	$LN24@Render
 
-; 754  :   {
-; 755  :     if (m_pSelectedBot->isPossessed())
+; 780  :   {
+; 781  :     if (m_pSelectedBot->isPossessed())
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+16]
@@ -30984,8 +31295,8 @@ $LN9@Render:
 	test	edx, edx
 	je	SHORT $LN16@Render
 
-; 756  :     {
-; 757  :       gdi->BluePen(); gdi->HollowBrush();
+; 782  :     {
+; 783  :       gdi->BluePen(); gdi->HollowBrush();
 
 	call	?Instance@Cgdi@@SAPAV1@XZ		; Cgdi::Instance
 	mov	ecx, eax
@@ -30994,7 +31305,7 @@ $LN9@Render:
 	mov	ecx, eax
 	call	?HollowBrush@Cgdi@@QAEXXZ		; Cgdi::HollowBrush
 
-; 758  :       gdi->Circle(m_pSelectedBot->Pos(), m_pSelectedBot->BRadius()+1);
+; 784  :       gdi->Circle(m_pSelectedBot->Pos(), m_pSelectedBot->BRadius()+1);
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+16]
@@ -31023,14 +31334,14 @@ $LN9@Render:
 	mov	ecx, eax
 	call	?Circle@Cgdi@@QAEXUVector2D@@N@Z	; Cgdi::Circle
 
-; 759  :     }
-; 760  :     else
+; 785  :     }
+; 786  :     else
 
 	jmp	SHORT $LN17@Render
 $LN16@Render:
 
-; 761  :     {
-; 762  :       gdi->RedPen(); gdi->HollowBrush();
+; 787  :     {
+; 788  :       gdi->RedPen(); gdi->HollowBrush();
 
 	call	?Instance@Cgdi@@SAPAV1@XZ		; Cgdi::Instance
 	mov	ecx, eax
@@ -31039,7 +31350,7 @@ $LN16@Render:
 	mov	ecx, eax
 	call	?HollowBrush@Cgdi@@QAEXXZ		; Cgdi::HollowBrush
 
-; 763  :       gdi->Circle(m_pSelectedBot->Pos(), m_pSelectedBot->BRadius()+1);
+; 789  :       gdi->Circle(m_pSelectedBot->Pos(), m_pSelectedBot->BRadius()+1);
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+16]
@@ -31069,18 +31380,18 @@ $LN16@Render:
 	call	?Circle@Cgdi@@QAEXUVector2D@@N@Z	; Cgdi::Circle
 $LN17@Render:
 
-; 764  :     }
-; 765  : 
-; 766  : 
-; 767  :     if (UserOptions->m_bShowOpponentsSensedBySelectedBot)
+; 790  :     }
+; 791  : 
+; 792  : 
+; 793  :     if (UserOptions->m_bShowOpponentsSensedBySelectedBot)
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	ecx, BYTE PTR [eax+4]
 	test	ecx, ecx
 	je	SHORT $LN18@Render
 
-; 768  :     {
-; 769  :       m_pSelectedBot->GetSensoryMem()->RenderBoxesAroundRecentlySensed();
+; 794  :     {
+; 795  :       m_pSelectedBot->GetSensoryMem()->RenderBoxesAroundRecentlySensed();
 
 	mov	edx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [edx+16]
@@ -31089,10 +31400,10 @@ $LN17@Render:
 	call	?RenderBoxesAroundRecentlySensed@Raven_SensoryMemory@@QBEXXZ ; Raven_SensoryMemory::RenderBoxesAroundRecentlySensed
 $LN18@Render:
 
-; 770  :     }
-; 771  : 
-; 772  :     //render a square around the bot's target
-; 773  :     if (UserOptions->m_bShowTargetOfSelectedBot && m_pSelectedBot->GetTargetBot())
+; 796  :     }
+; 797  : 
+; 798  :     //render a square around the bot's target
+; 799  :     if (UserOptions->m_bShowTargetOfSelectedBot && m_pSelectedBot->GetTargetBot())
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	eax, BYTE PTR [eax+3]
@@ -31104,16 +31415,16 @@ $LN18@Render:
 	test	eax, eax
 	je	$LN19@Render
 
-; 774  :     {  
-; 775  :       
-; 776  :       gdi->ThickRedPen();
+; 800  :     {  
+; 801  :       
+; 802  :       gdi->ThickRedPen();
 
 	call	?Instance@Cgdi@@SAPAV1@XZ		; Cgdi::Instance
 	mov	ecx, eax
 	call	?ThickRedPen@Cgdi@@QAEXXZ		; Cgdi::ThickRedPen
 
-; 777  : 
-; 778  :       Vector2D p = m_pSelectedBot->GetTargetBot()->Pos();
+; 803  : 
+; 804  :       Vector2D p = m_pSelectedBot->GetTargetBot()->Pos();
 
 	lea	edx, DWORD PTR _p$19[ebp]
 	push	edx
@@ -31123,7 +31434,7 @@ $LN18@Render:
 	mov	ecx, eax
 	call	?Pos@BaseGameEntity@@QBE?AUVector2D@@XZ	; BaseGameEntity::Pos
 
-; 779  :       double   b = m_pSelectedBot->GetTargetBot()->BRadius();
+; 805  :       double   b = m_pSelectedBot->GetTargetBot()->BRadius();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx+16]
@@ -31132,8 +31443,8 @@ $LN18@Render:
 	call	?BRadius@BaseGameEntity@@QBENXZ		; BaseGameEntity::BRadius
 	fstp	QWORD PTR _b$18[ebp]
 
-; 780  :       
-; 781  :       gdi->Line(p.x-b, p.y-b, p.x+b, p.y-b);
+; 806  :       
+; 807  :       gdi->Line(p.x-b, p.y-b, p.x+b, p.y-b);
 
 	movsd	xmm0, QWORD PTR _p$19[ebp+8]
 	subsd	xmm0, QWORD PTR _b$18[ebp]
@@ -31155,7 +31466,7 @@ $LN18@Render:
 	mov	ecx, eax
 	call	?Line@Cgdi@@QAEXNNNN@Z			; Cgdi::Line
 
-; 782  :       gdi->Line(p.x+b, p.y-b, p.x+b, p.y+b);
+; 808  :       gdi->Line(p.x+b, p.y-b, p.x+b, p.y+b);
 
 	movsd	xmm0, QWORD PTR _p$19[ebp+8]
 	addsd	xmm0, QWORD PTR _b$18[ebp]
@@ -31177,7 +31488,7 @@ $LN18@Render:
 	mov	ecx, eax
 	call	?Line@Cgdi@@QAEXNNNN@Z			; Cgdi::Line
 
-; 783  :       gdi->Line(p.x+b, p.y+b, p.x-b, p.y+b);
+; 809  :       gdi->Line(p.x+b, p.y+b, p.x-b, p.y+b);
 
 	movsd	xmm0, QWORD PTR _p$19[ebp+8]
 	addsd	xmm0, QWORD PTR _b$18[ebp]
@@ -31199,7 +31510,7 @@ $LN18@Render:
 	mov	ecx, eax
 	call	?Line@Cgdi@@QAEXNNNN@Z			; Cgdi::Line
 
-; 784  :       gdi->Line(p.x-b, p.y+b, p.x-b, p.y-b);
+; 810  :       gdi->Line(p.x-b, p.y+b, p.x-b, p.y-b);
 
 	movsd	xmm0, QWORD PTR _p$19[ebp+8]
 	subsd	xmm0, QWORD PTR _b$18[ebp]
@@ -31222,20 +31533,20 @@ $LN18@Render:
 	call	?Line@Cgdi@@QAEXNNNN@Z			; Cgdi::Line
 $LN19@Render:
 
-; 785  :     }
-; 786  : 
-; 787  : 
-; 788  : 
-; 789  :     //render the path of the bot
-; 790  :     if (UserOptions->m_bShowPathOfSelectedBot)
+; 811  :     }
+; 812  : 
+; 813  : 
+; 814  : 
+; 815  :     //render the path of the bot
+; 816  :     if (UserOptions->m_bShowPathOfSelectedBot)
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+2]
 	test	edx, edx
 	je	SHORT $LN20@Render
 
-; 791  :     {
-; 792  :       m_pSelectedBot->GetBrain()->Render();
+; 817  :     {
+; 818  :       m_pSelectedBot->GetBrain()->Render();
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+16]
@@ -31251,18 +31562,18 @@ $LN19@Render:
 	call	__RTC_CheckEsp
 $LN20@Render:
 
-; 793  :     }  
-; 794  :     
-; 795  :     //display the bot's goal stack
-; 796  :     if (UserOptions->m_bShowGoalsOfSelectedBot)
+; 819  :     }  
+; 820  :     
+; 821  :     //display the bot's goal stack
+; 822  :     if (UserOptions->m_bShowGoalsOfSelectedBot)
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	ecx, BYTE PTR [eax+6]
 	test	ecx, ecx
 	je	$LN21@Render
 
-; 797  :     {
-; 798  :       Vector2D p(m_pSelectedBot->Pos().x -50, m_pSelectedBot->Pos().y);
+; 823  :     {
+; 824  :       Vector2D p(m_pSelectedBot->Pos().x -50, m_pSelectedBot->Pos().y);
 
 	lea	edx, DWORD PTR $T4[ebp]
 	push	edx
@@ -31284,8 +31595,8 @@ $LN20@Render:
 	lea	ecx, DWORD PTR _p$17[ebp]
 	call	??0Vector2D@@QAE@NN@Z			; Vector2D::Vector2D
 
-; 799  : 
-; 800  :       m_pSelectedBot->GetBrain()->RenderAtPos(p, GoalTypeToString::Instance());
+; 825  : 
+; 826  :       m_pSelectedBot->GetBrain()->RenderAtPos(p, GoalTypeToString::Instance());
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+16]
@@ -31305,17 +31616,17 @@ $LN20@Render:
 	call	__RTC_CheckEsp
 $LN21@Render:
 
-; 801  :     }
-; 802  : 
-; 803  :     if (UserOptions->m_bShowGoalAppraisals)
+; 827  :     }
+; 828  : 
+; 829  :     if (UserOptions->m_bShowGoalAppraisals)
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	eax, BYTE PTR [eax+7]
 	test	eax, eax
 	je	SHORT $LN22@Render
 
-; 804  :     {
-; 805  :       m_pSelectedBot->GetBrain()->RenderEvaluations(5, 415);
+; 830  :     {
+; 831  :       m_pSelectedBot->GetBrain()->RenderEvaluations(5, 415);
 
 	push	415					; 0000019fH
 	push	5
@@ -31326,17 +31637,17 @@ $LN21@Render:
 	call	?RenderEvaluations@Goal_Think@@QBEXHH@Z	; Goal_Think::RenderEvaluations
 $LN22@Render:
 
-; 806  :     } 
-; 807  :     
-; 808  :     if (UserOptions->m_bShowWeaponAppraisals)
+; 832  :     } 
+; 833  :     
+; 834  :     if (UserOptions->m_bShowWeaponAppraisals)
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+8]
 	test	edx, edx
 	je	SHORT $LN23@Render
 
-; 809  :     {
-; 810  :       m_pSelectedBot->GetWeaponSys()->RenderDesirabilities();
+; 835  :     {
+; 836  :       m_pSelectedBot->GetWeaponSys()->RenderDesirabilities();
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+16]
@@ -31345,9 +31656,9 @@ $LN22@Render:
 	call	?RenderDesirabilities@Raven_WeaponSystem@@QBEXXZ ; Raven_WeaponSystem::RenderDesirabilities
 $LN23@Render:
 
-; 811  :     }
-; 812  : 
-; 813  :    if (IS_KEY_PRESSED('Q') && m_pSelectedBot->isPossessed())
+; 837  :     }
+; 838  : 
+; 839  :    if (IS_KEY_PRESSED('Q') && m_pSelectedBot->isPossessed())
 
 	mov	esi, esp
 	push	81					; 00000051H
@@ -31364,8 +31675,8 @@ $LN23@Render:
 	test	eax, eax
 	je	SHORT $LN24@Render
 
-; 814  :     {
-; 815  :       gdi->TextColor(255,0,0);
+; 840  :     {
+; 841  :       gdi->TextColor(255,0,0);
 
 	push	0
 	push	0
@@ -31374,9 +31685,9 @@ $LN23@Render:
 	mov	ecx, eax
 	call	?TextColor@Cgdi@@QAEXHHH@Z		; Cgdi::TextColor
 
-; 816  :       gdi->TextAtPos(GetClientCursorPosition(), "Queuing");
+; 842  :       gdi->TextAtPos(GetClientCursorPosition(), "Queuing");
 
-	push	OFFSET $SG187077
+	push	OFFSET $SG187102
 	lea	ecx, DWORD PTR $T16[ebp]
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 7
@@ -31403,9 +31714,9 @@ $LN23@Render:
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 $LN24@Render:
 
-; 817  :     }
-; 818  :   }
-; 819  : }
+; 843  :     }
+; 844  :   }
+; 845  : }
 
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR _curW$[ebp]
@@ -31547,7 +31858,7 @@ __$EHRec$ = -12						; size = 12
 ??1Raven_Game@@QAE@XZ PROC				; Raven_Game::~Raven_Game
 ; _this$ = ecx
 
-; 52   : {
+; 53   : {
 
 	push	ebp
 	mov	ebp, esp
@@ -31570,12 +31881,12 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 53   :   Clear();
+; 54   :   Clear();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?Clear@Raven_Game@@AAEXXZ		; Raven_Game::Clear
 
-; 54   :   delete m_pPathManager;
+; 55   :   delete m_pPathManager;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+36]
@@ -31593,7 +31904,7 @@ $LN3@Raven_Game:
 	mov	DWORD PTR tv74[ebp], 0
 $LN4@Raven_Game:
 
-; 55   :   delete m_pMap;
+; 56   :   delete m_pMap;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax]
@@ -31611,8 +31922,8 @@ $LN5@Raven_Game:
 	mov	DWORD PTR tv80[ebp], 0
 $LN6@Raven_Game:
 
-; 56   :   
-; 57   :   delete m_pGraveMarkers;
+; 57   :   
+; 58   :   delete m_pGraveMarkers;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax+44]
@@ -31630,7 +31941,7 @@ $LN7@Raven_Game:
 	mov	DWORD PTR tv86[ebp], 0
 $LN1@Raven_Game:
 
-; 58   : }
+; 59   : }
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 24					; 00000018H
@@ -31663,8 +31974,8 @@ text$x	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\mes documents\git\projet-ia-raven\raven\raven_game.cpp
 _TEXT	SEGMENT
-tv130 = -56						; size = 4
-tv135 = -52						; size = 4
+tv131 = -56						; size = 4
+tv136 = -52						; size = 4
 $T2 = -48						; size = 28
 _this$ = -20						; size = 4
 __$ArrayPad$ = -16					; size = 4
@@ -31672,7 +31983,7 @@ __$EHRec$ = -12						; size = 12
 ??0Raven_Game@@QAE@XZ PROC				; Raven_Game::Raven_Game
 ; _this$ = ecx
 
-; 43   : {
+; 44   : {
 
 	push	ebp
 	mov	ebp, esp
@@ -31701,7 +32012,7 @@ __$EHRec$ = -12						; size = 12
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax], 0
 
-; 43   : {
+; 44   : {
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
@@ -31713,7 +32024,12 @@ __$EHRec$ = -12						; size = 12
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [ecx+16], 0
 
-; 43   : {
+; 43   : 						 m_thereIsAHuman(false)
+
+	mov	edx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [edx+20], 0
+
+; 44   : {
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 24					; 00000018H
@@ -31722,46 +32038,46 @@ __$EHRec$ = -12						; size = 12
 
 ; 41   :                          m_pPathManager(NULL),
 
-	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+36], 0
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+36], 0
 
 ; 38   :                          m_bPaused(false),
 
-	mov	eax, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [eax+40], 0
+	mov	ecx, DWORD PTR _this$[ebp]
+	mov	BYTE PTR [ecx+40], 0
 
 ; 39   :                          m_bRemoveABot(false),
 
-	mov	ecx, DWORD PTR _this$[ebp]
-	mov	BYTE PTR [ecx+41], 0
-
-; 42   :                          m_pGraveMarkers(NULL)
-
 	mov	edx, DWORD PTR _this$[ebp]
-	mov	DWORD PTR [edx+44], 0
+	mov	BYTE PTR [edx+41], 0
 
-; 44   :   //load in the default map
-; 45   :   LoadMap(script->GetString("StartMap"));
+; 42   :                          m_pGraveMarkers(NULL),
 
-	push	OFFSET $SG183508
-	lea	eax, DWORD PTR $T2[ebp]
-	push	eax
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	DWORD PTR [eax+44], 0
+
+; 45   :   //load in the default map
+; 46   :   LoadMap(script->GetString("StartMap"));
+
+	push	OFFSET $SG183512
+	lea	ecx, DWORD PTR $T2[ebp]
+	push	ecx
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetString@Scriptor@@QAE?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PAD@Z ; Scriptor::GetString
-	mov	DWORD PTR tv135[ebp], eax
-	mov	ecx, DWORD PTR tv135[ebp]
-	mov	DWORD PTR tv130[ebp], ecx
+	mov	DWORD PTR tv136[ebp], eax
+	mov	edx, DWORD PTR tv136[ebp]
+	mov	DWORD PTR tv131[ebp], edx
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
-	mov	edx, DWORD PTR tv130[ebp]
-	push	edx
+	mov	eax, DWORD PTR tv131[ebp]
+	push	eax
 	mov	ecx, DWORD PTR _this$[ebp]
 	call	?LoadMap@Raven_Game@@QAE_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z ; Raven_Game::LoadMap
 	mov	BYTE PTR __$EHRec$[ebp+8], 1
 	lea	ecx, DWORD PTR $T2[ebp]
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 
-; 46   : }
+; 47   : }
 
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	mov	eax, DWORD PTR _this$[ebp]
@@ -31818,7 +32134,7 @@ _pRemovedBot$ = 8					; size = 4
 ?NotifyAllBotsOfRemoval@Raven_Game@@ABEXPAVRaven_Bot@@@Z PROC ; Raven_Game::NotifyAllBotsOfRemoval
 ; _this$ = ecx
 
-; 293  : {
+; 296  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -31841,7 +32157,7 @@ _pRemovedBot$ = 8					; size = 4
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 294  :     std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+; 297  :     std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
 
 	lea	eax, DWORD PTR _curBot$[ebp]
 	push	eax
@@ -31852,7 +32168,7 @@ _pRemovedBot$ = 8					; size = 4
 	jmp	SHORT $LN4@NotifyAllB
 $LN2@NotifyAllB:
 
-; 295  :     for (curBot; curBot != m_Bots.end(); ++curBot)
+; 298  :     for (curBot; curBot != m_Bots.end(); ++curBot)
 
 	lea	ecx, DWORD PTR _curBot$[ebp]
 	call	??E?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator++
@@ -31878,8 +32194,8 @@ $LN4@NotifyAllB:
 	test	ecx, ecx
 	je	SHORT $LN3@NotifyAllB
 
-; 296  :     {
-; 297  :       Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
+; 299  :     {
+; 300  :       Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
 
 	mov	edx, DWORD PTR _pRemovedBot$[ebp]
 	push	edx
@@ -31897,17 +32213,17 @@ $LN4@NotifyAllB:
 	mov	ecx, eax
 	call	?DispatchMsg@MessageDispatcher@@QAEXNHHHPAX@Z ; MessageDispatcher::DispatchMsg
 
-; 298  :                               SENDER_ID_IRRELEVANT,
-; 299  :                               (*curBot)->ID(),
-; 300  :                               Msg_UserHasRemovedBot,
-; 301  :                               pRemovedBot);
-; 302  : 
-; 303  :     }
+; 301  :                               SENDER_ID_IRRELEVANT,
+; 302  :                               (*curBot)->ID(),
+; 303  :                               Msg_UserHasRemovedBot,
+; 304  :                               pRemovedBot);
+; 305  : 
+; 306  :     }
 
 	jmp	SHORT $LN2@NotifyAllB
 $LN3@NotifyAllB:
 
-; 304  : }
+; 307  : }
 
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR _curBot$[ebp]
@@ -31987,7 +32303,7 @@ _pBot$ = 8						; size = 4
 ?AttemptToAddBot@Raven_Game@@AAE_NPAVRaven_Bot@@@Z PROC	; Raven_Game::AttemptToAddBot
 ; _this$ = ecx
 
-; 202  : {
+; 206  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -32010,8 +32326,8 @@ _pBot$ = 8						; size = 4
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 203  :   //make sure there are some spawn points available
-; 204  :   if (m_pMap->GetSpawnPoints().size() <= 0)
+; 207  :   //make sure there are some spawn points available
+; 208  :   if (m_pMap->GetSpawnPoints().size() <= 0)
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [eax]
@@ -32021,21 +32337,21 @@ _pBot$ = 8						; size = 4
 	test	eax, eax
 	ja	SHORT $LN7@AttemptToA
 
-; 205  :   {
-; 206  :     ErrorBox("Map has no spawn points!"); return false;
+; 209  :   {
+; 210  :     ErrorBox("Map has no spawn points!"); return false;
 
-	push	OFFSET $SG185478
+	push	OFFSET $SG185482
 	call	?ErrorBox@@YAXPAD@Z			; ErrorBox
 	add	esp, 4
 	xor	al, al
 	jmp	$LN1@AttemptToA
 $LN7@AttemptToA:
 
-; 207  :   }
-; 208  : 
-; 209  :   //we'll make the same number of attempts to spawn a bot this update as
-; 210  :   //there are spawn points
-; 211  :   int attempts = m_pMap->GetSpawnPoints().size();
+; 211  :   }
+; 212  : 
+; 213  :   //we'll make the same number of attempts to spawn a bot this update as
+; 214  :   //there are spawn points
+; 215  :   int attempts = m_pMap->GetSpawnPoints().size();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	mov	ecx, DWORD PTR [ecx]
@@ -32045,17 +32361,17 @@ $LN7@AttemptToA:
 	mov	DWORD PTR _attempts$[ebp], eax
 $LN2@AttemptToA:
 
-; 212  : 
-; 213  :   while (--attempts >= 0)
+; 216  : 
+; 217  :   while (--attempts >= 0)
 
 	mov	edx, DWORD PTR _attempts$[ebp]
 	sub	edx, 1
 	mov	DWORD PTR _attempts$[ebp], edx
 	js	$LN3@AttemptToA
 
-; 214  :   { 
-; 215  :     //select a random spawn point
-; 216  :     Vector2D pos = m_pMap->GetRandomSpawnPoint();
+; 218  :   { 
+; 219  :     //select a random spawn point
+; 220  :     Vector2D pos = m_pMap->GetRandomSpawnPoint();
 
 	lea	eax, DWORD PTR _pos$9[ebp]
 	push	eax
@@ -32063,9 +32379,9 @@ $LN2@AttemptToA:
 	mov	ecx, DWORD PTR [ecx]
 	call	?GetRandomSpawnPoint@Raven_Map@@QAE?AUVector2D@@XZ ; Raven_Map::GetRandomSpawnPoint
 
-; 217  : 
-; 218  :     //check to see if it's occupied
-; 219  :     std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+; 221  : 
+; 222  :     //check to see if it's occupied
+; 223  :     std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
 
 	lea	edx, DWORD PTR $T6[ebp]
 	push	edx
@@ -32081,15 +32397,15 @@ $LN2@AttemptToA:
 	lea	ecx, DWORD PTR $T6[ebp]
 	call	??1?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAE@XZ
 
-; 220  : 
-; 221  :     bool bAvailable = true;
+; 224  : 
+; 225  :     bool bAvailable = true;
 
 	mov	BYTE PTR _bAvailable$7[ebp], 1
 	jmp	SHORT $LN6@AttemptToA
 $LN4@AttemptToA:
 
-; 222  : 
-; 223  :     for (curBot; curBot != m_Bots.end(); ++curBot)
+; 226  : 
+; 227  :     for (curBot; curBot != m_Bots.end(); ++curBot)
 
 	lea	ecx, DWORD PTR _curBot$8[ebp]
 	call	??E?$_List_const_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_const_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator++
@@ -32115,9 +32431,9 @@ $LN6@AttemptToA:
 	test	ecx, ecx
 	je	SHORT $LN5@AttemptToA
 
-; 224  :     {
-; 225  :       //if the spawn point is unoccupied spawn a bot
-; 226  :       if (Vec2DDistance(pos, (*curBot)->Pos()) < (*curBot)->BRadius())
+; 228  :     {
+; 229  :       //if the spawn point is unoccupied spawn a bot
+; 230  :       if (Vec2DDistance(pos, (*curBot)->Pos()) < (*curBot)->BRadius())
 
 	lea	edx, DWORD PTR $T3[ebp]
 	push	edx
@@ -32143,27 +32459,27 @@ $LN6@AttemptToA:
 	comisd	xmm0, xmm1
 	jbe	SHORT $LN8@AttemptToA
 
-; 227  :       {
-; 228  :         bAvailable = false;
+; 231  :       {
+; 232  :         bAvailable = false;
 
 	mov	BYTE PTR _bAvailable$7[ebp], 0
 $LN8@AttemptToA:
 
-; 229  :       }
-; 230  :     }
+; 233  :       }
+; 234  :     }
 
 	jmp	$LN4@AttemptToA
 $LN5@AttemptToA:
 
-; 231  : 
-; 232  :     if (bAvailable)
+; 235  : 
+; 236  :     if (bAvailable)
 
 	movzx	ecx, BYTE PTR _bAvailable$7[ebp]
 	test	ecx, ecx
 	je	SHORT $LN9@AttemptToA
 
-; 233  :     {  
-; 234  :       pBot->Spawn(pos);
+; 237  :     {  
+; 238  :       pBot->Spawn(pos);
 
 	sub	esp, 16					; 00000010H
 	mov	edx, esp
@@ -32178,8 +32494,8 @@ $LN5@AttemptToA:
 	mov	ecx, DWORD PTR _pBot$[ebp]
 	call	?Spawn@Raven_Bot@@QAEXUVector2D@@@Z	; Raven_Bot::Spawn
 
-; 235  : 
-; 236  :       return true;   
+; 239  : 
+; 240  :       return true;   
 
 	mov	BYTE PTR $T2[ebp], 1
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
@@ -32189,8 +32505,8 @@ $LN5@AttemptToA:
 	jmp	SHORT $LN1@AttemptToA
 $LN9@AttemptToA:
 
-; 237  :     }
-; 238  :   }
+; 241  :     }
+; 242  :   }
 
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR _curBot$8[ebp]
@@ -32198,13 +32514,13 @@ $LN9@AttemptToA:
 	jmp	$LN2@AttemptToA
 $LN3@AttemptToA:
 
-; 239  : 
-; 240  :   return false;
+; 243  : 
+; 244  :   return false;
 
 	xor	al, al
 $LN1@AttemptToA:
 
-; 241  : }
+; 245  : }
 
 	push	edx
 	mov	ecx, ebp
@@ -32288,7 +32604,7 @@ __$EHRec$ = -12						; size = 12
 ?Clear@Raven_Game@@AAEXXZ PROC				; Raven_Game::Clear
 ; _this$ = ecx
 
-; 66   : {
+; 67   : {
 
 	push	ebp
 	mov	ebp, esp
@@ -32312,12 +32628,12 @@ __$EHRec$ = -12						; size = 12
 	mov	DWORD PTR fs:0, eax
 	mov	DWORD PTR _this$[ebp], ecx
 
-; 67   : #ifdef LOG_CREATIONAL_STUFF
-; 68   :     debug_con << "\n------------------------------ Clearup -------------------------------" <<"";
-; 69   : #endif
-; 70   : 
-; 71   :   //delete the bots
-; 72   :   std::list<Raven_Bot*>::iterator it = m_Bots.begin();
+; 68   : #ifdef LOG_CREATIONAL_STUFF
+; 69   :     debug_con << "\n------------------------------ Clearup -------------------------------" <<"";
+; 70   : #endif
+; 71   : 
+; 72   :   //delete the bots
+; 73   :   std::list<Raven_Bot*>::iterator it = m_Bots.begin();
 
 	lea	eax, DWORD PTR _it$[ebp]
 	push	eax
@@ -32328,7 +32644,7 @@ __$EHRec$ = -12						; size = 12
 	jmp	SHORT $LN4@Clear
 $LN2@Clear:
 
-; 73   :   for (it; it != m_Bots.end(); ++it)
+; 74   :   for (it; it != m_Bots.end(); ++it)
 
 	lea	ecx, DWORD PTR _it$[ebp]
 	call	??E?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator++
@@ -32354,13 +32670,13 @@ $LN4@Clear:
 	test	ecx, ecx
 	je	SHORT $LN3@Clear
 
-; 74   :   {
-; 75   : #ifdef LOG_CREATIONAL_STUFF
-; 76   :     debug_con << "deleting entity id: " << (*it)->ID() << " of type "
-; 77   :               << GetNameOfType((*it)->EntityType()) << "(" << (*it)->EntityType() << ")" <<"";
-; 78   : #endif
-; 79   : 
-; 80   :     delete *it;
+; 75   :   {
+; 76   : #ifdef LOG_CREATIONAL_STUFF
+; 77   :     debug_con << "deleting entity id: " << (*it)->ID() << " of type "
+; 78   :               << GetNameOfType((*it)->EntityType()) << "(" << (*it)->EntityType() << ")" <<"";
+; 79   : #endif
+; 80   : 
+; 81   :     delete *it;
 
 	lea	ecx, DWORD PTR _it$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Bot@@@std@@@std@@@std@@QBEAAPAVRaven_Bot@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Bot *> > >::operator*
@@ -32385,14 +32701,14 @@ $LN9@Clear:
 	mov	DWORD PTR tv133[ebp], 0
 $LN10@Clear:
 
-; 81   :   }
+; 82   :   }
 
 	jmp	$LN2@Clear
 $LN3@Clear:
 
-; 82   : 
-; 83   :   //delete any active projectiles
-; 84   :   std::list<Raven_Projectile*>::iterator curW = m_Projectiles.begin();
+; 83   : 
+; 84   :   //delete any active projectiles
+; 85   :   std::list<Raven_Projectile*>::iterator curW = m_Projectiles.begin();
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	push	ecx
@@ -32403,7 +32719,7 @@ $LN3@Clear:
 	jmp	SHORT $LN7@Clear
 $LN5@Clear:
 
-; 85   :   for (curW; curW != m_Projectiles.end(); ++curW)
+; 86   :   for (curW; curW != m_Projectiles.end(); ++curW)
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??E?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QAEAAV01@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Projectile *> > >::operator++
@@ -32429,12 +32745,12 @@ $LN7@Clear:
 	test	edx, edx
 	je	SHORT $LN6@Clear
 
-; 86   :   {
-; 87   : #ifdef LOG_CREATIONAL_STUFF
-; 88   :     debug_con << "deleting projectile id: " << (*curW)->ID() << "";
-; 89   : #endif
-; 90   : 
-; 91   :     delete *curW;
+; 87   :   {
+; 88   : #ifdef LOG_CREATIONAL_STUFF
+; 89   :     debug_con << "deleting projectile id: " << (*curW)->ID() << "";
+; 90   : #endif
+; 91   : 
+; 92   :     delete *curW;
 
 	lea	ecx, DWORD PTR _curW$[ebp]
 	call	??D?$_List_iterator@V?$_List_val@U?$_List_simple_types@PAVRaven_Projectile@@@std@@@std@@@std@@QBEAAPAVRaven_Projectile@@XZ ; std::_List_iterator<std::_List_val<std::_List_simple_types<Raven_Projectile *> > >::operator*
@@ -32459,34 +32775,34 @@ $LN11@Clear:
 	mov	DWORD PTR tv171[ebp], 0
 $LN12@Clear:
 
-; 92   :   }
+; 93   :   }
 
 	jmp	$LN5@Clear
 $LN6@Clear:
 
-; 93   : 
-; 94   :   //clear the containers
-; 95   :   m_Projectiles.clear();
+; 94   : 
+; 95   :   //clear the containers
+; 96   :   m_Projectiles.clear();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 24					; 00000018H
 	call	?clear@?$list@PAVRaven_Projectile@@V?$allocator@PAVRaven_Projectile@@@std@@@std@@QAEXXZ ; std::list<Raven_Projectile *,std::allocator<Raven_Projectile *> >::clear
 
-; 96   :   m_Bots.clear();
+; 97   :   m_Bots.clear();
 
 	mov	ecx, DWORD PTR _this$[ebp]
 	add	ecx, 4
 	call	?clear@?$list@PAVRaven_Bot@@V?$allocator@PAVRaven_Bot@@@std@@@std@@QAEXXZ ; std::list<Raven_Bot *,std::allocator<Raven_Bot *> >::clear
 
-; 97   : 
-; 98   :   m_pSelectedBot = NULL;
+; 98   : 
+; 99   :   m_pSelectedBot = NULL;
 
 	mov	eax, DWORD PTR _this$[ebp]
 	mov	DWORD PTR [eax+16], 0
 
-; 99   : 
 ; 100  : 
-; 101  : }
+; 101  : 
+; 102  : }
 
 	mov	BYTE PTR __$EHRec$[ebp+8], 0
 	lea	ecx, DWORD PTR _curW$[ebp]
@@ -38259,7 +38575,7 @@ _this$ = -4						; size = 4
 ?GetSensoryMem@Raven_Bot@@QBEQAVRaven_SensoryMemory@@XZ PROC ; Raven_Bot::GetSensoryMem, COMDAT
 ; _this$ = ecx
 
-; 215  :   Raven_SensoryMemory* const         GetSensoryMem()const{return m_pSensoryMem;}
+; 216  :   Raven_SensoryMemory* const         GetSensoryMem()const{return m_pSensoryMem;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38281,7 +38597,7 @@ _this$ = -4						; size = 4
 ?GetWeaponSys@Raven_Bot@@QBEQAVRaven_WeaponSystem@@XZ PROC ; Raven_Bot::GetWeaponSys, COMDAT
 ; _this$ = ecx
 
-; 214  :   Raven_WeaponSystem* const          GetWeaponSys()const{return m_pWeaponSys;}
+; 215  :   Raven_WeaponSystem* const          GetWeaponSys()const{return m_pWeaponSys;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38303,7 +38619,7 @@ _this$ = -4						; size = 4
 ?GetTargetBot@Raven_Bot@@QBEQAV1@XZ PROC		; Raven_Bot::GetTargetBot, COMDAT
 ; _this$ = ecx
 
-; 213  :   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
+; 214  :   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
 
 	push	ebp
 	mov	ebp, esp
@@ -38329,7 +38645,7 @@ _this$ = -4						; size = 4
 ?GetBrain@Raven_Bot@@QAEQAVGoal_Think@@XZ PROC		; Raven_Bot::GetBrain, COMDAT
 ; _this$ = ecx
 
-; 210  :   Goal_Think* const                  GetBrain(){return m_pBrain;}
+; 211  :   Goal_Think* const                  GetBrain(){return m_pBrain;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38351,7 +38667,7 @@ _this$ = -4						; size = 4
 ?GetSteering@Raven_Bot@@QAEQAVRaven_Steering@@XZ PROC	; Raven_Bot::GetSteering, COMDAT
 ; _this$ = ecx
 
-; 208  :   Raven_Steering* const              GetSteering(){return m_pSteering;}
+; 209  :   Raven_Steering* const              GetSteering(){return m_pSteering;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38374,7 +38690,7 @@ _poss$ = 8						; size = 1
 ?SetIsPossessed@Raven_Bot@@QAEX_N@Z PROC		; Raven_Bot::SetIsPossessed, COMDAT
 ; _this$ = ecx
 
-; 165  :   void          SetIsPossessed(bool poss) { m_bPossessed = poss; }
+; 166  :   void          SetIsPossessed(bool poss) { m_bPossessed = poss; }
 
 	push	ebp
 	mov	ebp, esp
@@ -38397,7 +38713,7 @@ _this$ = -4						; size = 4
 ?SetSpawning@Raven_Bot@@QAEXXZ PROC			; Raven_Bot::SetSpawning, COMDAT
 ; _this$ = ecx
 
-; 162  :   void          SetSpawning(){m_Status = spawning;}
+; 163  :   void          SetSpawning(){m_Status = spawning;}
 
 	push	ebp
 	mov	ebp, esp
@@ -38410,6 +38726,28 @@ _this$ = -4						; size = 4
 	pop	ebp
 	ret	0
 ?SetSpawning@Raven_Bot@@QAEXXZ ENDP			; Raven_Bot::SetSpawning
+_TEXT	ENDS
+; Function compile flags: /Odtp /RTCsu
+; File d:\mes documents\git\projet-ia-raven\raven\raven_bot.h
+;	COMDAT ?isPathPlanner@Raven_Bot@@QBEPAVRaven_PathPlanner@@XZ
+_TEXT	SEGMENT
+_this$ = -4						; size = 4
+?isPathPlanner@Raven_Bot@@QBEPAVRaven_PathPlanner@@XZ PROC ; Raven_Bot::isPathPlanner, COMDAT
+; _this$ = ecx
+
+; 161  :   Raven_PathPlanner*	isPathPlanner()const { return m_pPathPlanner; }
+
+	push	ebp
+	mov	ebp, esp
+	push	ecx
+	mov	DWORD PTR [ebp-4], -858993460		; ccccccccH
+	mov	DWORD PTR _this$[ebp], ecx
+	mov	eax, DWORD PTR _this$[ebp]
+	mov	eax, DWORD PTR [eax+164]
+	mov	esp, ebp
+	pop	ebp
+	ret	0
+?isPathPlanner@Raven_Bot@@QBEPAVRaven_PathPlanner@@XZ ENDP ; Raven_Bot::isPathPlanner
 _TEXT	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\mes documents\git\projet-ia-raven\raven\raven_bot.h

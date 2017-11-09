@@ -10,10 +10,10 @@ INCLUDELIB LIBCMTD
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG170587 DB	'BOT ', 00H
-$SG170589 DB	00H
+$SG170590 DB	'BOT ', 00H
+$SG170592 DB	00H
 	ORG $+2
-$SG170588 DB	' IS STUCK!!', 00H
+$SG170591 DB	' IS STUCK!!', 00H
 ?colors@@3QBKB DD 0ffH					; colors
 	DD	0ff0000H
 	DD	0ff00H
@@ -22214,11 +22214,11 @@ _this$ = -4						; size = 4
 	mov	ecx, DWORD PTR [edx+8]
 	call	?ID@BaseGameEntity@@QBEHXZ		; BaseGameEntity::ID
 	mov	DWORD PTR $T1[ebp], eax
-	push	OFFSET $SG170589
-	push	OFFSET $SG170588
+	push	OFFSET $SG170592
+	push	OFFSET $SG170591
 	lea	eax, DWORD PTR $T1[ebp]
 	push	eax
-	push	OFFSET $SG170587
+	push	OFFSET $SG170590
 	call	?Instance@DebugConsole@@SAPAV1@XZ	; DebugConsole::Instance
 	mov	ecx, eax
 	call	??$?6$$BY04D@DebugConsole@@QAEAAV0@AAY04$$CBD@Z ; DebugConsole::operator<<<char [5]>
@@ -22821,7 +22821,7 @@ _this$ = -4						; size = 4
 ?GetSteering@Raven_Bot@@QAEQAVRaven_Steering@@XZ PROC	; Raven_Bot::GetSteering, COMDAT
 ; _this$ = ecx
 
-; 208  :   Raven_Steering* const              GetSteering(){return m_pSteering;}
+; 209  :   Raven_Steering* const              GetSteering(){return m_pSteering;}
 
 	push	ebp
 	mov	ebp, esp

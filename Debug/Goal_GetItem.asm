@@ -25,7 +25,7 @@ CONST	SEGMENT
 	DD	0ffff00H
 	DD	0c8c8c8H
 	DD	0e6e6ffH
-$SG172007 DB	'Goal_GetItem cannot determine item type', 00H
+$SG172010 DB	'Goal_GetItem cannot determine item type', 00H
 CONST	ENDS
 PUBLIC	?__empty_global_delete@@YAXPAX@Z		; __empty_global_delete
 PUBLIC	?__empty_global_delete@@YAXPAXI@Z		; __empty_global_delete
@@ -5378,7 +5378,7 @@ $LN8@ItemTypeTo:
 ; 32   : 
 ; 33   :   default: throw std::runtime_error("Goal_GetItem cannot determine item type");
 
-	push	OFFSET $SG172007
+	push	OFFSET $SG172010
 	lea	ecx, DWORD PTR $T1[ebp]
 	call	??0runtime_error@std@@QAE@PBD@Z		; std::runtime_error::runtime_error
 	push	OFFSET __TI2?AVruntime_error@std@@
@@ -5414,7 +5414,7 @@ _this$ = -4						; size = 4
 ?GetPathPlanner@Raven_Bot@@QAEQAVRaven_PathPlanner@@XZ PROC ; Raven_Bot::GetPathPlanner, COMDAT
 ; _this$ = ecx
 
-; 209  :   Raven_PathPlanner* const           GetPathPlanner(){return m_pPathPlanner;}
+; 210  :   Raven_PathPlanner* const           GetPathPlanner(){return m_pPathPlanner;}
 
 	push	ebp
 	mov	ebp, esp
@@ -8181,6 +8181,8 @@ _TEXT	SEGMENT
 ___formal$ = 8						; size = 4
 ___formal$ = 12						; size = 4
 ?__empty_global_delete@@YAXPAXI@Z PROC			; __empty_global_delete, COMDAT
+
+; 130  : }
 
 	push	ebp
 	mov	ebp, esp

@@ -25,9 +25,9 @@ CONST	SEGMENT
 	DD	0ffff00H
 	DD	0c8c8c8H
 	DD	0e6e6ffH
-$SG159166 DB	'DefaultGiverTriggerRange', 00H
+$SG159169 DB	'DefaultGiverTriggerRange', 00H
 	ORG $+3
-$SG159167 DB	'Health_RespawnDelay', 00H
+$SG159170 DB	'Health_RespawnDelay', 00H
 CONST	ENDS
 PUBLIC	?__empty_global_delete@@YAXPAX@Z		; __empty_global_delete
 PUBLIC	?__empty_global_delete@@YAXPAXI@Z		; __empty_global_delete
@@ -18425,7 +18425,7 @@ _in$ = 8						; size = 4
 ; 56   :   //create this trigger's region of fluence
 ; 57   :   AddCircularTriggerRegion(Pos(), script->GetDouble("DefaultGiverTriggerRange"));
 
-	push	OFFSET $SG159166
+	push	OFFSET $SG159169
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble
@@ -18451,7 +18451,7 @@ _in$ = 8						; size = 4
 ; 58   : 
 ; 59   :   SetRespawnDelay((unsigned int)(script->GetDouble("Health_RespawnDelay") * FrameRate));
 
-	push	OFFSET $SG159167
+	push	OFFSET $SG159170
 	call	?Instance@Raven_Scriptor@@SAPAV1@XZ	; Raven_Scriptor::Instance
 	mov	ecx, eax
 	call	?GetDouble@Scriptor@@QAENPAD@Z		; Scriptor::GetDouble

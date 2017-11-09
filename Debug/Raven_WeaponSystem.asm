@@ -25,7 +25,7 @@ CONST	SEGMENT
 	DD	0ffff00H
 	DD	0c8c8c8H
 	DD	0e6e6ffH
-$SG169544 DB	' ', 00H
+$SG169548 DB	' ', 00H
 ?piecewise_construct@std@@3Upiecewise_construct_t@1@B	ORG $+1 ; std::piecewise_construct
 CONST	ENDS
 PUBLIC	?__empty_global_delete@@YAXPAX@Z		; __empty_global_delete
@@ -26697,7 +26697,7 @@ _this$ = -4						; size = 4
 ?GetTargetBot@Raven_Bot@@QBEQAV1@XZ PROC		; Raven_Bot::GetTargetBot, COMDAT
 ; _this$ = ecx
 
-; 213  :   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
+; 214  :   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
 
 	push	ebp
 	mov	ebp, esp
@@ -26723,7 +26723,7 @@ _this$ = -4						; size = 4
 ?GetTargetSys@Raven_Bot@@QAEQAVRaven_TargetingSystem@@XZ PROC ; Raven_Bot::GetTargetSys, COMDAT
 ; _this$ = ecx
 
-; 212  :   Raven_TargetingSystem* const       GetTargetSys(){return m_pTargSys;}
+; 213  :   Raven_TargetingSystem* const       GetTargetSys(){return m_pTargSys;}
 
 	push	ebp
 	mov	ebp, esp
@@ -26746,7 +26746,7 @@ _ch$ = 8						; size = 1
 ?SetWeaponChanged@Raven_Bot@@QAEX_N@Z PROC		; Raven_Bot::SetWeaponChanged, COMDAT
 ; _this$ = ecx
 
-; 166  :   void          SetWeaponChanged(bool ch) { weaponChanged = ch; }
+; 167  :   void          SetWeaponChanged(bool ch) { weaponChanged = ch; }
 
 	push	ebp
 	mov	ebp, esp
@@ -27875,7 +27875,7 @@ $LN7@RenderDesi:
 
 	lea	edx, DWORD PTR _type$11[ebp]
 	push	edx
-	push	OFFSET $SG169544
+	push	OFFSET $SG169548
 	push	2
 	lea	eax, DWORD PTR _score$12[ebp]
 	push	eax

@@ -279,14 +279,21 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
     }
     break;
 
-   case WM_MOUSEWHEEL: //change les armes avec la molette de la souris
+   /*case WM_KEYDOWN:
    {
-	   g_pRaven->PossessedBot()->SetWeaponChanged(false);
-	   if ((short)HIWORD(wParam)/120 > 0) { //si la roulette est montee
-		   choiceWeaponScrollUp(armeCourante,nbArme);
-	   } else if ((short)HIWORD(wParam)/120 < 0) { //si la roulette est descendue
-		   choiceWeaponScrollDown(armeCourante, nbArme);
-	   }
+	   g_pRaven->ChangePositionHumanBot();
+	   break;
+   }*/
+
+   case WM_MOUSEWHEEL: //change les armes avec la molette de la souris
+   {	if (g_pRaven->PossessedBot()) {
+			g_pRaven->PossessedBot()->SetWeaponChanged(false);
+			if ((short)HIWORD(wParam)/120 > 0) { //si la roulette est montee
+				choiceWeaponScrollUp(armeCourante,nbArme);
+			} else if ((short)HIWORD(wParam)/120 < 0) { //si la roulette est descendue
+				choiceWeaponScrollDown(armeCourante, nbArme);
+			}
+		}  
    }
    break;
 

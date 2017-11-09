@@ -146,6 +146,8 @@ public:
   // bot/s will attempt to move to that position.
   void        ClickRightMouseButton(POINTS p);
 
+  //void ChangePositionHumanBot();
+
   //this method is called when the user clicks the left mouse button. If there
   //is a possessed bot, this fires the weapon, else does nothing
   void        ClickLeftMouseButton(POINTS p);

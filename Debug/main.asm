@@ -16,23 +16,23 @@ _BSS	SEGMENT
 ?g_pRaven@@3PAVRaven_Game@@A DD 01H DUP (?)		; g_pRaven
 _BSS	ENDS
 CONST	SEGMENT
-$SG169559 DB	'Raven', 00H
-$SG169692 DB	00H
+$SG169563 DB	'Raven', 00H
+$SG169698 DB	00H
 	ORG $+1
-$SG169561 DB	'MyWindowClass', 00H
+$SG169565 DB	'MyWindowClass', 00H
 	ORG $+2
-$SG169689 DB	'map', 00H
-$SG169690 DB	'Raven map file (*.map)', 00H
+$SG169695 DB	'map', 00H
+$SG169696 DB	'Raven map file (*.map)', 00H
 	ORG $+1
-$SG169691 DB	'Filename: ', 00H
+$SG169697 DB	'Filename: ', 00H
 	ORG $+1
-$SG169747 DB	'Error', 00H
+$SG169753 DB	'Error', 00H
 	ORG $+2
-$SG169748 DB	'Registration Failed!', 00H
+$SG169754 DB	'Registration Failed!', 00H
 	ORG $+3
-$SG169751 DB	'Error!', 00H
+$SG169757 DB	'Error!', 00H
 	ORG $+1
-$SG169752 DB	'CreateWindowEx Failed!', 00H
+$SG169758 DB	'CreateWindowEx Failed!', 00H
 	ORG $+1
 ?colors@@3QBKB DD 0ffH					; colors
 	DD	0ff0000H
@@ -51,8 +51,8 @@ $SG169752 DB	'CreateWindowEx Failed!', 00H
 	DD	0e6e6ffH
 CONST	ENDS
 _DATA	SEGMENT
-?g_szApplicationName@@3PADA DD FLAT:$SG169559		; g_szApplicationName
-?g_szWindowClassName@@3PADA DD FLAT:$SG169561		; g_szWindowClassName
+?g_szApplicationName@@3PADA DD FLAT:$SG169563		; g_szApplicationName
+?g_szWindowClassName@@3PADA DD FLAT:$SG169565		; g_szWindowClassName
 _DATA	ENDS
 PUBLIC	?__empty_global_delete@@YAXPAX@Z		; __empty_global_delete
 PUBLIC	?__empty_global_delete@@YAXPAXI@Z		; __empty_global_delete
@@ -725,6 +725,7 @@ EXTRN	?LoadMap@Raven_Game@@QAE_NABV?$basic_string@DU?$char_traits@D@std@@V?$allo
 EXTRN	?AddBots@Raven_Game@@QAEXI@Z:PROC		; Raven_Game::AddBots
 EXTRN	?RemoveBot@Raven_Game@@QAEXXZ:PROC		; Raven_Game::RemoveBot
 EXTRN	?ClickRightMouseButton@Raven_Game@@QAEXUtagPOINTS@@@Z:PROC ; Raven_Game::ClickRightMouseButton
+EXTRN	?ChangePositionHumanBot@Raven_Game@@QAEXXZ:PROC	; Raven_Game::ChangePositionHumanBot
 EXTRN	?ClickLeftMouseButton@Raven_Game@@QAEXUtagPOINTS@@@Z:PROC ; Raven_Game::ClickLeftMouseButton
 EXTRN	?ExorciseAnyPossessedBot@Raven_Game@@QAEXXZ:PROC ; Raven_Game::ExorciseAnyPossessedBot
 EXTRN	?ChangeWeaponOfPossessedBot@Raven_Game@@QBEXI@Z:PROC ; Raven_Game::ChangeWeaponOfPossessedBot
@@ -9083,19 +9084,19 @@ text$x	ENDS
 ; Function compile flags: /Odtp /RTCsu
 ; File d:\mes documents\git\projet-ia-raven\raven\main.cpp
 _TEXT	SEGMENT
-tv450 = -280						; size = 4
-tv437 = -276						; size = 4
-tv424 = -272						; size = 4
-tv411 = -268						; size = 4
-tv398 = -264						; size = 4
-tv385 = -260						; size = 4
-tv372 = -256						; size = 4
-tv352 = -252						; size = 4
-tv332 = -248						; size = 4
-tv319 = -244						; size = 4
-tv306 = -240						; size = 4
-tv293 = -236						; size = 4
-tv251 = -232						; size = 4
+tv454 = -280						; size = 4
+tv441 = -276						; size = 4
+tv428 = -272						; size = 4
+tv415 = -268						; size = 4
+tv402 = -264						; size = 4
+tv389 = -260						; size = 4
+tv376 = -256						; size = 4
+tv356 = -252						; size = 4
+tv336 = -248						; size = 4
+tv323 = -244						; size = 4
+tv310 = -240						; size = 4
+tv297 = -236						; size = 4
+tv255 = -232						; size = 4
 tv187 = -228						; size = 4
 tv95 = -224						; size = 4
 tv64 = -220						; size = 4
@@ -9166,26 +9167,33 @@ _lParam$ = 20						; size = 4
 	mov	eax, DWORD PTR _msg$[ebp]
 	mov	DWORD PTR tv64[ebp], eax
 	cmp	DWORD PTR tv64[ebp], 257		; 00000101H
-	ja	SHORT $LN78@WindowProc
+	ja	SHORT $LN80@WindowProc
 	cmp	DWORD PTR tv64[ebp], 257		; 00000101H
 	je	$LN9@WindowProc
-	mov	ecx, DWORD PTR tv64[ebp]
-	sub	ecx, 1
-	mov	DWORD PTR tv64[ebp], ecx
-	cmp	DWORD PTR tv64[ebp], 14			; 0000000eH
-	ja	$LN2@WindowProc
-	mov	edx, DWORD PTR tv64[ebp]
-	movzx	eax, BYTE PTR $LN83@WindowProc[edx]
-	jmp	DWORD PTR $LN91@WindowProc[eax*4]
-$LN78@WindowProc:
+	cmp	DWORD PTR tv64[ebp], 5
+	ja	SHORT $LN81@WindowProc
+	cmp	DWORD PTR tv64[ebp], 5
+	je	$LN51@WindowProc
+	cmp	DWORD PTR tv64[ebp], 1
+	je	SHORT $LN8@WindowProc
+	cmp	DWORD PTR tv64[ebp], 2
+	je	$LN52@WindowProc
+	jmp	$LN2@WindowProc
+$LN81@WindowProc:
+	cmp	DWORD PTR tv64[ebp], 15			; 0000000fH
+	je	$LN50@WindowProc
+	cmp	DWORD PTR tv64[ebp], 256		; 00000100H
+	je	$LN26@WindowProc
+	jmp	$LN2@WindowProc
+$LN80@WindowProc:
 	mov	ecx, DWORD PTR tv64[ebp]
 	sub	ecx, 273				; 00000111H
 	mov	DWORD PTR tv64[ebp], ecx
 	cmp	DWORD PTR tv64[ebp], 249		; 000000f9H
 	ja	$LN2@WindowProc
 	mov	edx, DWORD PTR tv64[ebp]
-	movzx	eax, BYTE PTR $LN84@WindowProc[edx]
-	jmp	DWORD PTR $LN92@WindowProc[eax*4]
+	movzx	eax, BYTE PTR $LN86@WindowProc[edx]
+	jmp	DWORD PTR $LN93@WindowProc[eax*4]
 $LN8@WindowProc:
 
 ; 141  :     {
@@ -9314,14 +9322,14 @@ $LN8@WindowProc:
 	mov	DWORD PTR $T2[ebp], eax
 	mov	DWORD PTR __$EHRec$[ebp+8], 0
 	cmp	DWORD PTR $T2[ebp], 0
-	je	SHORT $LN52@WindowProc
+	je	SHORT $LN54@WindowProc
 	mov	ecx, DWORD PTR $T2[ebp]
 	call	??0Raven_Game@@QAE@XZ			; Raven_Game::Raven_Game
 	mov	DWORD PTR tv95[ebp], eax
-	jmp	SHORT $LN53@WindowProc
-$LN52@WindowProc:
+	jmp	SHORT $LN55@WindowProc
+$LN54@WindowProc:
 	mov	DWORD PTR tv95[ebp], 0
-$LN53@WindowProc:
+$LN55@WindowProc:
 	mov	ecx, DWORD PTR tv95[ebp]
 	mov	DWORD PTR $T3[ebp], ecx
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
@@ -9495,8 +9503,8 @@ $LN9@WindowProc:
 	cmp	DWORD PTR tv187[ebp], 61		; 0000003dH
 	ja	$LN4@WindowProc
 	mov	edx, DWORD PTR tv187[ebp]
-	movzx	eax, BYTE PTR $LN85@WindowProc[edx]
-	jmp	DWORD PTR $LN93@WindowProc[eax*4]
+	movzx	eax, BYTE PTR $LN87@WindowProc[edx]
+	jmp	DWORD PTR $LN94@WindowProc[eax*4]
 $LN10@WindowProc:
 
 ; 205  :         {
@@ -9719,9 +9727,44 @@ $LN25@WindowProc:
 $LN26@WindowProc:
 
 ; 281  : 
-; 282  :    case WM_MOUSEWHEEL: //change les armes avec la molette de la souris
+; 282  :    case WM_KEYDOWN:
 ; 283  :    {
-; 284  : 	   g_pRaven->PossessedBot()->SetWeaponChanged(false);
+; 284  : 	   /*switch (wParam)
+; 285  : 	   {
+; 286  : 	   case 'Z':
+; 287  : 		   g_pRaven->ChangePositionHumanBot(Vector2D(0,-2));
+; 288  : 		   break;
+; 289  : 	   case 'Q':
+; 290  : 		   g_pRaven->ChangePositionHumanBot(Vector2D(-2, 0));
+; 291  : 		   break;
+; 292  : 	   case 'S':
+; 293  : 		   g_pRaven->ChangePositionHumanBot(Vector2D(0, 2));
+; 294  : 		   break;
+; 295  : 	   case 'D':
+; 296  : 		   g_pRaven->ChangePositionHumanBot(Vector2D(2,0));
+; 297  : 		   break;
+; 298  : 	   }*/
+; 299  : 	   g_pRaven->ChangePositionHumanBot();
+
+	mov	ecx, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
+	call	?ChangePositionHumanBot@Raven_Game@@QAEXXZ ; Raven_Game::ChangePositionHumanBot
+
+; 300  : 	   break;
+
+	jmp	$LN2@WindowProc
+$LN27@WindowProc:
+
+; 301  :    }
+; 302  : 
+; 303  :    case WM_MOUSEWHEEL: //change les armes avec la molette de la souris
+; 304  :    {	if (g_pRaven->PossessedBot()) {
+
+	mov	ecx, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
+	call	?PossessedBot@Raven_Game@@QBEPAVRaven_Bot@@XZ ; Raven_Game::PossessedBot
+	test	eax, eax
+	je	SHORT $LN28@WindowProc
+
+; 305  : 			g_pRaven->PossessedBot()->SetWeaponChanged(false);
 
 	push	0
 	mov	ecx, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
@@ -9729,7 +9772,7 @@ $LN26@WindowProc:
 	mov	ecx, eax
 	call	?SetWeaponChanged@Raven_Bot@@QAEX_N@Z	; Raven_Bot::SetWeaponChanged
 
-; 285  : 	   if ((short)HIWORD(wParam)/120 > 0) { //si la roulette est montee
+; 306  : 			if ((short)HIWORD(wParam)/120 > 0) { //si la roulette est montee
 
 	mov	eax, DWORD PTR _wParam$[ebp]
 	shr	eax, 16					; 00000010H
@@ -9739,9 +9782,9 @@ $LN26@WindowProc:
 	mov	ecx, 120				; 00000078H
 	idiv	ecx
 	test	eax, eax
-	jle	SHORT $LN27@WindowProc
+	jle	SHORT $LN29@WindowProc
 
-; 286  : 		   choiceWeaponScrollUp(armeCourante,nbArme);
+; 307  : 				choiceWeaponScrollUp(armeCourante,nbArme);
 
 	mov	edx, DWORD PTR _nbArme$[ebp]
 	push	edx
@@ -9749,9 +9792,9 @@ $LN26@WindowProc:
 	call	?choiceWeaponScrollUp@@YAXAAHH@Z	; choiceWeaponScrollUp
 	add	esp, 8
 	jmp	SHORT $LN28@WindowProc
-$LN27@WindowProc:
+$LN29@WindowProc:
 
-; 287  : 	   } else if ((short)HIWORD(wParam)/120 < 0) { //si la roulette est descendue
+; 308  : 			} else if ((short)HIWORD(wParam)/120 < 0) { //si la roulette est descendue
 
 	mov	eax, DWORD PTR _wParam$[ebp]
 	shr	eax, 16					; 00000010H
@@ -9763,7 +9806,7 @@ $LN27@WindowProc:
 	test	eax, eax
 	jge	SHORT $LN28@WindowProc
 
-; 288  : 		   choiceWeaponScrollDown(armeCourante, nbArme);
+; 309  : 				choiceWeaponScrollDown(armeCourante, nbArme);
 
 	mov	edx, DWORD PTR _nbArme$[ebp]
 	push	edx
@@ -9772,42 +9815,43 @@ $LN27@WindowProc:
 	add	esp, 8
 $LN28@WindowProc:
 
-; 289  : 	   }
-; 290  :    }
-; 291  :    break;
+; 310  : 			}
+; 311  : 		}  
+; 312  :    }
+; 313  :    break;
 
 	jmp	$LN2@WindowProc
-$LN30@WindowProc:
+$LN32@WindowProc:
 
-; 292  : 
-; 293  :     case WM_COMMAND:
-; 294  :     {
-; 295  : 
-; 296  :      switch(wParam)
+; 314  : 
+; 315  :     case WM_COMMAND:
+; 316  :     {
+; 317  : 
+; 318  :      switch(wParam)
 
 	mov	eax, DWORD PTR _wParam$[ebp]
-	mov	DWORD PTR tv251[ebp], eax
-	mov	ecx, DWORD PTR tv251[ebp]
+	mov	DWORD PTR tv255[ebp], eax
+	mov	ecx, DWORD PTR tv255[ebp]
 	sub	ecx, 40001				; 00009c41H
-	mov	DWORD PTR tv251[ebp], ecx
-	cmp	DWORD PTR tv251[ebp], 16		; 00000010H
-	ja	$LN48@WindowProc
-	mov	edx, DWORD PTR tv251[ebp]
-	jmp	DWORD PTR $LN94@WindowProc[edx*4]
-$LN31@WindowProc:
+	mov	DWORD PTR tv255[ebp], ecx
+	cmp	DWORD PTR tv255[ebp], 16		; 00000010H
+	ja	$LN50@WindowProc
+	mov	edx, DWORD PTR tv255[ebp]
+	jmp	DWORD PTR $LN95@WindowProc[edx*4]
+$LN33@WindowProc:
 
-; 297  :       {
-; 298  :       
-; 299  : 
-; 300  :       case IDM_GAME_LOAD:
-; 301  :           
-; 302  :           FileOpenDlg(hwnd, szFileName, szTitleName, "Raven map file (*.map)", "map");
+; 319  :       {
+; 320  :       
+; 321  : 
+; 322  :       case IDM_GAME_LOAD:
+; 323  :           
+; 324  :           FileOpenDlg(hwnd, szFileName, szTitleName, "Raven map file (*.map)", "map");
 
-	push	OFFSET $SG169689
+	push	OFFSET $SG169695
 	lea	ecx, DWORD PTR $T8[ebp]
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	mov	DWORD PTR __$EHRec$[ebp+8], 1
-	push	OFFSET $SG169690
+	push	OFFSET $SG169696
 	lea	ecx, DWORD PTR $T7[ebp]
 	call	??0?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@QBD@Z ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::basic_string<char,std::char_traits<char>,std::allocator<char> >
 	mov	BYTE PTR __$EHRec$[ebp+8], 2
@@ -9828,12 +9872,12 @@ $LN31@WindowProc:
 	lea	ecx, DWORD PTR $T8[ebp]
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 
-; 303  : 
-; 304  :           debug_con << "Filename: " << szTitleName << "";
+; 325  : 
+; 326  :           debug_con << "Filename: " << szTitleName << "";
 
-	push	OFFSET $SG169692
+	push	OFFSET $SG169698
 	push	OFFSET ?szTitleName@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PADA
-	push	OFFSET $SG169691
+	push	OFFSET $SG169697
 	call	?Instance@DebugConsole@@SAPAV1@XZ	; DebugConsole::Instance
 	mov	ecx, eax
 	call	??$?6$$BY0L@D@DebugConsole@@QAEAAV0@AAY0L@$$CBD@Z ; DebugConsole::operator<<<char [11]>
@@ -9842,17 +9886,17 @@ $LN31@WindowProc:
 	mov	ecx, eax
 	call	??$?6$$BY00D@DebugConsole@@QAEAAV0@AAY00$$CBD@Z ; DebugConsole::operator<<<char [1]>
 
-; 305  : 
-; 306  :           if (strlen(szTitleName) > 0)
+; 327  : 
+; 328  :           if (strlen(szTitleName) > 0)
 
 	push	OFFSET ?szTitleName@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PADA
 	call	_strlen
 	add	esp, 4
 	test	eax, eax
-	jbe	SHORT $LN32@WindowProc
+	jbe	SHORT $LN34@WindowProc
 
-; 307  :           {
-; 308  :             g_pRaven->LoadMap(szTitleName);
+; 329  :           {
+; 330  :             g_pRaven->LoadMap(szTitleName);
 
 	push	OFFSET ?szTitleName@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PADA
 	lea	ecx, DWORD PTR $T6[ebp]
@@ -9865,80 +9909,80 @@ $LN31@WindowProc:
 	mov	DWORD PTR __$EHRec$[ebp+8], -1
 	lea	ecx, DWORD PTR $T6[ebp]
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
-$LN32@WindowProc:
+$LN34@WindowProc:
 
-; 309  :           }
-; 310  : 
-; 311  :           break;
+; 331  :           }
+; 332  : 
+; 333  :           break;
 
-	jmp	$LN48@WindowProc
-$LN33@WindowProc:
+	jmp	$LN50@WindowProc
+$LN35@WindowProc:
 
-; 312  : 
-; 313  :       case IDM_GAME_ADDBOT:
-; 314  : 
-; 315  :           g_pRaven->AddBots(1);
+; 334  : 
+; 335  :       case IDM_GAME_ADDBOT:
+; 336  : 
+; 337  :           g_pRaven->AddBots(1);
 
 	push	1
 	mov	ecx, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
 	call	?AddBots@Raven_Game@@QAEXI@Z		; Raven_Game::AddBots
 
-; 316  :           
-; 317  :           break;
+; 338  :           
+; 339  :           break;
 
-	jmp	$LN48@WindowProc
-$LN34@WindowProc:
+	jmp	$LN50@WindowProc
+$LN36@WindowProc:
 
-; 318  : 
-; 319  :       case IDM_GAME_REMOVEBOT:
-; 320  :           
-; 321  :           g_pRaven->RemoveBot();
+; 340  : 
+; 341  :       case IDM_GAME_REMOVEBOT:
+; 342  :           
+; 343  :           g_pRaven->RemoveBot();
 
 	mov	ecx, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
 	call	?RemoveBot@Raven_Game@@QAEXXZ		; Raven_Game::RemoveBot
 
-; 322  : 
-; 323  :           break;
+; 344  : 
+; 345  :           break;
 
-	jmp	$LN48@WindowProc
-$LN35@WindowProc:
+	jmp	$LN50@WindowProc
+$LN37@WindowProc:
 
-; 324  : 
-; 325  :       case IDM_GAME_PAUSE:
-; 326  :           
-; 327  :           g_pRaven->TogglePause();
+; 346  : 
+; 347  :       case IDM_GAME_PAUSE:
+; 348  :           
+; 349  :           g_pRaven->TogglePause();
 
 	mov	ecx, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
 	call	?TogglePause@Raven_Game@@QAEXXZ		; Raven_Game::TogglePause
 
-; 328  : 
-; 329  :           break;
+; 350  : 
+; 351  :           break;
 
-	jmp	$LN48@WindowProc
-$LN36@WindowProc:
+	jmp	$LN50@WindowProc
+$LN38@WindowProc:
 
-; 330  : 
-; 331  : 
-; 332  : 
-; 333  :       case IDM_NAVIGATION_SHOW_NAVGRAPH:
-; 334  : 
-; 335  :         UserOptions->m_bShowGraph = !UserOptions->m_bShowGraph;
+; 352  : 
+; 353  : 
+; 354  : 
+; 355  :       case IDM_NAVIGATION_SHOW_NAVGRAPH:
+; 356  : 
+; 357  :         UserOptions->m_bShowGraph = !UserOptions->m_bShowGraph;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	ecx, BYTE PTR [eax]
 	test	ecx, ecx
-	jne	SHORT $LN54@WindowProc
-	mov	DWORD PTR tv293[ebp], 1
-	jmp	SHORT $LN55@WindowProc
-$LN54@WindowProc:
-	mov	DWORD PTR tv293[ebp], 0
-$LN55@WindowProc:
+	jne	SHORT $LN56@WindowProc
+	mov	DWORD PTR tv297[ebp], 1
+	jmp	SHORT $LN57@WindowProc
+$LN56@WindowProc:
+	mov	DWORD PTR tv297[ebp], 0
+$LN57@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	dl, BYTE PTR tv293[ebp]
+	mov	dl, BYTE PTR tv297[ebp]
 	mov	BYTE PTR [eax], dl
 
-; 336  : 
-; 337  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SHOW_NAVGRAPH, UserOptions->m_bShowGraph);
+; 358  : 
+; 359  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SHOW_NAVGRAPH, UserOptions->m_bShowGraph);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	al, BYTE PTR [eax]
@@ -9950,32 +9994,32 @@ $LN55@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 338  : 
-; 339  :         break;
+; 360  : 
+; 361  :         break;
 
-	jmp	$LN48@WindowProc
-$LN37@WindowProc:
+	jmp	$LN50@WindowProc
+$LN39@WindowProc:
 
-; 340  :         
-; 341  :       case IDM_NAVIGATION_SHOW_PATH:
-; 342  : 
-; 343  :         UserOptions->m_bShowPathOfSelectedBot = !UserOptions->m_bShowPathOfSelectedBot;
+; 362  :         
+; 363  :       case IDM_NAVIGATION_SHOW_PATH:
+; 364  : 
+; 365  :         UserOptions->m_bShowPathOfSelectedBot = !UserOptions->m_bShowPathOfSelectedBot;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	eax, BYTE PTR [eax+2]
 	test	eax, eax
-	jne	SHORT $LN56@WindowProc
-	mov	DWORD PTR tv306[ebp], 1
-	jmp	SHORT $LN57@WindowProc
-$LN56@WindowProc:
-	mov	DWORD PTR tv306[ebp], 0
-$LN57@WindowProc:
+	jne	SHORT $LN58@WindowProc
+	mov	DWORD PTR tv310[ebp], 1
+	jmp	SHORT $LN59@WindowProc
+$LN58@WindowProc:
+	mov	DWORD PTR tv310[ebp], 0
+$LN59@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv306[ebp]
+	mov	cl, BYTE PTR tv310[ebp]
 	mov	BYTE PTR [eax+2], cl
 
-; 344  : 
-; 345  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SHOW_PATH, UserOptions->m_bShowPathOfSelectedBot);
+; 366  : 
+; 367  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SHOW_PATH, UserOptions->m_bShowPathOfSelectedBot);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+2]
@@ -9987,32 +10031,32 @@ $LN57@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 346  : 
-; 347  :         break;
+; 368  : 
+; 369  :         break;
 
-	jmp	$LN48@WindowProc
-$LN38@WindowProc:
+	jmp	$LN50@WindowProc
+$LN40@WindowProc:
 
-; 348  : 
-; 349  :       case IDM_NAVIGATION_SHOW_INDICES:
-; 350  : 
-; 351  :         UserOptions->m_bShowNodeIndices = !UserOptions->m_bShowNodeIndices;
+; 370  : 
+; 371  :       case IDM_NAVIGATION_SHOW_INDICES:
+; 372  : 
+; 373  :         UserOptions->m_bShowNodeIndices = !UserOptions->m_bShowNodeIndices;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+1]
 	test	edx, edx
-	jne	SHORT $LN58@WindowProc
-	mov	DWORD PTR tv319[ebp], 1
-	jmp	SHORT $LN59@WindowProc
-$LN58@WindowProc:
-	mov	DWORD PTR tv319[ebp], 0
-$LN59@WindowProc:
+	jne	SHORT $LN60@WindowProc
+	mov	DWORD PTR tv323[ebp], 1
+	jmp	SHORT $LN61@WindowProc
+$LN60@WindowProc:
+	mov	DWORD PTR tv323[ebp], 0
+$LN61@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv319[ebp]
+	mov	cl, BYTE PTR tv323[ebp]
 	mov	BYTE PTR [eax+1], cl
 
-; 352  : 
-; 353  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SHOW_INDICES, UserOptions->m_bShowNodeIndices);
+; 374  : 
+; 375  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SHOW_INDICES, UserOptions->m_bShowNodeIndices);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+1]
@@ -10024,36 +10068,36 @@ $LN59@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 354  : 
-; 355  :         break;
+; 376  : 
+; 377  :         break;
 
-	jmp	$LN48@WindowProc
-$LN39@WindowProc:
+	jmp	$LN50@WindowProc
+$LN41@WindowProc:
 
-; 356  : 
-; 357  :       case IDM_NAVIGATION_SMOOTH_PATHS_QUICK:
-; 358  : 
-; 359  :         UserOptions->m_bSmoothPathsQuick = !UserOptions->m_bSmoothPathsQuick;
+; 378  : 
+; 379  :       case IDM_NAVIGATION_SMOOTH_PATHS_QUICK:
+; 380  : 
+; 381  :         UserOptions->m_bSmoothPathsQuick = !UserOptions->m_bSmoothPathsQuick;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+9]
 	test	edx, edx
-	jne	SHORT $LN60@WindowProc
-	mov	DWORD PTR tv332[ebp], 1
-	jmp	SHORT $LN61@WindowProc
-$LN60@WindowProc:
-	mov	DWORD PTR tv332[ebp], 0
-$LN61@WindowProc:
+	jne	SHORT $LN62@WindowProc
+	mov	DWORD PTR tv336[ebp], 1
+	jmp	SHORT $LN63@WindowProc
+$LN62@WindowProc:
+	mov	DWORD PTR tv336[ebp], 0
+$LN63@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv332[ebp]
+	mov	cl, BYTE PTR tv336[ebp]
 	mov	BYTE PTR [eax+9], cl
 
-; 360  :         UserOptions->m_bSmoothPathsPrecise = false;
+; 382  :         UserOptions->m_bSmoothPathsPrecise = false;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	BYTE PTR [eax+10], 0
 
-; 361  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SMOOTH_PATHS_PRECISE, UserOptions->m_bSmoothPathsPrecise);
+; 383  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SMOOTH_PATHS_PRECISE, UserOptions->m_bSmoothPathsPrecise);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+10]
@@ -10065,7 +10109,7 @@ $LN61@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 362  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SMOOTH_PATHS_QUICK, UserOptions->m_bSmoothPathsQuick);
+; 384  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SMOOTH_PATHS_QUICK, UserOptions->m_bSmoothPathsQuick);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+9]
@@ -10077,36 +10121,36 @@ $LN61@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 363  : 
-; 364  :         break;
+; 385  : 
+; 386  :         break;
 
-	jmp	$LN48@WindowProc
-$LN40@WindowProc:
+	jmp	$LN50@WindowProc
+$LN42@WindowProc:
 
-; 365  : 
-; 366  :       case IDM_NAVIGATION_SMOOTH_PATHS_PRECISE:
-; 367  : 
-; 368  :         UserOptions->m_bSmoothPathsPrecise = !UserOptions->m_bSmoothPathsPrecise;
+; 387  : 
+; 388  :       case IDM_NAVIGATION_SMOOTH_PATHS_PRECISE:
+; 389  : 
+; 390  :         UserOptions->m_bSmoothPathsPrecise = !UserOptions->m_bSmoothPathsPrecise;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+10]
 	test	edx, edx
-	jne	SHORT $LN62@WindowProc
-	mov	DWORD PTR tv352[ebp], 1
-	jmp	SHORT $LN63@WindowProc
-$LN62@WindowProc:
-	mov	DWORD PTR tv352[ebp], 0
-$LN63@WindowProc:
+	jne	SHORT $LN64@WindowProc
+	mov	DWORD PTR tv356[ebp], 1
+	jmp	SHORT $LN65@WindowProc
+$LN64@WindowProc:
+	mov	DWORD PTR tv356[ebp], 0
+$LN65@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv352[ebp]
+	mov	cl, BYTE PTR tv356[ebp]
 	mov	BYTE PTR [eax+10], cl
 
-; 369  :         UserOptions->m_bSmoothPathsQuick = false;
+; 391  :         UserOptions->m_bSmoothPathsQuick = false;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	BYTE PTR [eax+9], 0
 
-; 370  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SMOOTH_PATHS_QUICK, UserOptions->m_bSmoothPathsQuick);
+; 392  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SMOOTH_PATHS_QUICK, UserOptions->m_bSmoothPathsQuick);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+9]
@@ -10118,7 +10162,7 @@ $LN63@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 371  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SMOOTH_PATHS_PRECISE, UserOptions->m_bSmoothPathsPrecise);
+; 393  :         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SMOOTH_PATHS_PRECISE, UserOptions->m_bSmoothPathsPrecise);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+10]
@@ -10130,32 +10174,32 @@ $LN63@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 372  : 
-; 373  :         break;
+; 394  : 
+; 395  :         break;
 
-	jmp	$LN48@WindowProc
-$LN41@WindowProc:
+	jmp	$LN50@WindowProc
+$LN43@WindowProc:
 
-; 374  : 
-; 375  :       case IDM_BOTS_SHOW_IDS:
-; 376  : 
-; 377  :         UserOptions->m_bShowBotIDs = !UserOptions->m_bShowBotIDs;
+; 396  : 
+; 397  :       case IDM_BOTS_SHOW_IDS:
+; 398  : 
+; 399  :         UserOptions->m_bShowBotIDs = !UserOptions->m_bShowBotIDs;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+11]
 	test	edx, edx
-	jne	SHORT $LN64@WindowProc
-	mov	DWORD PTR tv372[ebp], 1
-	jmp	SHORT $LN65@WindowProc
-$LN64@WindowProc:
-	mov	DWORD PTR tv372[ebp], 0
-$LN65@WindowProc:
+	jne	SHORT $LN66@WindowProc
+	mov	DWORD PTR tv376[ebp], 1
+	jmp	SHORT $LN67@WindowProc
+$LN66@WindowProc:
+	mov	DWORD PTR tv376[ebp], 0
+$LN67@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv372[ebp]
+	mov	cl, BYTE PTR tv376[ebp]
 	mov	BYTE PTR [eax+11], cl
 
-; 378  : 
-; 379  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_IDS, UserOptions->m_bShowBotIDs);
+; 400  : 
+; 401  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_IDS, UserOptions->m_bShowBotIDs);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+11]
@@ -10167,32 +10211,32 @@ $LN65@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 380  : 
-; 381  :         break;
+; 402  : 
+; 403  :         break;
 
-	jmp	$LN48@WindowProc
-$LN42@WindowProc:
+	jmp	$LN50@WindowProc
+$LN44@WindowProc:
 
-; 382  : 
-; 383  :       case IDM_BOTS_SHOW_HEALTH:
-; 384  : 
-; 385  :         UserOptions->m_bShowBotHealth = !UserOptions->m_bShowBotHealth;
+; 404  : 
+; 405  :       case IDM_BOTS_SHOW_HEALTH:
+; 406  : 
+; 407  :         UserOptions->m_bShowBotHealth = !UserOptions->m_bShowBotHealth;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+12]
 	test	edx, edx
-	jne	SHORT $LN66@WindowProc
-	mov	DWORD PTR tv385[ebp], 1
-	jmp	SHORT $LN67@WindowProc
-$LN66@WindowProc:
-	mov	DWORD PTR tv385[ebp], 0
-$LN67@WindowProc:
+	jne	SHORT $LN68@WindowProc
+	mov	DWORD PTR tv389[ebp], 1
+	jmp	SHORT $LN69@WindowProc
+$LN68@WindowProc:
+	mov	DWORD PTR tv389[ebp], 0
+$LN69@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv385[ebp]
+	mov	cl, BYTE PTR tv389[ebp]
 	mov	BYTE PTR [eax+12], cl
 
-; 386  :         
-; 387  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_HEALTH, UserOptions->m_bShowBotHealth);
+; 408  :         
+; 409  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_HEALTH, UserOptions->m_bShowBotHealth);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+12]
@@ -10204,32 +10248,32 @@ $LN67@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 388  : 
-; 389  :         break;
+; 410  : 
+; 411  :         break;
 
-	jmp	$LN48@WindowProc
-$LN43@WindowProc:
+	jmp	$LN50@WindowProc
+$LN45@WindowProc:
 
-; 390  : 
-; 391  :       case IDM_BOTS_SHOW_TARGET:
-; 392  : 
-; 393  :         UserOptions->m_bShowTargetOfSelectedBot = !UserOptions->m_bShowTargetOfSelectedBot;
+; 412  : 
+; 413  :       case IDM_BOTS_SHOW_TARGET:
+; 414  : 
+; 415  :         UserOptions->m_bShowTargetOfSelectedBot = !UserOptions->m_bShowTargetOfSelectedBot;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+3]
 	test	edx, edx
-	jne	SHORT $LN68@WindowProc
-	mov	DWORD PTR tv398[ebp], 1
-	jmp	SHORT $LN69@WindowProc
-$LN68@WindowProc:
-	mov	DWORD PTR tv398[ebp], 0
-$LN69@WindowProc:
+	jne	SHORT $LN70@WindowProc
+	mov	DWORD PTR tv402[ebp], 1
+	jmp	SHORT $LN71@WindowProc
+$LN70@WindowProc:
+	mov	DWORD PTR tv402[ebp], 0
+$LN71@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv398[ebp]
+	mov	cl, BYTE PTR tv402[ebp]
 	mov	BYTE PTR [eax+3], cl
 
-; 394  :         
-; 395  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_TARGET, UserOptions->m_bShowTargetOfSelectedBot);
+; 416  :         
+; 417  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_TARGET, UserOptions->m_bShowTargetOfSelectedBot);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+3]
@@ -10241,32 +10285,32 @@ $LN69@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 396  : 
-; 397  :         break;
+; 418  : 
+; 419  :         break;
 
-	jmp	$LN48@WindowProc
-$LN44@WindowProc:
+	jmp	$LN50@WindowProc
+$LN46@WindowProc:
 
-; 398  : 
-; 399  :       case IDM_BOTS_SHOW_SENSED:
-; 400  : 
-; 401  :         UserOptions->m_bShowOpponentsSensedBySelectedBot = !UserOptions->m_bShowOpponentsSensedBySelectedBot;
+; 420  : 
+; 421  :       case IDM_BOTS_SHOW_SENSED:
+; 422  : 
+; 423  :         UserOptions->m_bShowOpponentsSensedBySelectedBot = !UserOptions->m_bShowOpponentsSensedBySelectedBot;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+4]
 	test	edx, edx
-	jne	SHORT $LN70@WindowProc
-	mov	DWORD PTR tv411[ebp], 1
-	jmp	SHORT $LN71@WindowProc
-$LN70@WindowProc:
-	mov	DWORD PTR tv411[ebp], 0
-$LN71@WindowProc:
+	jne	SHORT $LN72@WindowProc
+	mov	DWORD PTR tv415[ebp], 1
+	jmp	SHORT $LN73@WindowProc
+$LN72@WindowProc:
+	mov	DWORD PTR tv415[ebp], 0
+$LN73@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv411[ebp]
+	mov	cl, BYTE PTR tv415[ebp]
 	mov	BYTE PTR [eax+4], cl
 
-; 402  :         
-; 403  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_SENSED, UserOptions->m_bShowOpponentsSensedBySelectedBot);
+; 424  :         
+; 425  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_SENSED, UserOptions->m_bShowOpponentsSensedBySelectedBot);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+4]
@@ -10278,33 +10322,33 @@ $LN71@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 404  : 
-; 405  :         break;
+; 426  : 
+; 427  :         break;
 
-	jmp	$LN48@WindowProc
-$LN45@WindowProc:
+	jmp	$LN50@WindowProc
+$LN47@WindowProc:
 
-; 406  : 
-; 407  : 
-; 408  :       case IDM_BOTS_SHOW_FOV:
-; 409  : 
-; 410  :         UserOptions->m_bOnlyShowBotsInTargetsFOV = !UserOptions->m_bOnlyShowBotsInTargetsFOV;
+; 428  : 
+; 429  : 
+; 430  :       case IDM_BOTS_SHOW_FOV:
+; 431  : 
+; 432  :         UserOptions->m_bOnlyShowBotsInTargetsFOV = !UserOptions->m_bOnlyShowBotsInTargetsFOV;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+5]
 	test	edx, edx
-	jne	SHORT $LN72@WindowProc
-	mov	DWORD PTR tv424[ebp], 1
-	jmp	SHORT $LN73@WindowProc
-$LN72@WindowProc:
-	mov	DWORD PTR tv424[ebp], 0
-$LN73@WindowProc:
+	jne	SHORT $LN74@WindowProc
+	mov	DWORD PTR tv428[ebp], 1
+	jmp	SHORT $LN75@WindowProc
+$LN74@WindowProc:
+	mov	DWORD PTR tv428[ebp], 0
+$LN75@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv424[ebp]
+	mov	cl, BYTE PTR tv428[ebp]
 	mov	BYTE PTR [eax+5], cl
 
-; 411  :         
-; 412  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_FOV, UserOptions->m_bOnlyShowBotsInTargetsFOV);
+; 433  :         
+; 434  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_FOV, UserOptions->m_bOnlyShowBotsInTargetsFOV);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+5]
@@ -10316,32 +10360,32 @@ $LN73@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 413  : 
-; 414  :         break;
+; 435  : 
+; 436  :         break;
 
-	jmp	$LN48@WindowProc
-$LN46@WindowProc:
+	jmp	$LN50@WindowProc
+$LN48@WindowProc:
 
-; 415  : 
-; 416  :       case IDM_BOTS_SHOW_SCORES:
-; 417  : 
-; 418  :         UserOptions->m_bShowScore = !UserOptions->m_bShowScore;
+; 437  : 
+; 438  :       case IDM_BOTS_SHOW_SCORES:
+; 439  : 
+; 440  :         UserOptions->m_bShowScore = !UserOptions->m_bShowScore;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+13]
 	test	edx, edx
-	jne	SHORT $LN74@WindowProc
-	mov	DWORD PTR tv437[ebp], 1
-	jmp	SHORT $LN75@WindowProc
-$LN74@WindowProc:
-	mov	DWORD PTR tv437[ebp], 0
-$LN75@WindowProc:
+	jne	SHORT $LN76@WindowProc
+	mov	DWORD PTR tv441[ebp], 1
+	jmp	SHORT $LN77@WindowProc
+$LN76@WindowProc:
+	mov	DWORD PTR tv441[ebp], 0
+$LN77@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv437[ebp]
+	mov	cl, BYTE PTR tv441[ebp]
 	mov	BYTE PTR [eax+13], cl
 
-; 419  :         
-; 420  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_SCORES, UserOptions->m_bShowScore);
+; 441  :         
+; 442  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_SCORES, UserOptions->m_bShowScore);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+13]
@@ -10353,32 +10397,32 @@ $LN75@WindowProc:
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
 
-; 421  : 
-; 422  :         break;
+; 443  : 
+; 444  :         break;
 
-	jmp	SHORT $LN48@WindowProc
-$LN47@WindowProc:
+	jmp	SHORT $LN50@WindowProc
+$LN49@WindowProc:
 
-; 423  : 
-; 424  :       case IDM_BOTS_SHOW_GOAL_Q:
-; 425  : 
-; 426  :         UserOptions->m_bShowGoalsOfSelectedBot = !UserOptions->m_bShowGoalsOfSelectedBot;
+; 445  : 
+; 446  :       case IDM_BOTS_SHOW_GOAL_Q:
+; 447  : 
+; 448  :         UserOptions->m_bShowGoalsOfSelectedBot = !UserOptions->m_bShowGoalsOfSelectedBot;
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	movzx	edx, BYTE PTR [eax+6]
 	test	edx, edx
-	jne	SHORT $LN76@WindowProc
-	mov	DWORD PTR tv450[ebp], 1
-	jmp	SHORT $LN77@WindowProc
-$LN76@WindowProc:
-	mov	DWORD PTR tv450[ebp], 0
-$LN77@WindowProc:
+	jne	SHORT $LN78@WindowProc
+	mov	DWORD PTR tv454[ebp], 1
+	jmp	SHORT $LN79@WindowProc
+$LN78@WindowProc:
+	mov	DWORD PTR tv454[ebp], 0
+$LN79@WindowProc:
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
-	mov	cl, BYTE PTR tv450[ebp]
+	mov	cl, BYTE PTR tv454[ebp]
 	mov	BYTE PTR [eax+6], cl
 
-; 427  :         
-; 428  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_GOAL_Q, UserOptions->m_bShowGoalsOfSelectedBot);
+; 449  :         
+; 450  :         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_GOAL_Q, UserOptions->m_bShowGoalsOfSelectedBot);
 
 	call	?Instance@Raven_UserOptions@@SAPAV1@XZ	; Raven_UserOptions::Instance
 	mov	dl, BYTE PTR [eax+6]
@@ -10389,21 +10433,21 @@ $LN77@WindowProc:
 	push	ecx
 	call	?CheckMenuItemAppropriately@@YAXPAUHWND__@@I_N@Z ; CheckMenuItemAppropriately
 	add	esp, 12					; 0000000cH
-$LN48@WindowProc:
+$LN50@WindowProc:
 
-; 429  : 
-; 430  :         break;
-; 431  : 
-; 432  :       }//end switch
-; 433  :     }
-; 434  : 
-; 435  :     
-; 436  :     case WM_PAINT:
-; 437  :       {
-; 438  :  		       
-; 439  :          PAINTSTRUCT ps;
-; 440  :           
-; 441  :          BeginPaint (hwnd, &ps);
+; 451  : 
+; 452  :         break;
+; 453  : 
+; 454  :       }//end switch
+; 455  :     }
+; 456  : 
+; 457  :     
+; 458  :     case WM_PAINT:
+; 459  :       {
+; 460  :  		       
+; 461  :          PAINTSTRUCT ps;
+; 462  :           
+; 463  :          BeginPaint (hwnd, &ps);
 
 	mov	esi, esp
 	lea	edx, DWORD PTR _ps$5[ebp]
@@ -10414,9 +10458,9 @@ $LN48@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 442  : 
-; 443  :         //fill our backbuffer with white
-; 444  :          BitBlt(hdcBackBuffer,
+; 464  : 
+; 465  :         //fill our backbuffer with white
+; 466  :          BitBlt(hdcBackBuffer,
 
 	mov	esi, esp
 	push	16711778				; 00ff0062H
@@ -10435,17 +10479,17 @@ $LN48@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 445  :                 0,
-; 446  :                 0,
-; 447  :                 cxClient,
-; 448  :                 cyClient,
-; 449  :                 NULL,
-; 450  :                 NULL,
-; 451  :                 NULL,
-; 452  :                 WHITENESS);
-; 453  :           
-; 454  :          
-; 455  :          gdi->StartDrawing(hdcBackBuffer);
+; 467  :                 0,
+; 468  :                 0,
+; 469  :                 cxClient,
+; 470  :                 cyClient,
+; 471  :                 NULL,
+; 472  :                 NULL,
+; 473  :                 NULL,
+; 474  :                 WHITENESS);
+; 475  :           
+; 476  :          
+; 477  :          gdi->StartDrawing(hdcBackBuffer);
 
 	mov	ecx, DWORD PTR ?hdcBackBuffer@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PAUHDC__@@A
 	push	ecx
@@ -10453,14 +10497,14 @@ $LN48@WindowProc:
 	mov	ecx, eax
 	call	?StartDrawing@Cgdi@@QAEXPAUHDC__@@@Z	; Cgdi::StartDrawing
 
-; 456  : 
-; 457  :          g_pRaven->Render();
+; 478  : 
+; 479  :          g_pRaven->Render();
 
 	mov	ecx, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
 	call	?Render@Raven_Game@@QAEXXZ		; Raven_Game::Render
 
-; 458  : 
-; 459  :          gdi->StopDrawing(hdcBackBuffer);
+; 480  : 
+; 481  :          gdi->StopDrawing(hdcBackBuffer);
 
 	mov	edx, DWORD PTR ?hdcBackBuffer@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PAUHDC__@@A
 	push	edx
@@ -10468,10 +10512,10 @@ $LN48@WindowProc:
 	mov	ecx, eax
 	call	?StopDrawing@Cgdi@@QAEXPAUHDC__@@@Z	; Cgdi::StopDrawing
 
-; 460  : 
-; 461  : 
-; 462  :          //now blit backbuffer to front
-; 463  : 			   BitBlt(ps.hdc, 0, 0, cxClient, cyClient, hdcBackBuffer, 0, 0, SRCCOPY); 
+; 482  : 
+; 483  : 
+; 484  :          //now blit backbuffer to front
+; 485  : 			   BitBlt(ps.hdc, 0, 0, cxClient, cyClient, hdcBackBuffer, 0, 0, SRCCOPY); 
 
 	mov	esi, esp
 	push	13369376				; 00cc0020H
@@ -10491,8 +10535,8 @@ $LN48@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 464  :           
-; 465  :          EndPaint (hwnd, &ps);
+; 486  :           
+; 487  :          EndPaint (hwnd, &ps);
 
 	mov	esi, esp
 	lea	ecx, DWORD PTR _ps$5[ebp]
@@ -10503,28 +10547,28 @@ $LN48@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 466  : 
-; 467  :       }
-; 468  : 
-; 469  :       break;
+; 488  : 
+; 489  :       }
+; 490  : 
+; 491  :       break;
 
 	jmp	$LN2@WindowProc
-$LN49@WindowProc:
+$LN51@WindowProc:
 
-; 470  : 
-; 471  :     //has the user resized the client area?
-; 472  : 		case WM_SIZE:
-; 473  : 		  {
-; 474  :         //if so we need to update our variables so that any drawing
-; 475  :         //we do using cxClient and cyClient is scaled accordingly
-; 476  : 			  cxClient = LOWORD(lParam);
+; 492  : 
+; 493  :     //has the user resized the client area?
+; 494  : 		case WM_SIZE:
+; 495  : 		  {
+; 496  :         //if so we need to update our variables so that any drawing
+; 497  :         //we do using cxClient and cyClient is scaled accordingly
+; 498  : 			  cxClient = LOWORD(lParam);
 
 	mov	eax, DWORD PTR _lParam$[ebp]
 	and	eax, 65535				; 0000ffffH
 	movzx	ecx, ax
 	mov	DWORD PTR ?cxClient@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4HA, ecx
 
-; 477  : 			  cyClient = HIWORD(lParam);
+; 499  : 			  cyClient = HIWORD(lParam);
 
 	mov	edx, DWORD PTR _lParam$[ebp]
 	shr	edx, 16					; 00000010H
@@ -10532,10 +10576,10 @@ $LN49@WindowProc:
 	movzx	eax, dx
 	mov	DWORD PTR ?cyClient@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4HA, eax
 
-; 478  : 
-; 479  :         //now to resize the backbuffer accordingly. First select
-; 480  :         //the old bitmap back into the DC
-; 481  : 			  SelectObject(hdcBackBuffer, hOldBitmap);
+; 500  : 
+; 501  :         //now to resize the backbuffer accordingly. First select
+; 502  :         //the old bitmap back into the DC
+; 503  : 			  SelectObject(hdcBackBuffer, hOldBitmap);
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR ?hOldBitmap@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PAUHBITMAP__@@A
@@ -10546,9 +10590,9 @@ $LN49@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 482  : 
-; 483  :         //don't forget to do this or you will get resource leaks
-; 484  :         DeleteObject(hBitmap); 
+; 504  : 
+; 505  :         //don't forget to do this or you will get resource leaks
+; 506  :         DeleteObject(hBitmap); 
 
 	mov	esi, esp
 	mov	eax, DWORD PTR ?hBitmap@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PAUHBITMAP__@@A
@@ -10557,9 +10601,9 @@ $LN49@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 485  : 
-; 486  : 			  //get the DC for the application
-; 487  :         HDC hdc = GetDC(hwnd);
+; 507  : 
+; 508  : 			  //get the DC for the application
+; 509  :         HDC hdc = GetDC(hwnd);
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _hwnd$[ebp]
@@ -10569,10 +10613,10 @@ $LN49@WindowProc:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR _hdc$4[ebp], eax
 
-; 488  : 
-; 489  : 			  //create another bitmap of the same size and mode
-; 490  :         //as the application
-; 491  :         hBitmap = CreateCompatibleBitmap(hdc,
+; 510  : 
+; 511  : 			  //create another bitmap of the same size and mode
+; 512  :         //as the application
+; 513  :         hBitmap = CreateCompatibleBitmap(hdc,
 
 	mov	esi, esp
 	mov	edx, DWORD PTR ?cyClient@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4HA
@@ -10586,10 +10630,10 @@ $LN49@WindowProc:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR ?hBitmap@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PAUHBITMAP__@@A, eax
 
-; 492  : 											  cxClient,
-; 493  : 											  cyClient);
-; 494  : 
-; 495  : 			  ReleaseDC(hwnd, hdc);
+; 514  : 											  cxClient,
+; 515  : 											  cyClient);
+; 516  : 
+; 517  : 			  ReleaseDC(hwnd, hdc);
 
 	mov	esi, esp
 	mov	edx, DWORD PTR _hdc$4[ebp]
@@ -10600,9 +10644,9 @@ $LN49@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 496  : 			  
-; 497  : 			  //select the new bitmap into the DC
-; 498  :         SelectObject(hdcBackBuffer, hBitmap);
+; 518  : 			  
+; 519  : 			  //select the new bitmap into the DC
+; 520  :         SelectObject(hdcBackBuffer, hBitmap);
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR ?hBitmap@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PAUHBITMAP__@@A
@@ -10613,20 +10657,20 @@ $LN49@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 499  : 
-; 500  :       }
-; 501  : 
-; 502  :       break;
+; 521  : 
+; 522  :       }
+; 523  : 
+; 524  :       break;
 
 	jmp	SHORT $LN2@WindowProc
-$LN50@WindowProc:
+$LN52@WindowProc:
 
-; 503  :           
-; 504  : 		 case WM_DESTROY:
-; 505  : 			 {
-; 506  : 
-; 507  :          //clean up our backbuffer objects
-; 508  :          SelectObject(hdcBackBuffer, hOldBitmap);
+; 525  :           
+; 526  : 		 case WM_DESTROY:
+; 527  : 			 {
+; 528  : 
+; 529  :          //clean up our backbuffer objects
+; 530  :          SelectObject(hdcBackBuffer, hOldBitmap);
 
 	mov	esi, esp
 	mov	eax, DWORD PTR ?hOldBitmap@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PAUHBITMAP__@@A
@@ -10637,8 +10681,8 @@ $LN50@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 509  : 
-; 510  :          DeleteDC(hdcBackBuffer);
+; 531  : 
+; 532  :          DeleteDC(hdcBackBuffer);
 
 	mov	esi, esp
 	mov	edx, DWORD PTR ?hdcBackBuffer@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PAUHDC__@@A
@@ -10647,7 +10691,7 @@ $LN50@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 511  :          DeleteObject(hBitmap); 
+; 533  :          DeleteObject(hBitmap); 
 
 	mov	esi, esp
 	mov	eax, DWORD PTR ?hBitmap@?1??WindowProc@@YGJPAUHWND__@@IIJ@Z@4PAUHBITMAP__@@A
@@ -10656,10 +10700,10 @@ $LN50@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 512  :          
-; 513  : 
-; 514  :          // kill the application, this sends a WM_QUIT message  
-; 515  : 				 PostQuitMessage (0);
+; 534  :          
+; 535  : 
+; 536  :          // kill the application, this sends a WM_QUIT message  
+; 537  : 				 PostQuitMessage (0);
 
 	mov	esi, esp
 	push	0
@@ -10668,15 +10712,15 @@ $LN50@WindowProc:
 	call	__RTC_CheckEsp
 $LN2@WindowProc:
 
-; 516  : 			 }
-; 517  : 
-; 518  :        break;
-; 519  : 
-; 520  :      }//end switch
-; 521  : 
-; 522  :      //this is where all the messages not specifically handled by our 
-; 523  : 		 //winproc are sent to be processed
-; 524  : 		 return DefWindowProc (hwnd, msg, wParam, lParam);
+; 538  : 			 }
+; 539  : 
+; 540  :        break;
+; 541  : 
+; 542  :      }//end switch
+; 543  : 
+; 544  :      //this is where all the messages not specifically handled by our 
+; 545  : 		 //winproc are sent to be processed
+; 546  : 		 return DefWindowProc (hwnd, msg, wParam, lParam);
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _lParam$[ebp]
@@ -10691,12 +10735,12 @@ $LN2@WindowProc:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 525  : }
+; 547  : }
 
 	push	edx
 	mov	ecx, ebp
 	push	eax
-	lea	edx, DWORD PTR $LN90@WindowProc
+	lea	edx, DWORD PTR $LN92@WindowProc
 	call	@_RTC_CheckStackVars@8
 	pop	eax
 	pop	edx
@@ -10714,56 +10758,34 @@ $LN2@WindowProc:
 	mov	esp, ebp
 	pop	ebp
 	ret	16					; 00000010H
-$LN90@WindowProc:
+	npad	2
+$LN92@WindowProc:
 	DD	2
-	DD	$LN89@WindowProc
-$LN89@WindowProc:
+	DD	$LN91@WindowProc
+$LN91@WindowProc:
 	DD	-40					; ffffffd8H
 	DD	16					; 00000010H
-	DD	$LN86@WindowProc
+	DD	$LN88@WindowProc
 	DD	-200					; ffffff38H
 	DD	64					; 00000040H
-	DD	$LN87@WindowProc
-$LN87@WindowProc:
+	DD	$LN89@WindowProc
+$LN89@WindowProc:
 	DB	112					; 00000070H
 	DB	115					; 00000073H
 	DB	0
-$LN86@WindowProc:
+$LN88@WindowProc:
 	DB	114					; 00000072H
 	DB	101					; 00000065H
 	DB	99					; 00000063H
 	DB	116					; 00000074H
 	DB	0
-$LN91@WindowProc:
-	DD	$LN8@WindowProc
-	DD	$LN50@WindowProc
-	DD	$LN49@WindowProc
-	DD	$LN48@WindowProc
-	DD	$LN2@WindowProc
-$LN83@WindowProc:
-	DB	0
-	DB	1
-	DB	4
-	DB	4
-	DB	2
-	DB	4
-	DB	4
-	DB	4
-	DB	4
-	DB	4
-	DB	4
-	DB	4
-	DB	4
-	DB	4
-	DB	3
-	npad	1
-$LN92@WindowProc:
-	DD	$LN30@WindowProc
+$LN93@WindowProc:
+	DD	$LN32@WindowProc
 	DD	$LN24@WindowProc
 	DD	$LN25@WindowProc
-	DD	$LN26@WindowProc
+	DD	$LN27@WindowProc
 	DD	$LN2@WindowProc
-$LN84@WindowProc:
+$LN86@WindowProc:
 	DB	0
 	DB	4
 	DB	4
@@ -11015,7 +11037,7 @@ $LN84@WindowProc:
 	DB	4
 	DB	3
 	npad	2
-$LN93@WindowProc:
+$LN94@WindowProc:
 	DD	$LN10@WindowProc
 	DD	$LN22@WindowProc
 	DD	$LN23@WindowProc
@@ -11026,7 +11048,7 @@ $LN93@WindowProc:
 	DD	$LN11@WindowProc
 	DD	$LN20@WindowProc
 	DD	$LN4@WindowProc
-$LN85@WindowProc:
+$LN87@WindowProc:
 	DB	0
 	DB	9
 	DB	9
@@ -11090,24 +11112,24 @@ $LN85@WindowProc:
 	DB	9
 	DB	8
 	npad	2
-$LN94@WindowProc:
-	DD	$LN31@WindowProc
-	DD	$LN36@WindowProc
-	DD	$LN48@WindowProc
-	DD	$LN37@WindowProc
+$LN95@WindowProc:
+	DD	$LN33@WindowProc
+	DD	$LN38@WindowProc
+	DD	$LN50@WindowProc
 	DD	$LN39@WindowProc
 	DD	$LN41@WindowProc
-	DD	$LN42@WindowProc
 	DD	$LN43@WindowProc
-	DD	$LN45@WindowProc
-	DD	$LN46@WindowProc
-	DD	$LN47@WindowProc
-	DD	$LN38@WindowProc
-	DD	$LN33@WindowProc
-	DD	$LN34@WindowProc
-	DD	$LN40@WindowProc
 	DD	$LN44@WindowProc
+	DD	$LN45@WindowProc
+	DD	$LN47@WindowProc
+	DD	$LN48@WindowProc
+	DD	$LN49@WindowProc
+	DD	$LN40@WindowProc
 	DD	$LN35@WindowProc
+	DD	$LN36@WindowProc
+	DD	$LN42@WindowProc
+	DD	$LN46@WindowProc
+	DD	$LN37@WindowProc
 _TEXT	ENDS
 text$x	SEGMENT
 __unwindfunclet$?WindowProc@@YGJPAUHWND__@@IIJ@Z$0:
@@ -11567,7 +11589,7 @@ _this$ = -4						; size = 4
 ?PossessedBot@Raven_Game@@QBEPAVRaven_Bot@@XZ PROC	; Raven_Game::PossessedBot, COMDAT
 ; _this$ = ecx
 
-; 159  :   Raven_Bot*  PossessedBot()const{return m_pSelectedBot;}
+; 161  :   Raven_Bot*  PossessedBot()const{return m_pSelectedBot;}
 
 	push	ebp
 	mov	ebp, esp
@@ -11646,7 +11668,7 @@ _ch$ = 8						; size = 1
 ?SetWeaponChanged@Raven_Bot@@QAEX_N@Z PROC		; Raven_Bot::SetWeaponChanged, COMDAT
 ; _this$ = ecx
 
-; 166  :   void          SetWeaponChanged(bool ch) { weaponChanged = ch; }
+; 167  :   void          SetWeaponChanged(bool ch) { weaponChanged = ch; }
 
 	push	ebp
 	mov	ebp, esp
@@ -26902,7 +26924,7 @@ _szCmdLine$ = 16					; size = 4
 _iCmdShow$ = 20						; size = 4
 _WinMain@16 PROC
 
-; 536  : {
+; 558  : {
 
 	push	ebp
 	mov	ebp, esp
@@ -26928,40 +26950,40 @@ _WinMain@16 PROC
 	mov	DWORD PTR __$EHRec$[ebp], esp
 	mov	BYTE PTR $T2[ebp], 0
 
-; 537  :   MSG msg;
-; 538  :   //handle to our window
-; 539  : 	HWND						hWnd;
-; 540  : 
-; 541  :  //the window class structure
-; 542  : 	WNDCLASSEX     winclass;
-; 543  : 
-; 544  :   // first fill in the window class stucture
-; 545  : 	winclass.cbSize        = sizeof(WNDCLASSEX);
+; 559  :   MSG msg;
+; 560  :   //handle to our window
+; 561  : 	HWND						hWnd;
+; 562  : 
+; 563  :  //the window class structure
+; 564  : 	WNDCLASSEX     winclass;
+; 565  : 
+; 566  :   // first fill in the window class stucture
+; 567  : 	winclass.cbSize        = sizeof(WNDCLASSEX);
 
 	mov	DWORD PTR _winclass$[ebp], 48		; 00000030H
 
-; 546  : 	winclass.style         = CS_HREDRAW | CS_VREDRAW;
+; 568  : 	winclass.style         = CS_HREDRAW | CS_VREDRAW;
 
 	mov	DWORD PTR _winclass$[ebp+4], 3
 
-; 547  :   winclass.lpfnWndProc   = WindowProc;
+; 569  :   winclass.lpfnWndProc   = WindowProc;
 
 	mov	DWORD PTR _winclass$[ebp+8], OFFSET ?WindowProc@@YGJPAUHWND__@@IIJ@Z ; WindowProc
 
-; 548  :   winclass.cbClsExtra    = 0;
+; 570  :   winclass.cbClsExtra    = 0;
 
 	mov	DWORD PTR _winclass$[ebp+12], 0
 
-; 549  :   winclass.cbWndExtra    = 0;
+; 571  :   winclass.cbWndExtra    = 0;
 
 	mov	DWORD PTR _winclass$[ebp+16], 0
 
-; 550  :   winclass.hInstance     = hInstance;
+; 572  :   winclass.hInstance     = hInstance;
 
 	mov	eax, DWORD PTR _hInstance$[ebp]
 	mov	DWORD PTR _winclass$[ebp+20], eax
 
-; 551  :   winclass.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
+; 573  :   winclass.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
 
 	mov	esi, esp
 	push	32512					; 00007f00H
@@ -26971,7 +26993,7 @@ _WinMain@16 PROC
 	call	__RTC_CheckEsp
 	mov	DWORD PTR _winclass$[ebp+24], eax
 
-; 552  :   winclass.hCursor       = LoadCursor(NULL, IDC_ARROW);
+; 574  :   winclass.hCursor       = LoadCursor(NULL, IDC_ARROW);
 
 	mov	esi, esp
 	push	32512					; 00007f00H
@@ -26981,20 +27003,20 @@ _WinMain@16 PROC
 	call	__RTC_CheckEsp
 	mov	DWORD PTR _winclass$[ebp+28], eax
 
-; 553  :   winclass.hbrBackground = NULL;
+; 575  :   winclass.hbrBackground = NULL;
 
 	mov	DWORD PTR _winclass$[ebp+32], 0
 
-; 554  :   winclass.lpszMenuName  = MAKEINTRESOURCE(IDR_MENU1);
+; 576  :   winclass.lpszMenuName  = MAKEINTRESOURCE(IDR_MENU1);
 
 	mov	DWORD PTR _winclass$[ebp+36], 101	; 00000065H
 
-; 555  :   winclass.lpszClassName = g_szWindowClassName;
+; 577  :   winclass.lpszClassName = g_szWindowClassName;
 
 	mov	ecx, DWORD PTR ?g_szWindowClassName@@3PADA ; g_szWindowClassName
 	mov	DWORD PTR _winclass$[ebp+40], ecx
 
-; 556  : 	winclass.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
+; 578  : 	winclass.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
 
 	mov	esi, esp
 	push	32512					; 00007f00H
@@ -27004,9 +27026,9 @@ _WinMain@16 PROC
 	call	__RTC_CheckEsp
 	mov	DWORD PTR _winclass$[ebp+44], eax
 
-; 557  : 
-; 558  :   //register the window class
-; 559  :   if (!RegisterClassEx(&winclass))
+; 579  : 
+; 580  :   //register the window class
+; 581  :   if (!RegisterClassEx(&winclass))
 
 	mov	esi, esp
 	lea	edx, DWORD PTR _winclass$[ebp]
@@ -27018,36 +27040,36 @@ _WinMain@16 PROC
 	test	eax, eax
 	jne	SHORT $LN6@WinMain
 
-; 560  :   {
-; 561  : 		MessageBox(NULL, "Registration Failed!", "Error", 0);
+; 582  :   {
+; 583  : 		MessageBox(NULL, "Registration Failed!", "Error", 0);
 
 	mov	esi, esp
 	push	0
-	push	OFFSET $SG169747
-	push	OFFSET $SG169748
+	push	OFFSET $SG169753
+	push	OFFSET $SG169754
 	push	0
 	call	DWORD PTR __imp__MessageBoxA@16
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 562  : 
-; 563  : 	  //exit the application
-; 564  : 		return 0;
+; 584  : 
+; 585  : 	  //exit the application
+; 586  : 		return 0;
 
 	xor	eax, eax
 	jmp	$LN1@WinMain
 $LN6@WinMain:
 
-; 565  :   }
-; 566  : 		
-; 567  : 
-; 568  :   try
+; 587  :   }
+; 588  : 		
+; 589  : 
+; 590  :   try
 
 	mov	DWORD PTR __$EHRec$[ebp+12], 0
 
-; 569  :   {  		 
-; 570  : 		 //create the window and assign its ID to hwnd    
-; 571  :      hWnd = CreateWindowEx (NULL,                 // extended style
+; 591  :   {  		 
+; 592  : 		 //create the window and assign its ID to hwnd    
+; 593  :      hWnd = CreateWindowEx (NULL,                 // extended style
 
 	mov	esi, esp
 	push	0
@@ -27088,42 +27110,42 @@ $LN6@WinMain:
 	call	__RTC_CheckEsp
 	mov	DWORD PTR _hWnd$[ebp], eax
 
-; 572  :                             g_szWindowClassName,  // window class name
-; 573  :                             g_szApplicationName,  // window caption
-; 574  :                             WS_OVERLAPPED | WS_VISIBLE | WS_CAPTION | WS_SYSMENU,  // window style
-; 575  :                             GetSystemMetrics(SM_CXSCREEN)/2 - WindowWidth/2,
-; 576  :                             GetSystemMetrics(SM_CYSCREEN)/2 - WindowHeight/2,                    
-; 577  :                             WindowWidth,     // initial x size
-; 578  :                             WindowHeight,    // initial y size
-; 579  :                             NULL,                 // parent window handle
-; 580  :                             NULL,                 // window menu handle
-; 581  :                             hInstance,            // program instance handle
-; 582  :                             NULL);                // creation parameters
-; 583  : 
-; 584  :      //make sure the window creation has gone OK
-; 585  :      if(!hWnd)
+; 594  :                             g_szWindowClassName,  // window class name
+; 595  :                             g_szApplicationName,  // window caption
+; 596  :                             WS_OVERLAPPED | WS_VISIBLE | WS_CAPTION | WS_SYSMENU,  // window style
+; 597  :                             GetSystemMetrics(SM_CXSCREEN)/2 - WindowWidth/2,
+; 598  :                             GetSystemMetrics(SM_CYSCREEN)/2 - WindowHeight/2,                    
+; 599  :                             WindowWidth,     // initial x size
+; 600  :                             WindowHeight,    // initial y size
+; 601  :                             NULL,                 // parent window handle
+; 602  :                             NULL,                 // window menu handle
+; 603  :                             hInstance,            // program instance handle
+; 604  :                             NULL);                // creation parameters
+; 605  : 
+; 606  :      //make sure the window creation has gone OK
+; 607  :      if(!hWnd)
 
 	cmp	DWORD PTR _hWnd$[ebp], 0
 	jne	SHORT $LN8@WinMain
 
-; 586  :      {
-; 587  :        MessageBox(NULL, "CreateWindowEx Failed!", "Error!", 0);
+; 608  :      {
+; 609  :        MessageBox(NULL, "CreateWindowEx Failed!", "Error!", 0);
 
 	mov	esi, esp
 	push	0
-	push	OFFSET $SG169751
-	push	OFFSET $SG169752
+	push	OFFSET $SG169757
+	push	OFFSET $SG169758
 	push	0
 	call	DWORD PTR __imp__MessageBoxA@16
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 $LN8@WinMain:
 
-; 588  :      }
-; 589  : 
-; 590  :      
-; 591  :     //make the window visible
-; 592  :     ShowWindow (hWnd, iCmdShow);
+; 610  :      }
+; 611  : 
+; 612  :      
+; 613  :     //make the window visible
+; 614  :     ShowWindow (hWnd, iCmdShow);
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _iCmdShow$[ebp]
@@ -27134,7 +27156,7 @@ $LN8@WinMain:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 593  :     UpdateWindow (hWnd);
+; 615  :     UpdateWindow (hWnd);
 
 	mov	esi, esp
 	mov	eax, DWORD PTR _hWnd$[ebp]
@@ -27143,9 +27165,9 @@ $LN8@WinMain:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 594  :    
-; 595  :     //create a timer
-; 596  :     PrecisionTimer timer(FrameRate);
+; 616  :    
+; 617  :     //create a timer
+; 618  :     PrecisionTimer timer(FrameRate);
 
 	sub	esp, 8
 	movsd	xmm0, QWORD PTR __real@404e000000000000
@@ -27153,30 +27175,30 @@ $LN8@WinMain:
 	lea	ecx, DWORD PTR _timer$11[ebp]
 	call	??0PrecisionTimer@@QAE@N@Z		; PrecisionTimer::PrecisionTimer
 
-; 597  : 
-; 598  :     //start the timer
-; 599  :     timer.Start();
+; 619  : 
+; 620  :     //start the timer
+; 621  :     timer.Start();
 
 	lea	ecx, DWORD PTR _timer$11[ebp]
 	call	?Start@PrecisionTimer@@QAEXXZ		; PrecisionTimer::Start
 
-; 600  : 
-; 601  :     //enter the message loop
-; 602  :     bool bDone = false;
+; 622  : 
+; 623  :     //enter the message loop
+; 624  :     bool bDone = false;
 
 	mov	BYTE PTR _bDone$10[ebp], 0
 $LN2@WinMain:
 
-; 603  : 
-; 604  :     while(!bDone)
+; 625  : 
+; 626  :     while(!bDone)
 
 	movzx	ecx, BYTE PTR _bDone$10[ebp]
 	test	ecx, ecx
 	jne	$LN3@WinMain
 $LN4@WinMain:
 
-; 605  :     {
-; 606  :       while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) ) 
+; 627  :     {
+; 628  :       while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) ) 
 
 	mov	esi, esp
 	push	1
@@ -27192,27 +27214,27 @@ $LN4@WinMain:
 	test	eax, eax
 	je	SHORT $LN5@WinMain
 
-; 607  :       {
-; 608  :         if( msg.message == WM_QUIT ) 
+; 629  :       {
+; 630  :         if( msg.message == WM_QUIT ) 
 
 	cmp	DWORD PTR _msg$[ebp+4], 18		; 00000012H
 	jne	SHORT $LN9@WinMain
 
-; 609  :         {
-; 610  :           // Stop loop if it's a quit message
-; 611  : 	        bDone = true;
+; 631  :         {
+; 632  :           // Stop loop if it's a quit message
+; 633  : 	        bDone = true;
 
 	mov	BYTE PTR _bDone$10[ebp], 1
 
-; 612  :         } 
-; 613  : 
-; 614  :         else 
+; 634  :         } 
+; 635  : 
+; 636  :         else 
 
 	jmp	SHORT $LN10@WinMain
 $LN9@WinMain:
 
-; 615  :         {
-; 616  :           TranslateMessage( &msg );
+; 637  :         {
+; 638  :           TranslateMessage( &msg );
 
 	mov	BYTE PTR $T2[ebp], 1
 	mov	esi, esp
@@ -27222,7 +27244,7 @@ $LN9@WinMain:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 617  :           DispatchMessage( &msg );
+; 639  :           DispatchMessage( &msg );
 
 	mov	BYTE PTR $T2[ebp], 1
 	mov	esi, esp
@@ -27233,14 +27255,14 @@ $LN9@WinMain:
 	call	__RTC_CheckEsp
 $LN10@WinMain:
 
-; 618  :         }
-; 619  :       }
+; 640  :         }
+; 641  :       }
 
 	jmp	SHORT $LN4@WinMain
 $LN5@WinMain:
 
-; 620  : 
-; 621  :       if (timer.ReadyForNextFrame() && msg.message != WM_QUIT)
+; 642  : 
+; 643  :       if (timer.ReadyForNextFrame() && msg.message != WM_QUIT)
 
 	lea	ecx, DWORD PTR _timer$11[ebp]
 	call	?ReadyForNextFrame@PrecisionTimer@@QAE_NXZ ; PrecisionTimer::ReadyForNextFrame
@@ -27251,15 +27273,15 @@ $LN5@WinMain:
 	cmp	DWORD PTR _msg$[ebp+4], 18		; 00000012H
 	je	SHORT $LN11@WinMain
 
-; 622  :       {
-; 623  :         g_pRaven->Update();
+; 644  :       {
+; 645  :         g_pRaven->Update();
 
 	mov	ecx, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
 	call	?Update@Raven_Game@@QAEXXZ		; Raven_Game::Update
 
-; 624  :         
-; 625  :         //render 
-; 626  :         RedrawWindow(hWnd);
+; 646  :         
+; 647  :         //render 
+; 648  :         RedrawWindow(hWnd);
 
 	push	1
 	mov	eax, DWORD PTR _hWnd$[ebp]
@@ -27268,10 +27290,10 @@ $LN5@WinMain:
 	add	esp, 8
 $LN11@WinMain:
 
-; 627  :       }
-; 628  : 
-; 629  :       //give the OS a little time
-; 630  :       Sleep(2);
+; 649  :       }
+; 650  : 
+; 651  :       //give the OS a little time
+; 652  :       Sleep(2);
 
 	mov	esi, esp
 	push	2
@@ -27279,22 +27301,22 @@ $LN11@WinMain:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 631  :      					
-; 632  :     }//end while
+; 653  :      					
+; 654  :     }//end while
 
 	jmp	$LN2@WinMain
 $LN3@WinMain:
 
-; 633  : 
-; 634  :   }//end try block
+; 655  : 
+; 656  :   }//end try block
 
 	jmp	__tryend$_WinMain@16$1
 __catch$_WinMain@16$0:
 
-; 635  : 
-; 636  :   catch (const std::runtime_error& err)
-; 637  :   {
-; 638  :     ErrorBox(std::string(err.what()));
+; 657  : 
+; 658  :   catch (const std::runtime_error& err)
+; 659  :   {
+; 660  :     ErrorBox(std::string(err.what()));
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _err$9[ebp]
@@ -27319,8 +27341,8 @@ __catch$_WinMain@16$0:
 	lea	ecx, DWORD PTR $T8[ebp]
 	call	??1?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@QAE@XZ ; std::basic_string<char,std::char_traits<char>,std::allocator<char> >::~basic_string<char,std::char_traits<char>,std::allocator<char> >
 
-; 639  :     //tidy up
-; 640  :     delete g_pRaven;
+; 661  :     //tidy up
+; 662  :     delete g_pRaven;
 
 	mov	eax, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
 	mov	DWORD PTR $T6[ebp], eax
@@ -27337,7 +27359,7 @@ $LN13@WinMain:
 	mov	DWORD PTR tv216[ebp], 0
 $LN14@WinMain:
 
-; 641  :     UnregisterClass( g_szWindowClassName, winclass.hInstance );
+; 663  :     UnregisterClass( g_szWindowClassName, winclass.hInstance );
 
 	mov	esi, esp
 	mov	edx, DWORD PTR _winclass$[ebp+20]
@@ -27348,13 +27370,13 @@ $LN14@WinMain:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 642  :     return 0;
+; 664  :     return 0;
 
 	mov	DWORD PTR $T5[ebp], 0
 	mov	eax, $LN21@WinMain
 	ret	0
 
-; 643  :   }
+; 665  :   }
 
 	mov	eax, __tryend$_WinMain@16$1
 	ret	0
@@ -27364,15 +27386,15 @@ __tryend$_WinMain@16$1:
 $LN21@WinMain:
 	mov	DWORD PTR __$EHRec$[ebp+12], -1
 
-; 642  :     return 0;
+; 664  :     return 0;
 
 	mov	eax, DWORD PTR $T5[ebp]
 	jmp	SHORT $LN1@WinMain
 $LN20@WinMain:
 
-; 644  :   
-; 645  :  //tidy up
-; 646  :  UnregisterClass( g_szWindowClassName, winclass.hInstance );
+; 666  :   
+; 667  :  //tidy up
+; 668  :  UnregisterClass( g_szWindowClassName, winclass.hInstance );
 
 	mov	esi, esp
 	mov	ecx, DWORD PTR _winclass$[ebp+20]
@@ -27383,7 +27405,7 @@ $LN20@WinMain:
 	cmp	esi, esp
 	call	__RTC_CheckEsp
 
-; 647  :  delete g_pRaven;
+; 669  :  delete g_pRaven;
 
 	mov	eax, DWORD PTR ?g_pRaven@@3PAVRaven_Game@@A ; g_pRaven
 	mov	DWORD PTR $T3[ebp], eax
@@ -27400,7 +27422,7 @@ $LN15@WinMain:
 	mov	DWORD PTR tv225[ebp], 0
 $LN16@WinMain:
 
-; 648  :  return msg.wParam;
+; 670  :  return msg.wParam;
 
 	cmp	BYTE PTR $T2[ebp], 0
 	jne	SHORT $LN22@WinMain
@@ -27411,7 +27433,7 @@ $LN22@WinMain:
 	mov	eax, DWORD PTR _msg$[ebp+8]
 $LN1@WinMain:
 
-; 649  : }
+; 671  : }
 
 	push	edx
 	mov	ecx, ebp

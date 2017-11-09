@@ -39,7 +39,8 @@ Raven_Game::Raven_Game():m_pSelectedBot(NULL),
                          m_bRemoveABot(false),
                          m_pMap(NULL),
                          m_pPathManager(NULL),
-                         m_pGraveMarkers(NULL)
+                         m_pGraveMarkers(NULL),
+						 m_thereIsAHuman(false)
 {
   //load in the default map
   LoadMap(script->GetString("StartMap"));
@@ -184,7 +185,10 @@ void Raven_Game::Update()
     if (!m_Bots.empty())
     {
       Raven_Bot* pBot = m_Bots.back();
-      if (pBot == m_pSelectedBot)m_pSelectedBot=0;
+	  if (pBot == m_pSelectedBot) {
+		  m_pSelectedBot = 0;
+		  m_thereIsAHuman = false;
+	  }
       NotifyAllBotsOfRemoval(pBot);
       delete m_Bots.back();
       m_Bots.remove(pBot);
@@ -256,7 +260,6 @@ void Raven_Game::CreateHumanBot(Raven_Bot* rb) {
 
 void Raven_Game::AddBots(unsigned int NumBotsToAdd)
 {
-  m_thereIsAHuman = false;
   while (NumBotsToAdd--)
   {
     //create a bot. (its position is irrelevant at this point because it will
@@ -475,7 +478,7 @@ void Raven_Game::ClickRightMouseButton(POINTS p)
 
   //if the bot is possessed then a right click moves the bot to the cursor
   //position
-  if (m_pSelectedBot->isPossessed())
+  if (m_pSelectedBot && m_pSelectedBot->isPossessed())
   {
     //if the shift key is pressed down at the same time as clicking then the
     //movement command will be queued
@@ -492,6 +495,25 @@ void Raven_Game::ClickRightMouseButton(POINTS p)
     }
   }
 }
+
+/*void Raven_Game::ChangePositionHumanBot() {
+	if (m_pSelectedBot && m_pSelectedBot->isPossessed())
+	{
+		BaseGameEntity* trig = m_pSelectedBot;
+		if (KEYDOWN('Z')) {
+			trig->SetPos(trig->Pos() + Vector2D(0,-1));
+		}
+		if (KEYDOWN('Q')) {
+			trig->SetPos(trig->Pos() + Vector2D(-1, 0));
+		}
+		if (KEYDOWN('S')) {
+			trig->SetPos(trig->Pos() + Vector2D(0, 1));
+		}
+		if (KEYDOWN('D')) {
+			trig->SetPos(trig->Pos() + Vector2D(1, 0));
+		}
+	}
+}*/
 
 //---------------------- ClickLeftMouseButton ---------------------------------
 //-----------------------------------------------------------------------------

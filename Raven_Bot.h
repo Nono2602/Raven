@@ -158,6 +158,7 @@ public:
   bool          isAlive()const{return m_Status == alive;}
   bool          isSpawning()const{return m_Status == spawning;}
   bool			isWeaponChanged()const { return weaponChanged; }
+  Raven_PathPlanner*	isPathPlanner()const { return m_pPathPlanner; }
   
   void          SetSpawning(){m_Status = spawning;}
   void          SetDead(){m_Status = dead;}
