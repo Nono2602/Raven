@@ -4,6 +4,7 @@
 #include "misc/cgdi.h"
 #include "misc/Stream_Utility_Functions.h"
 
+
 //------------------------------- ctor ----------------------------------------
 //-----------------------------------------------------------------------------
  Raven_SensoryMemory:: Raven_SensoryMemory(Raven_Bot* owner,
@@ -200,7 +201,7 @@ bool  Raven_SensoryMemory::isOpponentWithinFOV(Raven_Bot* pOpponent)const
 Vector2D  Raven_SensoryMemory::GetLastRecordedPositionOfOpponent(Raven_Bot* pOpponent)const
 {
   MemoryMap::const_iterator it = m_MemoryMap.find(pOpponent);
- 
+
   if (it != m_MemoryMap.end())
   {
     return it->second.vLastSensedPosition;

@@ -60,48 +60,21 @@ bool Raven_TeamManager::isTeammate(Raven_Bot* pTarget)
 
 void Raven_TeamManager::Update()
 {
-	debug_con << "TEAM UPDATING" << "";
+	debug_con << "TEAM UPDATE" << "";
 
-	//if the team has only one member
-	if (m_Teammates.size() == 1)
+	//if the team has only one member, has no target or if the last target died
+	if (m_Teammates.size() == 1 || !m_pTarget || m_pTarget->isDead())
 	{
-		//update the teammate's targeting system
+		debug_con << "TEAM UPDATING" << "";
+		//update the targeting system of each teammate to find the new target
 		SearchNewTeamTarget();
 	}
 
-	//if the team has no target or if the last target died
-	if (!m_pTarget || m_pTarget->isDead())
-	{
-		debug_con << "TEAM HAS NO TARGET" << "";
-		//update the targeting system of each teammate to find the new target
-		//if a target has been found
-		if (SearchNewTeamTarget())
-		{
-			debug_con << "TEAM NOW TARGETING " << m_pTarget->ID() << "";
-			//set the targeting system of each teammate to the team target
-			std::list<Raven_Teammate*>::const_iterator curBot = m_Teammates.begin();
-			for (curBot; curBot != m_Teammates.end(); ++curBot)
-			{
-				(*curBot)->GetTargetSys()->SetTarget(m_pTarget);
-				debug_con << "TEAM UPDATE TEAMMATE " << (*curBot)->ID() << " : targeting bot " << (*curBot)->GetTargetBot()->ID() << "";
-			}
-		}
-	}
-	else
-	{
-		debug_con << "TEAM IS TARGETING " << m_pTarget->ID() << "";
-		//set the targeting system of each teammate to the team target
-		std::list<Raven_Teammate*>::const_iterator curBot = m_Teammates.begin();
-		for (curBot; curBot != m_Teammates.end(); ++curBot)
-		{
-			(*curBot)->GetTargetSys()->SetTarget(m_pTarget);
-			debug_con << "TEAM UPDATE TEAMMATE " << (*curBot)->ID() << " : targeting bot " << (*curBot)->GetTargetBot()->ID() << "";
-		}
-	}
+	UpdateTeammates();
 }
 
 
-bool Raven_TeamManager::SearchNewTeamTarget()
+void Raven_TeamManager::SearchNewTeamTarget()
 {
 	std::list<Raven_Teammate*>::const_iterator curBot = m_Teammates.begin();
 	Raven_Bot* curTarget = NULL;
@@ -116,11 +89,33 @@ bool Raven_TeamManager::SearchNewTeamTarget()
 		{
 			//it becomes the new team target
 			m_pTarget = curTarget;
-			return true;
+			return;
 		}
 	}
+}
 
-	return false;
+
+void Raven_TeamManager::UpdateTeammates()
+{
+	if (!m_pTarget)
+	{
+		ClearTarget();
+	}
+	else
+	{
+		debug_con << "TEAM IS TARGETING " << m_pTarget->ID() << "";
+		
+		std::list<Raven_Teammate*>::const_iterator curBot = m_Teammates.begin();
+		for (curBot; curBot != m_Teammates.end(); ++curBot)
+		{
+			(*curBot)->UpdateTeamTarget(m_pTarget);
+
+			if((*curBot)->GetTargetBot())
+				debug_con << "UPDATE TEAMMATE " << (*curBot)->ID() << " : targeting bot " << (*curBot)->GetTargetBot()->ID() << "";
+			else
+				debug_con << "UPDATE TEAMMATE " << (*curBot)->ID() << " : no target " << "";
+		}
+	}
 }
 
 

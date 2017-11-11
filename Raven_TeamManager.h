@@ -46,7 +46,8 @@ public:
 	void		Update();
 	void		Clear();
 
-	bool		SearchNewTeamTarget();
+	void		SearchNewTeamTarget();
+	void		UpdateTeammates();
 	Raven_Bot*	GetTeamTarget()const { return m_pTarget; }
 	void		ClearTarget();
 

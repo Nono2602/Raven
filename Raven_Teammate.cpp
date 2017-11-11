@@ -155,3 +155,16 @@ Raven_Bot* Raven_Teammate::SearchNewTarget()
 
 	return m_pTargSys->GetTarget();
 }
+
+
+void Raven_Teammate::UpdateTeamTarget(Raven_Bot* newtarget)
+{
+	if (GetSensoryMem()->isInMemory(newtarget))
+	{
+		m_pTargSys->SetTarget(newtarget);
+	}
+	else
+	{
+		m_pTargSys->ClearTarget();
+	}
+}

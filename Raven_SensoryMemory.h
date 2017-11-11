@@ -102,13 +102,15 @@ public:
   bool     isOpponentShootable(Raven_Bot* pOpponent)const;
   bool     isOpponentWithinFOV(Raven_Bot* pOpponent)const;
   Vector2D GetLastRecordedPositionOfOpponent(Raven_Bot* pOpponent)const;
-  double    GetTimeOpponentHasBeenVisible(Raven_Bot* pOpponent)const;
-  double    GetTimeSinceLastSensed(Raven_Bot* pOpponent)const;
-  double    GetTimeOpponentHasBeenOutOfView(Raven_Bot* pOpponent)const;
+  double   GetTimeOpponentHasBeenVisible(Raven_Bot* pOpponent)const;
+  double   GetTimeSinceLastSensed(Raven_Bot* pOpponent)const;
+  double   GetTimeOpponentHasBeenOutOfView(Raven_Bot* pOpponent)const;
 
   //this method returns a list of all the opponents that have had their
   //records updated within the last m_dMemorySpan seconds.
   std::list<Raven_Bot*> GetListOfRecentlySensedOpponents()const;
+
+  bool		isInMemory(Raven_Bot* pOpponent)const { return m_MemoryMap.find(pOpponent) != m_MemoryMap.end(); }
 
   void     RenderBoxesAroundRecentlySensed()const;
 
