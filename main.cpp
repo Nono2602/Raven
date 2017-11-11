@@ -251,12 +251,10 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
            break;
 
 		 case 'T':
-			 debug_con << "ADD TEAMMATE" << "";
 			 g_pRaven->AddTeammates(1);
 			 break;
 		
 		 case 'Y':
-			 debug_con << "REMOVE TEAMMATE" << "";
 			 g_pRaven->RemoveTeammate();
 			 break;
 

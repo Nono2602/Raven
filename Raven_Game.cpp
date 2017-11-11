@@ -40,11 +40,11 @@ Raven_Game::Raven_Game():m_pSelectedBot(NULL),
                          m_pMap(NULL),
                          m_pPathManager(NULL),
                          m_pGraveMarkers(NULL),
+						 m_Team(NULL),
 						 m_thereIsAHuman(false)
 {
   //load in the default map
   LoadMap(script->GetString("StartMap"));
-  m_Team = new Raven_TeamManager(Vector2D());
 }
 
 
@@ -100,7 +100,10 @@ void Raven_Game::Clear()
 
   m_pSelectedBot = NULL;
 
-
+  if (m_Team)
+  {
+	  m_Team->Clear();
+  }
 }
 // bool test = true;
 
@@ -152,6 +155,12 @@ void Raven_Game::Update()
     }   
   }
   
+  //update the team
+  if (!m_Team->isEmpty())
+  {
+	  m_Team->Update();
+  }
+
   //update the bots
   bool bSpawnPossible = true;
   
@@ -204,6 +213,38 @@ void Raven_Game::Update()
     }
 
     m_bRemoveABot = false;
+  }
+  //if the user has requested that the number of teammates be decreased, remove
+  //one
+  if (m_bRemoveATeammate)
+  {
+	  if (!m_Bots.empty() && !m_Team->isEmpty())
+	  {
+		  Raven_Bot* pTeammate = m_Team->RemoveATeammate();
+		  if (pTeammate == m_pSelectedBot) {
+			  m_pSelectedBot = 0;
+			  m_thereIsAHuman = false;
+		  }
+
+		  NotifyAllBotsOfRemoval(pTeammate);
+
+		  bool TeammateRemoved = false;
+		  std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+		  while (curBot != m_Bots.end() && !TeammateRemoved)
+		  {
+			  if ((*curBot)->ID() == pTeammate->ID())
+			  {
+				  delete *curBot;
+				  TeammateRemoved = true;
+			  }
+
+			  curBot++;
+		  }
+		  m_Bots.remove(pTeammate);
+		  pTeammate = 0;
+	  }
+
+	  m_bRemoveATeammate = false;
   }
 }
 
@@ -285,7 +326,7 @@ void Raven_Game::AddBots(unsigned int NumBotsToAdd)
 
 	////////////////////////////////	HUMAN BOT	//////////////////////////////////////////////
 	//if you don't want human bot, comment this line
-	CreateHumanBot(rb);
+	//CreateHumanBot(rb);
 
     
 #ifdef LOG_CREATIONAL_STUFF
@@ -296,7 +337,27 @@ void Raven_Game::AddBots(unsigned int NumBotsToAdd)
 
 void Raven_Game::AddTeammates(unsigned int NumBotsToAdd)
 {
-	/*** TO DO ***/
+	while (NumBotsToAdd--)
+	{
+		//create a bot. (its position is irrelevant at this point because it will
+		//not be rendered until it is spawned)
+		Raven_Teammate* rb = new Raven_Teammate(this, Vector2D(), m_Team);
+
+		//switch the default steering behaviors on
+		rb->GetSteering()->WallAvoidanceOn();
+		rb->GetSteering()->SeparationOn();
+
+		m_Bots.push_back(rb);
+		m_Team->AddTeammate(rb);
+
+		//register the bot with the entity manager
+		EntityMgr->RegisterEntity(rb);
+
+
+#ifdef LOG_CREATIONAL_STUFF
+		debug_con << "Adding teammate bot with ID " << ttos(rb->ID()) << "";
+#endif
+	}
 }
 
 //---------------------------- NotifyAllBotsOfRemoval -------------------------
@@ -329,7 +390,7 @@ void Raven_Game::RemoveBot()
 
 void Raven_Game::RemoveTeammate()
 {
-	/*** TO DO ***/
+	m_bRemoveATeammate = true;
 }
 
 //--------------------------- AddBolt -----------------------------------------
@@ -419,11 +480,13 @@ bool Raven_Game::LoadMap(const std::string& filename)
   delete m_pMap;
   delete m_pGraveMarkers;
   delete m_pPathManager;
+  delete m_Team;
 
   //in with the new
   m_pGraveMarkers = new GraveMarkers(script->GetDouble("GraveLifetime"));
   m_pPathManager = new PathManager<Raven_PathPlanner>(script->GetInt("MaxSearchCyclesPerUpdateStep"));
   m_pMap = new Raven_Map();
+  m_Team = new Raven_TeamManager(Vector2D());
 
   //make sure the entity manager is reset
   EntityMgr->Reset();

@@ -31,24 +31,16 @@ Raven_Teammate::Raven_Teammate(Raven_Game* world, Vector2D pos, Raven_TeamManage
 
 Raven_Teammate::~Raven_Teammate()
 {
-	debug_con << "deleting raven bot (id = " << ID() << ")" << "";
-
-	delete m_pBrain;
-	delete m_pPathPlanner;
-	delete m_pSteering;
-	delete m_pWeaponSelectionRegulator;
-	delete m_pTargSys;
-	delete m_pGoalArbitrationRegulator;
-	delete m_pTargetSelectionRegulator;
-	delete m_pTriggerTestRegulator;
-	delete m_pVisionUpdateRegulator;
-	delete m_pWeaponSys;
-	delete m_pSensoryMem;
 }
 
 
 void Raven_Teammate::Update()
 {
+	if(GetTargetBot())
+		debug_con << "Teammate " << ID() << " targeting bot " << GetTargetBot()->ID() << "";
+	else
+		debug_con << "Teammate " << ID() << " has no target" << "";
+
 	//process the currently active goal. Note this is required even if the bot
 	//is under user control. This is because a goal is created whenever a user 
 	//clicks on an area of the map that necessitates a path planning request.
@@ -60,15 +52,6 @@ void Raven_Teammate::Update()
 	//if the bot is under AI control but not scripted
 	if (!isPossessed())
 	{
-		//examine all the opponents in the bots sensory memory and select one
-		//to be the current target
-		/*
-		if (m_pTargetSelectionRegulator->isReady())
-		{
-			m_pTargSys->Update();
-		}
-		*/
-
 		//appraise and arbitrate between all possible high level goals
 		if (m_pGoalArbitrationRegulator->isReady())
 		{

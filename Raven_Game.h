@@ -69,6 +69,9 @@ private:
   //if true a bot is removed from the game
   bool								m_bRemoveABot;
 
+  //if true a teammate bot is removed from the game
+  bool								m_bRemoveATeammate;
+
   //when a bot is killed a "grave" is displayed for a few seconds. This
   //class manages the graves
   GraveMarkers*						m_pGraveMarkers;

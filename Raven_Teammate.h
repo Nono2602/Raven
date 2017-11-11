@@ -40,7 +40,7 @@ public:
 	virtual bool	HandleMessage(const Telegram& msg) override;
 
 	Raven_Bot*		SearchNewTarget();
-	void			SetTeamTarget(Raven_Bot* newtarget) { m_pTargSys->SetTarget(newtarget); }
+	void			UpdateTeamTarget(Raven_Bot* newtarget) { m_pTargSys->SetTarget(newtarget); }
 };
 
 #endif

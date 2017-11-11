@@ -37,11 +37,14 @@ public:
 	~Raven_TeamManager();
 
 	void		AddTeammate(Raven_Teammate* pBot);
-	void		RemoveTeammate(Raven_Teammate* pBot);
+	Raven_Bot*	RemoveATeammate();
+
+	bool		isEmpty() { return m_Teammates.empty(); }
 
 	bool		isTeammate(Raven_Bot* pTarget);
 
-	void		UpdateTeam();
+	void		Update();
+	void		Clear();
 
 	bool		SearchNewTeamTarget();
 	Raven_Bot*	GetTeamTarget()const { return m_pTarget; }
