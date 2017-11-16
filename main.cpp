@@ -48,6 +48,8 @@ int WeaponType(int nbRoulette) {
 		case 3: {
 			res = type_rail_gun;
 		}
+		case 4:
+			res = type_grenade;
 		break;
 	}
 	return res;
@@ -73,7 +75,7 @@ void choiceWeaponScrollUp(int& armeCourante, int nbArme) {
 		i++;
 	}
 	if (armeCourante == 0) {
-		armeCourante = 3;
+		armeCourante = 4;
 	}
 	else {
 		armeCourante--;
@@ -122,7 +124,7 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 	static int armeCourante = 0; //type_blaster
 
 	//nombre arme differente possible au total
-	int nbArme = 3;
+	int nbArme = 4;
  
    //these hold the dimensions of the client window area
 	 static int cxClient, cyClient; 
@@ -243,6 +245,11 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 			 }
 
            break;
+
+		 case '5':
+			 if (!g_pRaven->isThereAHuman())
+				 g_pRaven->ChangeWeaponOfPossessedBot(type_grenade);
+		   break;
 
          case 'X':
 			 if (!g_pRaven->isThereAHuman()) {
