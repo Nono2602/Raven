@@ -162,6 +162,8 @@ public:
   //is a possessed bot, this fires the weapon, else does nothing
   void        ClickLeftMouseButton(POINTS p);
 
+  void		  ChangePositionHumanBot(Vector2D position);
+
   //when called will release any possessed bot from user control
   void        ExorciseAnyPossessedBot();
  

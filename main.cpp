@@ -75,7 +75,7 @@ void choiceWeaponScrollUp(int& armeCourante, int nbArme) {
 		i++;
 	}
 	if (armeCourante == 0) {
-		armeCourante = 4;
+		armeCourante = nbArme;
 	}
 	else {
 		armeCourante--;
@@ -124,7 +124,7 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 	static int armeCourante = 0; //type_blaster
 
 	//nombre arme differente possible au total
-	int nbArme = 4;
+	int nbArme = 5;
  
    //these hold the dimensions of the client window area
 	 static int cxClient, cyClient; 
@@ -289,16 +289,18 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
     break;
 
    case WM_RBUTTONDOWN: //se deplace a l'endroit ou se trouve le curseur de la souris
-    {
-		g_pRaven->ClickRightMouseButton(MAKEPOINTS(lParam));
+   {
+	   if (!g_pRaven->isThereAHuman()) {
+		   g_pRaven->ClickRightMouseButton(MAKEPOINTS(lParam));
+		}
     }
     break;
 
-   /*case WM_KEYDOWN:
+   case WM_KEYDOWN:
    {
-	   g_pRaven->ChangePositionHumanBot();
+	   
 	   break;
-   }*/
+   }
 
    case WM_MOUSEWHEEL: //change les armes avec la molette de la souris
    {	if (g_pRaven->PossessedBot()) {
@@ -457,7 +459,25 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
     
     case WM_PAINT:
       {
- 		       
+		if (g_pRaven->isThereAHuman()) {
+			Vector2D position = Vector2D(0, 0);
+			if (GetAsyncKeyState('Z')) {
+				position += Vector2D(0, -3);
+			}
+			if (GetAsyncKeyState('Q')) {
+				position += Vector2D(-3, 0);
+			}
+			if (GetAsyncKeyState('S')) {
+				position += Vector2D(0, 3);
+			}
+			if (GetAsyncKeyState('D')) {
+				position += Vector2D(3, 0);
+			}
+			if (position != Vector2D(0, 0)) {
+				g_pRaven->ChangePositionHumanBot(position);
+			}
+		}
+		      
          PAINTSTRUCT ps;
           
          BeginPaint (hwnd, &ps);

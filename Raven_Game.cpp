@@ -327,7 +327,7 @@ void Raven_Game::AddBots(unsigned int NumBotsToAdd)
 
 	////////////////////////////////	HUMAN BOT	//////////////////////////////////////////////
 	//if you don't want human bot, comment this line
-	//CreateHumanBot(rb);
+	CreateHumanBot(rb);
 
     
 #ifdef LOG_CREATIONAL_STUFF
@@ -591,24 +591,13 @@ void Raven_Game::ClickRightMouseButton(POINTS p)
   }
 }
 
-/*void Raven_Game::ChangePositionHumanBot() {
+void Raven_Game::ChangePositionHumanBot(Vector2D position) {
 	if (m_pSelectedBot && m_pSelectedBot->isPossessed())
 	{
-		BaseGameEntity* trig = m_pSelectedBot;
-		if (KEYDOWN('Z')) {
-			trig->SetPos(trig->Pos() + Vector2D(0,-1));
-		}
-		if (KEYDOWN('Q')) {
-			trig->SetPos(trig->Pos() + Vector2D(-1, 0));
-		}
-		if (KEYDOWN('S')) {
-			trig->SetPos(trig->Pos() + Vector2D(0, 1));
-		}
-		if (KEYDOWN('D')) {
-			trig->SetPos(trig->Pos() + Vector2D(1, 0));
-		}
+		m_pSelectedBot->GetBrain()->RemoveAllSubgoals();
+		m_pSelectedBot->GetBrain()->AddGoal_SeekToPosition(m_pSelectedBot->Pos() + position);
 	}
-}*/
+}
 
 //---------------------- ClickLeftMouseButton ---------------------------------
 //-----------------------------------------------------------------------------
@@ -931,7 +920,7 @@ void Raven_Game::Render()
       m_pSelectedBot->GetWeaponSys()->RenderDesirabilities();
     }
 
-   if (IS_KEY_PRESSED('Q') && m_pSelectedBot->isPossessed())
+   if (IS_KEY_PRESSED('Q') && m_pSelectedBot->isPossessed() && !isThereAHuman())
     {
       gdi->TextColor(255,0,0);
       gdi->TextAtPos(GetClientCursorPosition(), "Queuing");
