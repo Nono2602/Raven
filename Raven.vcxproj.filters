@@ -80,6 +80,9 @@
     <Filter Include="AI\Team Management">
       <UniqueIdentifier>{af85dcab-e175-470b-8a44-294f2c9a3744}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\Neural Network">
+      <UniqueIdentifier>{b2fea415-9ebb-41e1-a848-5e8dbb122e37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -285,6 +288,12 @@
     </ClCompile>
     <ClCompile Include="armory\Grenade.cpp">
       <Filter>Game\weapons &amp; projectiles\projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuralNetwork\Net.cpp">
+      <Filter>AI\Neural Network</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuralNetwork\Neuron.cpp">
+      <Filter>AI\Neural Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -638,6 +647,12 @@
     </ClInclude>
     <ClInclude Include="armory\Grenade.h">
       <Filter>Game\weapons &amp; projectiles\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetwork\Net.h">
+      <Filter>AI\Neural Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetwork\Neuron.h">
+      <Filter>AI\Neural Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

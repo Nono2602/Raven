@@ -226,6 +226,8 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='boundschecker|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="NeuralNetwork\Net.cpp" />
+    <ClCompile Include="NeuralNetwork\Neuron.cpp" />
     <ClCompile Include="Raven_Bot.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -543,6 +545,8 @@
     <ClInclude Include="armory\Grenade.h" />
     <ClInclude Include="armory\Weapon_Grenade.h" />
     <ClInclude Include="goals\Goal_SafeDodge.h" />
+    <ClInclude Include="NeuralNetwork\Net.h" />
+    <ClInclude Include="NeuralNetwork\Neuron.h" />
     <ClInclude Include="Raven_Bot.h" />
     <ClInclude Include="Raven_Game.h" />
     <ClInclude Include="Raven_Map.h" />
