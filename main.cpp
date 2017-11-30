@@ -12,6 +12,10 @@
 #include "Raven_Game.h"
 #include "lua/Raven_Scriptor.h"
 #include <iostream>
+#include <fstream>
+
+using namespace std;
+
 
 
 //need to include this for the toolbar stuff
@@ -24,10 +28,17 @@
 //------------------------------------------------------------------------
 
 char* g_szApplicationName = "Raven";
-char*	g_szWindowClassName = "MyWindowClass";
+char* g_szWindowClassName = "MyWindowClass";
 
 
 Raven_Game* g_pRaven;
+
+//numero arme courante
+static int armeCourante = 0; //type_blaster
+//active or not the collection of data
+static bool getDataFromHuman = true;
+//human bot shoot
+static bool humanBotShoot = false;
 
 
 //Matcher arme courante au type d'arme
@@ -110,6 +121,47 @@ void choiceWeaponScrollDown(int& armeCourante, int nbArme) {
 	}
 }
 
+/*Get data for the neural network, only work with 2 bots on the map*/
+void getDataFromHumanBot() {
+	ofstream fichier("dataHumanBot.txt", ios::out | ios::app);
+	if (fichier)
+	{
+		int lifeHumanBot = 100;
+		int lifeOtherBot = 100; 
+		int otherBotVisible = 0; //true if 1, 0 else
+		int isHumanBotShoot = 0; //true if 1, 0 else
+
+	//get the life of the other bot and the human bot
+		std::list<Raven_Bot*> bots = g_pRaven->GetAllBots();
+		std::list<Raven_Bot*>::const_iterator curBot = bots.begin();
+		for (curBot; curBot != bots.end(); ++curBot) {
+			if (*curBot == g_pRaven->PossessedBot()) {
+				lifeHumanBot = (*curBot)->Health();
+			}
+			else {
+				lifeOtherBot = (*curBot)->Health();
+			}
+		}
+	//knows if the other bot is visible or not
+		std::vector<Raven_Bot*> botsVisible = g_pRaven->GetAllBotsInFOV(g_pRaven->PossessedBot());
+		if (botsVisible.empty()) otherBotVisible = 0;
+		else otherBotVisible = 1;
+
+	//get the distance between the 2 bots
+
+	//ammunition quantity
+
+	//get if the human bot shoot
+		if (humanBotShoot) isHumanBotShoot = 1;
+		else 0;
+		
+		fichier << lifeHumanBot << " " << lifeOtherBot << " " << otherBotVisible << " " << WeaponType(armeCourante) << " " << isHumanBotShoot << endl;
+		humanBotShoot = false;
+	}
+
+	else cerr << "Can't open the file !" << endl;
+}
+
 
 //---------------------------- WindowProc ---------------------------------
 //	
@@ -121,8 +173,6 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
                              WPARAM wParam,
                              LPARAM lParam)
 {
-	//numero arme courante
-	static int armeCourante = 0; //type_blaster
 
 	//nombre arme differente possible au total
 	int nbArme = 5;
@@ -285,6 +335,7 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
     case WM_LBUTTONDOWN: //tire vers l'endroit ou se trouve le curseur de la souris
     {
 		 g_pRaven->ClickLeftMouseButton(MAKEPOINTS(lParam));
+		 humanBotShoot = true;
     }
     
     break;
@@ -561,6 +612,7 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
        break;
 
      }//end switch
+	 	 
 
      //this is where all the messages not specifically handled by our 
 		 //winproc are sent to be processed
@@ -644,6 +696,10 @@ int WINAPI WinMain (HINSTANCE hInstance,
     //enter the message loop
     bool bDone = false;
 
+	//initialize the time when we peak up information avec data
+	int currentTime = 0;
+	int timeMax = 100;
+
     while(!bDone)
     {
       while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) ) 
@@ -668,6 +724,12 @@ int WINAPI WinMain (HINSTANCE hInstance,
         //render 
         RedrawWindow(hWnd);
       }
+	  //Get the data for the neural network
+	  if (getDataFromHuman && currentTime == timeMax) {
+		  getDataFromHumanBot();
+		  currentTime = 0;
+	  }
+	  else currentTime++;
 
       //give the OS a little time
       Sleep(2);
@@ -690,5 +752,6 @@ int WINAPI WinMain (HINSTANCE hInstance,
  delete g_pRaven;
  return msg.wParam;
 }
+
 
 
