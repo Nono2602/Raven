@@ -29,27 +29,28 @@ char*	g_szWindowClassName = "MyWindowClass";
 
 Raven_Game* g_pRaven;
 
+
 //Matcher arme courante au type d'arme
 int WeaponType(int nbRoulette) {
 	int res = 0;
 	switch (nbRoulette) {
-		case 0: {
-			res = type_blaster;
-		}
-		break;
-		case 1: {
-			res = type_shotgun;
-		}
-		break;
-		case 2: {
-			res = type_rocket_launcher;
-		}
-		break;
-		case 3: {
-			res = type_rail_gun;
-		}
-		case 4:
-			res = type_grenade;
+	case 0: {
+		res = type_blaster;
+	}
+			break;
+	case 1: {
+		res = type_shotgun;
+	}
+			break;
+	case 2: {
+		res = type_rocket_launcher;
+	}
+			break;
+	case 3: {
+		res = type_rail_gun;
+	}
+	case 4:
+		res = type_grenade;
 		break;
 	}
 	return res;
