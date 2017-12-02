@@ -24,63 +24,68 @@
 
 //-------------------------- ctor ---------------------------------------------
 Raven_Bot::Raven_Bot(Raven_Game* world,Vector2D pos):
-
-  MovingEntity(pos,
-               script->GetDouble("Bot_Scale"),
-               Vector2D(0,0),
-               script->GetDouble("Bot_MaxSpeed"),
-               Vector2D(1,0),
-               script->GetDouble("Bot_Mass"),
-               Vector2D(script->GetDouble("Bot_Scale"),script->GetDouble("Bot_Scale")),
-               script->GetDouble("Bot_MaxHeadTurnRate"),
-               script->GetDouble("Bot_MaxForce")),
-                 
-                 m_iMaxHealth(script->GetInt("Bot_MaxHealth")),
-                 m_iHealth(script->GetInt("Bot_MaxHealth")),
-                 m_pPathPlanner(NULL),
-                 m_pSteering(NULL),
-                 m_pWorld(world),
-                 m_pBrain(NULL),
-                 m_iNumUpdatesHitPersistant((int)(FrameRate * script->GetDouble("HitFlashTime"))),
-                 m_bHit(false),
-                 m_iScore(0),
-                 m_Status(spawning),
-                 m_bPossessed(false),
-                 m_dFieldOfView(DegsToRads(script->GetDouble("Bot_FOV")))
-           
+	Raven_Bot(world, pos, new Raven_Steering(world, this), new Goal_Think(this))
 {
-  SetEntityType(type_bot);
+}
 
-  SetUpVertexBuffer();
-  
-  //a bot starts off facing in the direction it is heading
-  m_vFacing = m_vHeading;
+Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos, Raven_Steering * steering, Goal_Think * goal) :
 
-  //create the navigation module
-  m_pPathPlanner = new Raven_PathPlanner(this);
+	MovingEntity(pos,
+		script->GetDouble("Bot_Scale"),
+		Vector2D(0, 0),
+		script->GetDouble("Bot_MaxSpeed"),
+		Vector2D(1, 0),
+		script->GetDouble("Bot_Mass"),
+		Vector2D(script->GetDouble("Bot_Scale"), script->GetDouble("Bot_Scale")),
+		script->GetDouble("Bot_MaxHeadTurnRate"),
+		script->GetDouble("Bot_MaxForce")),
 
-  //create the steering behavior class
-  m_pSteering = new Raven_Steering(world, this);
+	m_iMaxHealth(script->GetInt("Bot_MaxHealth")),
+	m_iHealth(script->GetInt("Bot_MaxHealth")),
+	m_pPathPlanner(NULL),
+	m_pSteering(NULL),
+	m_pWorld(world),
+	m_pBrain(NULL),
+	m_iNumUpdatesHitPersistant((int)(FrameRate * script->GetDouble("HitFlashTime"))),
+	m_bHit(false),
+	m_iScore(0),
+	m_Status(spawning),
+	m_bPossessed(false),
+	m_dFieldOfView(DegsToRads(script->GetDouble("Bot_FOV")))
 
-  //create the regulators
-  m_pWeaponSelectionRegulator = new Regulator(script->GetDouble("Bot_WeaponSelectionFrequency"));
-  m_pGoalArbitrationRegulator =  new Regulator(script->GetDouble("Bot_GoalAppraisalUpdateFreq"));
-  m_pTargetSelectionRegulator = new Regulator(script->GetDouble("Bot_TargetingUpdateFreq"));
-  m_pTriggerTestRegulator = new Regulator(script->GetDouble("Bot_TriggerUpdateFreq"));
-  m_pVisionUpdateRegulator = new Regulator(script->GetDouble("Bot_VisionUpdateFreq"));
+{
+	SetEntityType(type_bot);
 
-  //create the goal queue
-  m_pBrain = new Goal_Think(this);
+	SetUpVertexBuffer();
 
-  //create the targeting system
-  m_pTargSys = new Raven_TargetingSystem(this);
+	//a bot starts off facing in the direction it is heading
+	m_vFacing = m_vHeading;
 
-  m_pWeaponSys = new Raven_WeaponSystem(this,
-                                        script->GetDouble("Bot_ReactionTime"),
-                                        script->GetDouble("Bot_AimAccuracy"),
-                                        script->GetDouble("Bot_AimPersistance"));
+	//create the navigation module
+	m_pPathPlanner = new Raven_PathPlanner(this);
 
-  m_pSensoryMem = new Raven_SensoryMemory(this, script->GetDouble("Bot_MemorySpan"));
+	//create the steering behavior class
+	m_pSteering = steering;
+
+	//create the regulators
+	m_pWeaponSelectionRegulator = new Regulator(script->GetDouble("Bot_WeaponSelectionFrequency"));
+	m_pGoalArbitrationRegulator = new Regulator(script->GetDouble("Bot_GoalAppraisalUpdateFreq"));
+	m_pTargetSelectionRegulator = new Regulator(script->GetDouble("Bot_TargetingUpdateFreq"));
+	m_pTriggerTestRegulator = new Regulator(script->GetDouble("Bot_TriggerUpdateFreq"));
+	m_pVisionUpdateRegulator = new Regulator(script->GetDouble("Bot_VisionUpdateFreq"));
+
+	//create the goal queue
+	m_pBrain = goal;
+
+	//create the targeting system
+	m_pTargSys = new Raven_TargetingSystem(this);
+
+	m_pWeaponSys = new Raven_WeaponSystem(this,
+		script->GetDouble("Bot_ReactionTime"),
+		script->GetDouble("Bot_AimAccuracy"),
+		script->GetDouble("Bot_AimPersistance"));
+
+	m_pSensoryMem = new Raven_SensoryMemory(this, script->GetDouble("Bot_MemorySpan"));
 }
 
 //-------------------------------- dtor ---------------------------------------

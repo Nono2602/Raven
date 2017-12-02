@@ -21,11 +21,11 @@
 
 class Goal_Think : public Goal_Composite<Raven_Bot>
 {
-private:
+protected:
   
   typedef std::vector<Goal_Evaluator*>   GoalEvaluators;
 
-private:
+protected:
   
   GoalEvaluators  m_Evaluators;
 
