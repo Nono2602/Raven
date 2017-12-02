@@ -295,20 +295,20 @@
     <ClCompile Include="NeuralNetwork\Neuron.cpp">
       <Filter>AI\Neural Network</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSteeringBehaviors.cpp">
-      <Filter>AI\Movement &amp; Navigation</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Leader.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ThinkAsTeammate.cpp">
-      <Filter>AI\goals\composite</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\RegroupGoal_Evaluator.cpp">
+    <ClCompile Include="RegroupGoal_Evaluator.cpp">
       <Filter>AI\goals\goal evaluation</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_Regroup.cpp">
+    <ClCompile Include="Raven_Leader.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Goal_Regroup.cpp">
       <Filter>AI\goals\composite</Filter>
+    </ClCompile>
+    <ClCompile Include="Goal_ThinkAsTeammate.cpp">
+      <Filter>AI\goals\composite</Filter>
+    </ClCompile>
+    <ClCompile Include="Raven_TeammateSteeringBehaviors.cpp">
+      <Filter>AI\Movement &amp; Navigation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -669,20 +669,20 @@
     <ClInclude Include="NeuralNetwork\Neuron.h">
       <Filter>AI\Neural Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSteeringBehaviors.h">
-      <Filter>AI\Movement &amp; Navigation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Leader.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ThinkAsTeammate.h">
-      <Filter>AI\goals\composite</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\RegroupGoal_Evaluator.h">
+    <ClInclude Include="RegroupGoal_Evaluator.h">
       <Filter>AI\goals\goal evaluation</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_Regroup.h">
+    <ClInclude Include="Raven_Leader.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Goal_Regroup.h">
       <Filter>AI\goals\composite</Filter>
+    </ClInclude>
+    <ClInclude Include="Goal_ThinkAsTeammate.h">
+      <Filter>AI\goals\composite</Filter>
+    </ClInclude>
+    <ClInclude Include="Raven_TeammateSteeringBehaviors.h">
+      <Filter>AI\Movement &amp; Navigation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
