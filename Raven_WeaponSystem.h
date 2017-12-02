@@ -13,6 +13,8 @@
 //-----------------------------------------------------------------------------
 #include <map>
 #include "2d/vector2d.h"
+//AJOUTE POUR LA QUESTION 2
+#include "Fuzzy/FuzzyModule.h"
 
 class Raven_Bot;
 class Raven_Weapon;
@@ -37,6 +39,9 @@ private:
   //a pointer to the weapon the bot is currently holding
   Raven_Weapon*    m_pCurrentWeapon;
 
+  //AJOUTE POUR LA QUESTION 2 : permet d'impliquer la logique floue dans le comportement du Bot
+  FuzzyModule   m_FuzzyModule;
+
   //this is the minimum amount of time a bot needs to see an opponent before
   //it can react to it. This variable is used to prevent a bot shooting at
   //an opponent the instant it becomes visible.
@@ -59,7 +64,7 @@ private:
 
   //adds a random deviation to the firing angle not greater than m_dAimAccuracy 
   //rads
-  void        AddNoiseToAim(Vector2D& AimingPos)const;
+  void        AddNoiseToAim(Vector2D& AimingPos);
 
 public:
 
@@ -76,7 +81,7 @@ public:
   //this method aims the bot's current weapon at the target (if there is a
   //target) and, if aimed correctly, fires a round. (Called each update-step
   //from Raven_Bot::Update)
-  void          TakeAimAndShoot()const;
+  void          TakeAimAndShoot();
 
   //this method determines the most appropriate weapon to use given the current
   //game state. (Called every n update-steps from Raven_Bot::Update)
@@ -108,6 +113,9 @@ public:
 
   void          RenderCurrentWeapon()const;
   void          RenderDesirabilities()const;
+  
+  // AJOUTE POUR LA QUESTION 2
+  void     InitializeFuzzyModule();
 };
 
 #endif
