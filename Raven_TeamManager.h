@@ -21,11 +21,14 @@
 #include "Raven_Teammate.h"
 
 class Raven_Teammate;
+class Raven_Leader;
 
 class Raven_TeamManager
 {
 private:
 	std::list<Raven_Teammate*>	m_Teammates;
+
+	Raven_Leader*				m_pLeader;
 
 	Raven_Bot*					m_pTarget;
 
@@ -38,6 +41,9 @@ public:
 
 	void		AddTeammate(Raven_Teammate* pBot);
 	Raven_Bot*	RemoveATeammate();
+
+	void		SetLeader(Raven_Leader* pBot) { m_pLeader = pBot; }
+	Raven_Leader*	GetLeader() const { return m_pLeader; }
 
 	bool		isEmpty() { return m_Teammates.empty(); }
 
@@ -53,6 +59,10 @@ public:
 
 	bool		isWeaponAvailable()const { return m_WeaponAvailable; }
 	Vector2D	GetWeaponSpawn()const { return m_WeaponSpawn; }
+
+	int					TeamSize() const;
+	Vector2D			CenterOfMass(Raven_Teammate * pBot) const;
+	Raven_Teammate*		ClosestToLocation(const Vector2D& location, Raven_Teammate* pBot) const;
 };
 
 #endif

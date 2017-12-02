@@ -17,14 +17,14 @@
 #include "Messaging/MessageDispatcher.h"
 
 #include "goals/Raven_Goal_Types.h"
-#include "goals/Goal_Think.h"
+#include "Goal_ThinkAsTeammate.h"
 
 #include "Debug\DebugConsole.h"
 
-
+#include "Raven_TeammateSteeringBehaviors.h"
 
 Raven_Teammate::Raven_Teammate(Raven_Game* world, Vector2D pos, Raven_TeamManager* teammanager)
-	: Raven_Bot(world, pos), m_pTeamManager(teammanager)
+	: Raven_Bot(world, pos, new Raven_TeammateSteering(world, this), new Goal_ThinkAsTeammate(this)), m_pTeamManager(teammanager)
 {
 }
 
@@ -74,6 +74,10 @@ void Raven_Teammate::Update()
 		//this method aims the bot's current weapon at the current target
 		//and takes a shot if a shot is possible
 		m_pWeaponSys->TakeAimAndShoot();
+
+		if (TeamSize() > 1) {
+			UpdateRegroupLocation();
+		}
 	}
 }
 
@@ -167,4 +171,31 @@ void Raven_Teammate::UpdateTeamTarget(Raven_Bot* newtarget)
 	{
 		m_pTargSys->ClearTarget();
 	}
+}
+
+Goal_ThinkAsTeammate * const Raven_Teammate::GetBrain()
+{
+	return static_cast<Goal_ThinkAsTeammate *>(m_pBrain);
+}
+
+void Raven_Teammate::UpdateRegroupLocation()
+{
+	// Get team center of mass (TeamSize() > 1)
+	Vector2D center = m_pTeamManager->CenterOfMass(this);
+
+	// Get the closest teammate
+	Raven_Teammate* closest = m_pTeamManager->ClosestToLocation(center, this);
+
+	// update location
+	m_regroupLocation = closest->Pos();
+}
+
+Vector2D Raven_Teammate::GetRegroupLocation()
+{
+	return m_regroupLocation;
+}
+
+int Raven_Teammate::TeamSize()
+{
+	return m_pTeamManager->TeamSize();
 }

@@ -83,6 +83,10 @@ std::string GoalTypeToString::Convert(int gt)
 
     return "say_phrase";
 
+  case goal_regroup:
+
+	  return "regroup";
+
   default:
 
     return "UNKNOWN GOAL TYPE!";

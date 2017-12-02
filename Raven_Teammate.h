@@ -20,13 +20,17 @@
 #include "Raven_Bot.h"
 #include "Raven_TeamManager.h"
 #include "Raven_TargetingSystem.h"
+#include "Goal_ThinkAsTeammate.h"
 
 class Raven_TeamManager;
 
 class Raven_Teammate : public Raven_Bot
 {
-private:
+protected:
 	Raven_TeamManager*	m_pTeamManager;
+
+	Vector2D m_regroupLocation;
+	void UpdateRegroupLocation();
 
 public:
 	Raven_Teammate(Raven_Game* world, Vector2D pos, Raven_TeamManager* teammanager);
@@ -41,6 +45,11 @@ public:
 
 	Raven_Bot*		SearchNewTarget();
 	void			UpdateTeamTarget(Raven_Bot* newtarget);
+
+	virtual Goal_ThinkAsTeammate* const       GetBrain() override;
+
+	Vector2D GetRegroupLocation();
+	int TeamSize();
 };
 
 #endif

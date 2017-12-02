@@ -1,11 +1,12 @@
 #include "Raven_TeamManager.h"
 
 #include "Debug\DebugConsole.h"
+#include "Raven_Leader.h"
 
-
+#include <limits>
 
 Raven_TeamManager::Raven_TeamManager(Vector2D weaponspawn)
-	: m_pTarget(NULL), m_WeaponSpawn(weaponspawn), m_WeaponAvailable(false)
+	: m_pTarget(NULL), m_WeaponSpawn(weaponspawn), m_WeaponAvailable(false), m_pLeader(nullptr)
 {
 }
 
@@ -40,7 +41,6 @@ Raven_Bot* Raven_TeamManager::RemoveATeammate()
 
 	return pTeammate;
 }
-
 
 bool Raven_TeamManager::isTeammate(Raven_Bot* pTarget)
 {
@@ -128,6 +128,57 @@ void Raven_TeamManager::ClearTarget()
 	{
 		(*curBot)->GetTargetSys()->ClearTarget();
 	}
+}
+
+int Raven_TeamManager::TeamSize() const
+{
+	return m_Teammates.size() + (m_pLeader ? 1 : 0);
+}
+
+Vector2D Raven_TeamManager::CenterOfMass(Raven_Teammate * pBot) const
+{
+	int nb = 0;
+	Vector2D pos;
+	std::list<Raven_Teammate*>::const_iterator curBot = m_Teammates.begin();
+	for (curBot; curBot != m_Teammates.end(); ++curBot)
+	{
+		if ((*curBot)->ID() != pBot->ID()) {
+			pos += (*curBot)->Pos();
+			nb++;
+		}
+	}
+	if (m_pLeader) {
+		pos += m_pLeader->Pos();
+		nb++;
+	}
+	pos /= nb;
+
+	return pos;
+}
+
+Raven_Teammate * Raven_TeamManager::ClosestToLocation(const Vector2D & location, Raven_Teammate* pBot) const
+{
+	double distance = DBL_MAX;
+	Raven_Teammate * closest = nullptr;
+	std::list<Raven_Teammate*>::const_iterator curBot = m_Teammates.begin();
+	for (curBot; curBot != m_Teammates.end(); ++curBot)
+	{
+		if (pBot == nullptr || (*curBot)->ID() != pBot->ID()) {
+			double tmp = location.Distance((*curBot)->Pos());
+			if (tmp < distance) {
+				distance = tmp;
+				closest = (*curBot);
+			}
+		}
+	}
+	if (m_pLeader) {
+		double tmp = location.Distance(m_pLeader->Pos());
+		if (tmp < distance) {
+			closest = m_pLeader;
+		}
+	}
+
+	return closest;
 }
 
 

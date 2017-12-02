@@ -218,6 +218,11 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_Regroup.cpp" />
+    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ThinkAsTeammate.cpp" />
+    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Leader.cpp" />
+    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSteeringBehaviors.cpp" />
+    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\RegroupGoal_Evaluator.cpp" />
     <ClCompile Include="armory\Grenade.cpp" />
     <ClCompile Include="armory\Weapon_Grenade.cpp" />
     <ClCompile Include="goals\Goal_SafeDodge.cpp" />
@@ -542,6 +547,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_Regroup.h" />
+    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ThinkAsTeammate.h" />
+    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Leader.h" />
+    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSteeringBehaviors.h" />
+    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\RegroupGoal_Evaluator.h" />
     <ClInclude Include="armory\Grenade.h" />
     <ClInclude Include="armory\Weapon_Grenade.h" />
     <ClInclude Include="goals\Goal_SafeDodge.h" />

@@ -47,7 +47,7 @@ public:
   
   enum summing_method{weighted_average, prioritized, dithered};
 
-private:
+protected:
 
   enum behavior_type
   {
@@ -57,9 +57,11 @@ private:
     wander             = 0x00010,
     separation         = 0x00040,
     wall_avoidance     = 0x00200,
+	team_regroup       = 0x00800,
+	team_offset_leader = 0x01000,
   };
 
-private:
+protected:
 
   
   //a pointer to the owner of this instance
