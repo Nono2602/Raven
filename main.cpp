@@ -132,7 +132,7 @@ void getDataFromHumanBot() {
 	if (fichier)
 	{
 		if (firstTimeGetData) {
-			fichier << "HealthHumanBot HealthOtherBot OtherBotVisible Distance HumanBotDirectionFacingX HumanBotDirectionFacingY Weapon Ammo HumanBotShot" << endl;
+			fichier << "HealthHumanBot HealthOtherBot OtherBotVisible Distance HumanBotDirectionFacingX HumanBotDirectionFacingY HumanPosX HumanPosY BotPosX BotPosY Weapon Ammo HumanBotShot" << endl;
 			firstTimeGetData = false;
 		}
 		int lifeHumanBot = 100;
@@ -142,17 +142,28 @@ void getDataFromHumanBot() {
 		double distance = 0;
 		int ammunition = 20; //The blaster ammo is 0 because we can shoot all the time.
 
+		double posBotX;
+		double posBotY;
+
+		double posOtherBotX;
+		double posOtherBotY;
+
 	//get the life of the other bot and the human bot
 		std::list<Raven_Bot*> bots = g_pRaven->GetAllBots();
 		std::list<Raven_Bot*>::const_iterator curBot = bots.begin();
 		for (curBot; curBot != bots.end(); ++curBot) {
 			if (*curBot == g_pRaven->PossessedBot()) {
 				lifeHumanBot = (*curBot)->Health();
+				posBotX = (*curBot)->Pos().x;
+				posBotY = (*curBot)->Pos().y;
 			}
 			else {
 				lifeOtherBot = (*curBot)->Health();
 				//get the distance between the 2 bots
 				distance = g_pRaven->PossessedBot()->isPathPlanner()->GetCostToNode((*curBot)->isPathPlanner()->GetClosestNodeToPosition((*curBot)->Pos()));
+				posOtherBotX = (*curBot)->Pos().x;
+				posOtherBotY = (*curBot)->Pos().y;
+
 			}
 		}
 	//knows if the other bot is visible or not
@@ -177,7 +188,7 @@ void getDataFromHumanBot() {
 		yFacing = 100 * humanBotDirectionFacing.y;
 		humanBotDirectionFacing.y = (double)yFacing / 100;
 		
-		fichier << lifeHumanBot << " " << lifeOtherBot << " " << otherBotVisible << " " << distance << " " << humanBotDirectionFacing << " " << WeaponType(armeCourante) << " " << ammunition << " " << isHumanBotShot << endl;
+		fichier << lifeHumanBot << " " << lifeOtherBot << " " << otherBotVisible << " " << distance << " " << humanBotDirectionFacing << " " << posBotX << " " << posBotY << " " << posOtherBotX << " " << posOtherBotY << WeaponType(armeCourante) << " " << ammunition << " " << isHumanBotShot  << endl;
 		humanBotShot = false;
 	}
 
@@ -189,8 +200,8 @@ void getDataFromHumanBot() {
 //	
 //	This is the callback function which handles all the windows messages
 //-------------------------------------------------------------------------
-
 LRESULT CALLBACK WindowProc (HWND   hwnd,
+
                              UINT   msg,
                              WPARAM wParam,
                              LPARAM lParam)
