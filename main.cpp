@@ -10,6 +10,9 @@
 #include "debug/DebugConsole.h"
 #include "Raven_UserOptions.h"
 #include "Raven_Game.h"
+#include "Raven_WeaponSystem.h"
+#include "navigation/Raven_PathPlanner.h"
+#include "armory/Raven_Weapon.h"
 #include "lua/Raven_Scriptor.h"
 #include <iostream>
 #include <fstream>
@@ -37,8 +40,10 @@ Raven_Game* g_pRaven;
 static int armeCourante = 0; //type_blaster
 //active or not the collection of data
 static bool getDataFromHuman = true;
+//permit to add an information lign in the data file
+bool firstTimeGetData = true;
 //human bot shoot
-static bool humanBotShoot = false;
+static bool humanBotShot = false;
 
 
 //Matcher arme courante au type d'arme
@@ -126,10 +131,16 @@ void getDataFromHumanBot() {
 	ofstream fichier("dataHumanBot.txt", ios::out | ios::app);
 	if (fichier)
 	{
+		if (firstTimeGetData) {
+			fichier << "HealthHumanBot HealthOtherBot OtherBotVisible Distance HumanBotDirectionFacingX HumanBotDirectionFacingY Weapon Ammo HumanBotShot" << endl;
+			firstTimeGetData = false;
+		}
 		int lifeHumanBot = 100;
 		int lifeOtherBot = 100; 
 		int otherBotVisible = 0; //true if 1, 0 else
-		int isHumanBotShoot = 0; //true if 1, 0 else
+		int isHumanBotShot = 0; //true if 1, 0 else
+		double distance = 0;
+		int ammunition = 20; //The blaster ammo is 0 because we can shoot all the time.
 
 	//get the life of the other bot and the human bot
 		std::list<Raven_Bot*> bots = g_pRaven->GetAllBots();
@@ -140,6 +151,8 @@ void getDataFromHumanBot() {
 			}
 			else {
 				lifeOtherBot = (*curBot)->Health();
+				//get the distance between the 2 bots
+				distance = g_pRaven->PossessedBot()->isPathPlanner()->GetCostToNode((*curBot)->isPathPlanner()->GetClosestNodeToPosition((*curBot)->Pos()));
 			}
 		}
 	//knows if the other bot is visible or not
@@ -147,16 +160,25 @@ void getDataFromHumanBot() {
 		if (botsVisible.empty()) otherBotVisible = 0;
 		else otherBotVisible = 1;
 
-	//get the distance between the 2 bots
-
 	//ammunition quantity
+		if (armeCourante != 0) { //si l'arme n'est pas un blaster (sinon il en affiche 0 car on peut tirer a l'infini car le nb de ammo n'est pas pris en compte
+			ammunition = g_pRaven->PossessedBot()->GetWeaponSys()->GetCurrentWeapon()->NumRoundsRemaining();
+		} 
 
 	//get if the human bot shoot
-		if (humanBotShoot) isHumanBotShoot = 1;
+		if (humanBotShot) isHumanBotShot = 1;
 		else 0;
+
+	//get the direction where the bot is facing
+		Vector2D humanBotDirectionFacing = g_pRaven->PossessedBot()->Facing();
+		int xFacing, yFacing;
+		xFacing = 100 * humanBotDirectionFacing.x;
+		humanBotDirectionFacing.x = (double)xFacing / 100;
+		yFacing = 100 * humanBotDirectionFacing.y;
+		humanBotDirectionFacing.y = (double)yFacing / 100;
 		
-		fichier << lifeHumanBot << " " << lifeOtherBot << " " << otherBotVisible << " " << WeaponType(armeCourante) << " " << isHumanBotShoot << endl;
-		humanBotShoot = false;
+		fichier << lifeHumanBot << " " << lifeOtherBot << " " << otherBotVisible << " " << distance << " " << humanBotDirectionFacing << " " << WeaponType(armeCourante) << " " << ammunition << " " << isHumanBotShot << endl;
+		humanBotShot = false;
 	}
 
 	else cerr << "Can't open the file !" << endl;
@@ -335,7 +357,7 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
     case WM_LBUTTONDOWN: //tire vers l'endroit ou se trouve le curseur de la souris
     {
 		 g_pRaven->ClickLeftMouseButton(MAKEPOINTS(lParam));
-		 humanBotShoot = true;
+		 humanBotShot = true;
     }
     
     break;
