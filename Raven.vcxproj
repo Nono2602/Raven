@@ -218,14 +218,11 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_Regroup.cpp" />
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ThinkAsTeammate.cpp" />
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Leader.cpp" />
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSteeringBehaviors.cpp" />
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\RegroupGoal_Evaluator.cpp" />
     <ClCompile Include="armory\Grenade.cpp" />
     <ClCompile Include="armory\Weapon_Grenade.cpp" />
     <ClCompile Include="goals\Goal_SafeDodge.cpp" />
+    <ClCompile Include="Goal_Regroup.cpp" />
+    <ClCompile Include="Goal_ThinkAsTeammate.cpp" />
     <ClCompile Include="main.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -243,6 +240,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='boundschecker|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="Raven_Leader.cpp" />
     <ClCompile Include="Raven_Map.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -325,6 +323,7 @@
     </ClCompile>
     <ClCompile Include="Raven_TeamManager.cpp" />
     <ClCompile Include="Raven_Teammate.cpp" />
+    <ClCompile Include="Raven_TeammateSteeringBehaviors.cpp" />
     <ClCompile Include="Raven_UserOptions.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -485,6 +484,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='boundschecker|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="RegroupGoal_Evaluator.cpp" />
     <ClCompile Include="triggers\Trigger_HealthGiver.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -547,18 +547,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_Regroup.h" />
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ThinkAsTeammate.h" />
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Leader.h" />
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSteeringBehaviors.h" />
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\RegroupGoal_Evaluator.h" />
     <ClInclude Include="armory\Grenade.h" />
     <ClInclude Include="armory\Weapon_Grenade.h" />
     <ClInclude Include="goals\Goal_SafeDodge.h" />
+    <ClInclude Include="Goal_Regroup.h" />
+    <ClInclude Include="Goal_ThinkAsTeammate.h" />
     <ClInclude Include="NeuralNetwork\Net.h" />
     <ClInclude Include="NeuralNetwork\Neuron.h" />
     <ClInclude Include="Raven_Bot.h" />
     <ClInclude Include="Raven_Game.h" />
+    <ClInclude Include="Raven_Leader.h" />
     <ClInclude Include="Raven_Map.h" />
     <ClInclude Include="armory\Raven_Weapon.h" />
     <ClInclude Include="armory\Weapon_Blaster.h" />
@@ -586,7 +584,9 @@
     <ClInclude Include="Raven_ObjectEnumerations.h" />
     <ClInclude Include="Raven_TeamManager.h" />
     <ClInclude Include="Raven_Teammate.h" />
+    <ClInclude Include="Raven_TeammateSteeringBehaviors.h" />
     <ClInclude Include="Raven_UserOptions.h" />
+    <ClInclude Include="RegroupGoal_Evaluator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="goals\Raven_Goal_Types.h" />
     <ClInclude Include="goals\Goal_AdjustRange.h" />
