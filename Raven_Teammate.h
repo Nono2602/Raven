@@ -34,6 +34,7 @@ protected:
 
 public:
 	Raven_Teammate(Raven_Game* world, Vector2D pos, Raven_TeamManager* teammanager);
+	Raven_Teammate(Raven_Game* world, Vector2D pos, Raven_TeamManager* teammanager, Goal_Think* goal);
 	~Raven_Teammate();
 
 	//bots shouldn't be copied, only created or respawned

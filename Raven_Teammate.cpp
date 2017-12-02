@@ -28,6 +28,11 @@ Raven_Teammate::Raven_Teammate(Raven_Game* world, Vector2D pos, Raven_TeamManage
 {
 }
 
+Raven_Teammate::Raven_Teammate(Raven_Game * world, Vector2D pos, Raven_TeamManager * teammanager, Goal_Think * goal)
+	: Raven_Bot(world, pos, new Raven_TeammateSteering(world, this), goal), m_pTeamManager(teammanager)
+{
+}
+
 
 Raven_Teammate::~Raven_Teammate()
 {
