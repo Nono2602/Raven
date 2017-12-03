@@ -45,7 +45,7 @@ Raven_Game* g_pRaven;
 //numero arme courante
 static int armeCourante = 0; //type_blaster
 //active or not the collection of data
-static bool getDataFromHuman = true;
+static bool getDataFromHuman = false;
 //permit to add an information lign in the data file
 bool firstTimeGetData = true;
 //human bot shoot
@@ -839,13 +839,13 @@ int WINAPI WinMain (HINSTANCE hInstance,
 			RedrawWindow(hWnd);
 		}
 		//Get the data for the neural network
-		/*if (getDataFromHuman && currentTime == timeMax) {
+		if (getDataFromHuman && currentTime == timeMax) {
 			getDataFromHumanBot();
 			currentTime = 0;
 		}
-		else currentTime++;*/
+		else currentTime++;
 		//if (!once) {
-		if (getDataFromHuman && currentTime == timeMax) {
+		if (currentTime == timeMax) {
 			topology.clear();
 			topology.push_back(11);
 			topology.push_back(4);
