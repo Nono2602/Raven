@@ -24,6 +24,14 @@ Neuron::~Neuron()
 {
 }
 
+void Neuron::SetWeights(Layer &prevLayer, vector<double> weights) {
+
+	for (int i = 0; i < (int)weights.size(); i++)
+	{
+		m_outputWeights.at(i).weight = weights.at(i);
+	}
+}
+
 void Neuron::UpdateInputWeights(Layer &prevLayer)
 {
 	// The weights to be updated are in the connection container
