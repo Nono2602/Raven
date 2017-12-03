@@ -46,6 +46,10 @@ Raven_Game* g_pRaven;
 static int armeCourante = 0; //type_blaster
 //active or not the collection of data
 static bool getDataFromHuman = false;
+//active or not the neuralnetwork.
+//When activate, a human can move a character, but let the neuralk shoot for him
+static bool NeuronIsActivated = true;
+
 //permit to add an information lign in the data file
 bool firstTimeGetData = true;
 //human bot shoot
@@ -845,7 +849,7 @@ int WINAPI WinMain (HINSTANCE hInstance,
 		}
 		else currentTime++;
 		//if (!once) {
-		if (currentTime == timeMax) {
+		if ( NeuronIsActivated && currentTime == timeMax) {
 			topology.clear();
 			topology.push_back(11);
 			topology.push_back(4);
