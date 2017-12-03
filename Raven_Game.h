@@ -72,6 +72,9 @@ private:
   //if true a teammate bot is removed from the game
   bool								m_bRemoveATeammate;
 
+  //if true a leader bot is removed from the game
+  bool								m_bRemoveALeader;
+
   //when a bot is killed a "grave" is displayed for a few seconds. This
   //class manages the graves
   GraveMarkers*						m_pGraveMarkers;
@@ -106,6 +109,7 @@ public:
   void CreateHumanBot(Raven_Bot* rb);
   void AddBots(unsigned int NumBotsToAdd);
   void AddTeammates(unsigned int NumBotsToAdd);
+  void AddOrRemoveLeader();
   void AddRocket(Raven_Bot* shooter, Vector2D target);
   void AddRailGunSlug(Raven_Bot* shooter, Vector2D target);
   void AddShotGunPellet(Raven_Bot* shooter, Vector2D target);

@@ -8,3 +8,10 @@ Raven_Leader::Raven_Leader(Raven_Game * world, Vector2D pos, Raven_TeamManager *
 Raven_Leader::~Raven_Leader()
 {
 }
+
+void Raven_Leader::Update()
+{
+	Raven_Bot::Update();
+	
+
+}

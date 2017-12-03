@@ -4,9 +4,11 @@
 #include "Raven_Leader.h"
 
 #include <limits>
+#include <set>
+#include "goals/Raven_Feature.h"
 
 Raven_TeamManager::Raven_TeamManager(Vector2D weaponspawn)
-	: m_pTarget(NULL), m_WeaponSpawn(weaponspawn), m_WeaponAvailable(false), m_pLeader(nullptr)
+	: m_pTarget(NULL), m_WeaponSpawn(weaponspawn), m_WeaponAvailable(false), m_pLeader(nullptr), m_pWeakTeammate(nullptr), goal(teamgoal_attack)
 {
 }
 
@@ -47,6 +49,9 @@ bool Raven_TeamManager::isTeammate(Raven_Bot* pTarget)
 	if (!pTarget)
 		return false;
 
+	if (m_pLeader != nullptr && m_pLeader->ID() == pTarget->ID())
+		return true;
+
 	std::list<Raven_Teammate*>::const_iterator curBot = m_Teammates.begin();
 	for (curBot; curBot != m_Teammates.end(); ++curBot)
 	{
@@ -61,13 +66,16 @@ bool Raven_TeamManager::isTeammate(Raven_Bot* pTarget)
 void Raven_TeamManager::Update()
 {
 	debug_con << "TEAM UPDATE" << "";
-
-	//if the team has only one member, has no target or if the last target died
-	if (m_Teammates.size() == 1 || !m_pTarget || m_pTarget->isDead())
-	{
-		debug_con << "TEAM UPDATING" << "";
-		//update the targeting system of each teammate to find the new target
-		SearchNewTeamTarget();
+	if (!m_pTarget || m_pTarget->isDead()) {//if the team has has no target or if the last target died
+		if (m_pLeader) { //if the team has a leader
+			debug_con << "TEAM UPDATING WITH LEADER" << "";
+			SearchNewTeamTargetByLeader();
+		}
+		else if(m_Teammates.size() >= 1){ //else
+			debug_con << "TEAM UPDATING WITHOUT LEADER" << "";
+			//update the targeting system of each teammate to find the new target
+			SearchNewTeamTarget();
+		}
 	}
 
 	UpdateTeammates();
@@ -94,6 +102,48 @@ void Raven_TeamManager::SearchNewTeamTarget()
 	}
 }
 
+void Raven_TeamManager::SearchNewTeamTargetByLeader()
+{
+	std::list<Raven_Teammate*>::const_iterator curBot = m_Teammates.begin();
+	std::set<Raven_Bot*> potentialTarget;
+	Raven_Bot* curTarget = NULL;
+	for (curBot; curBot != m_Teammates.end(); ++curBot)
+	{
+		//we update each teammate's targeting system to find a new target
+		(*curBot)->GetTargetSys()->Update();
+		curTarget = (*curBot)->GetTargetBot();
+
+		//if a new target that does not belong to the team is found
+		if (curTarget && !isTeammate(curTarget))
+		{
+			//it is added to the potential target collection
+			potentialTarget.insert(curTarget);
+		}
+	}
+	// same with the leader
+	m_pLeader->GetTargetSys()->Update();
+	curTarget = m_pLeader->GetTargetBot();
+	if (curTarget && !isTeammate(curTarget))
+	{
+		potentialTarget.insert(curTarget);
+	}
+
+	// search for most desirable target
+	double desirability = 0.0f;
+	curTarget = NULL;
+	std::set<Raven_Bot*>::iterator it;
+	for (it = potentialTarget.begin(); it != potentialTarget.end(); ++it) {
+		double tmp = 1.0 - Raven_Feature::Health(*it);
+		if (tmp > desirability) {
+			desirability = tmp;
+			curTarget = *it;
+		}
+	}
+	if (curTarget) {
+		m_pTarget = curTarget;
+	}
+}
+
 
 void Raven_TeamManager::UpdateTeammates()
 {
@@ -114,6 +164,14 @@ void Raven_TeamManager::UpdateTeammates()
 				debug_con << "UPDATE TEAMMATE " << (*curBot)->ID() << " : targeting bot " << (*curBot)->GetTargetBot()->ID() << "";
 			else
 				debug_con << "UPDATE TEAMMATE " << (*curBot)->ID() << " : no target " << "";
+		}
+		if (m_pLeader) {
+			m_pLeader->UpdateTeamTarget(m_pTarget);
+
+			if (m_pLeader->GetTargetBot())
+				debug_con << "UPDATE TEAMMATE " << m_pLeader->ID() << " : targeting bot " << m_pLeader->GetTargetBot()->ID() << "";
+			else
+				debug_con << "UPDATE TEAMMATE " << m_pLeader->ID() << " : no target " << "";
 		}
 	}
 }

@@ -33,7 +33,7 @@ double RegroupGoal_Evaluator::CalculateDesirability(Raven_Bot * pBot)
 	else // distance > distanceMin
 	{ 
 		//value used to tweak the desirability
-		const double Tweaker = 0.4;
+		const double Tweaker = 0.7;
 
 		double Desirability = Tweaker * (distance - distanceMin) / (distanceMax - distanceMin);
 

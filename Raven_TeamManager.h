@@ -23,6 +23,11 @@
 class Raven_Teammate;
 class Raven_Leader;
 
+enum {
+	teamgoal_attack,
+	teamgoal_protect
+};
+
 class Raven_TeamManager
 {
 private:
@@ -31,6 +36,9 @@ private:
 	Raven_Leader*				m_pLeader;
 
 	Raven_Bot*					m_pTarget;
+	Raven_Teammate*				m_pWeakTeammate;
+
+	int goal;
 
 	Vector2D					m_WeaponSpawn;
 	bool						m_WeaponAvailable;
@@ -53,6 +61,7 @@ public:
 	void		Clear();
 
 	void		SearchNewTeamTarget();
+	void		SearchNewTeamTargetByLeader();
 	void		UpdateTeammates();
 	Raven_Bot*	GetTeamTarget()const { return m_pTarget; }
 	void		ClearTarget();
