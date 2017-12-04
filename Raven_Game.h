@@ -46,7 +46,8 @@ private:
   std::list<Raven_Bot*>				m_Bots;
 
   //the user can create a Raven bots team that will target an enemy bot
-  Raven_TeamManager*				m_Team;
+  Raven_TeamManager*				m_TeamA;
+  Raven_TeamManager*				m_TeamB;
 
   //the user may select a bot to control manually. This is a pointer to that
   //bot
@@ -70,10 +71,8 @@ private:
   bool								m_bRemoveABot;
 
   //if true a teammate bot is removed from the game
-  bool								m_bRemoveATeammate;
-
-  //if true a leader bot is removed from the game
-  bool								m_bRemoveALeader;
+  bool								m_bRemoveATeammateA;
+  bool								m_bRemoveATeammateB;
 
   //when a bot is killed a "grave" is displayed for a few seconds. This
   //class manages the graves
@@ -108,8 +107,11 @@ public:
 
   void CreateHumanBot(Raven_Bot* rb);
   void AddBots(unsigned int NumBotsToAdd);
-  void AddTeammates(unsigned int NumBotsToAdd);
-  void AddOrRemoveLeader();
+  void AddTeammatesA(unsigned int NumBotsToAdd);
+  void AddTeammatesB(unsigned int NumBotsToAdd);
+  void TeammateARemoval();
+  void TeammateBRemoval();
+  void AddLeader();
   void AddFollowers(unsigned int NumBotsToAdd);
   void AddRocket(Raven_Bot* shooter, Vector2D target);
   void AddRailGunSlug(Raven_Bot* shooter, Vector2D target);
@@ -119,7 +121,8 @@ public:
 
   //removes the last bot to be added
   void RemoveBot();
-  void RemoveTeammate();
+  void RemoveTeammateA();
+  void RemoveTeammateB();
 
   bool         isThereAHuman()const { return m_thereIsAHuman; }
 

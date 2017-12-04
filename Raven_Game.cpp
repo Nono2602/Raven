@@ -41,11 +41,13 @@
 Raven_Game::Raven_Game():m_pSelectedBot(NULL),
                          m_bPaused(false),
                          m_bRemoveABot(false),
-	                     m_bRemoveALeader(false),
+	                     m_bRemoveATeammateA(false),
+						 m_bRemoveATeammateB(false),
                          m_pMap(NULL),
                          m_pPathManager(NULL),
                          m_pGraveMarkers(NULL),
-						 m_Team(NULL),
+						 m_TeamA(NULL),
+						 m_TeamB(NULL),
 						 m_thereIsAHuman(false)
 {
   //load in the default map
@@ -59,7 +61,8 @@ Raven_Game::~Raven_Game()
 {
   Clear();
   delete m_pPathManager;
-  delete m_Team;
+  delete m_TeamA;
+  delete m_TeamB;
   delete m_pMap;
   
   delete m_pGraveMarkers;
@@ -105,12 +108,17 @@ void Raven_Game::Clear()
 
   m_pSelectedBot = NULL;
 
-  if (m_Team)
+  if (m_TeamA)
   {
-	  m_Team->Clear();
+	  m_TeamA->Clear();
+  }
+  if (m_TeamB)
+  {
+	  m_TeamB->Clear();
   }
 }
-// bool test = true;
+
+bool test = true;
 
 //-------------------------------- Update -------------------------------------
 //
@@ -118,10 +126,10 @@ void Raven_Game::Clear()
 //-----------------------------------------------------------------------------
 void Raven_Game::Update()
 { 
-	/*if (test) {
+	if (test) {
 		ExorciseAnyPossessedBot();
 		test = !test;
-	}*/
+	}
   //don't update if the user has paused the game
   if (m_bPaused) return;
 
@@ -161,9 +169,13 @@ void Raven_Game::Update()
   }
   
   //update the team
-  if (!m_Team->isEmpty())
+  if (!m_TeamA->isEmpty())
   {
-	  m_Team->Update();
+	  m_TeamA->Update();
+  }
+  if (!m_TeamB->isEmpty())
+  {
+	  m_TeamB->Update();
   }
 
   //update the bots
@@ -204,77 +216,26 @@ void Raven_Game::Update()
   //one
   if (m_bRemoveABot)
   { 
-    if (!m_Bots.empty())
+    if (RandBool())
     {
-      Raven_Bot* pBot = m_Bots.back();
-	  if (pBot == m_pSelectedBot) {
-		  m_pSelectedBot = 0;
-		  m_thereIsAHuman = false;
-	  }
-      NotifyAllBotsOfRemoval(pBot);
-      delete m_Bots.back();
-      m_Bots.remove(pBot);
-      pBot = 0;
+		TeammateARemoval();
     }
+	else
+	{
+		TeammateBRemoval();
+	}
 
-    m_bRemoveABot = false;
+	m_bRemoveABot = false;
   }
   //if the user has requested that the number of teammates be decreased, remove
   //one
-  if (m_bRemoveATeammate)
+  if (m_bRemoveATeammateA)
   {
-	  if (!m_Bots.empty() && !m_Team->isEmpty())
-	  {
-		  Raven_Bot* pTeammate = m_Team->RemoveATeammate();
-		  if (pTeammate == m_pSelectedBot) {
-			  m_pSelectedBot = 0;
-			  m_thereIsAHuman = false;
-		  }
-
-		  NotifyAllBotsOfRemoval(pTeammate);
-
-		  bool TeammateRemoved = false;
-		  std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
-		  while (curBot != m_Bots.end() && !TeammateRemoved)
-		  {
-			  if ((*curBot)->ID() == pTeammate->ID())
-			  {
-				  delete *curBot;
-				  TeammateRemoved = true;
-			  }
-
-			  curBot++;
-		  }
-		  m_Bots.remove(pTeammate);
-		  pTeammate = 0;
-	  }
-
-	  m_bRemoveATeammate = false;
+	  TeammateARemoval();
   }
-  if (m_bRemoveALeader) {
-	  Raven_Leader* pLeader = m_Team->GetLeader();
-	  m_Team->SetLeader(nullptr);
-	  if (pLeader == m_pSelectedBot) {
-		  m_pSelectedBot = 0;
-		  m_thereIsAHuman = false;
-	  }
-
-	  bool LeaderRemoved = false;
-	  std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
-	  while (curBot != m_Bots.end() && !LeaderRemoved)
-	  {
-		  if ((*curBot)->ID() == pLeader->ID())
-		  {
-			  delete *curBot;
-			  LeaderRemoved = true;
-		  }
-
-		  curBot++;
-	  }
-	  m_Bots.remove(pLeader);
-	  pLeader = 0;
-
-	  m_bRemoveALeader = false;
+  if (m_bRemoveATeammateB)
+  {
+	  TeammateBRemoval();
   }
 }
 
@@ -341,44 +302,31 @@ void Raven_Game::AddBots(unsigned int NumBotsToAdd)
 {
   while (NumBotsToAdd--)
   {
-    //create a bot. (its position is irrelevant at this point because it will
-    //not be rendered until it is spawned)
-    Raven_Bot* rb = new Raven_Bot(this, Vector2D());
-	
-	//switch the default steering behaviors on
-	rb->GetSteering()->WallAvoidanceOn();
-	rb->GetSteering()->SeparationOn();
-
-    m_Bots.push_back(rb);
-
-    //register the bot with the entity manager
-    EntityMgr->RegisterEntity(rb);
-
-	////////////////////////////////	HUMAN BOT	//////////////////////////////////////////////
-	//if you don't want human bot, comment this line
-	CreateHumanBot(rb);
-
-    
-#ifdef LOG_CREATIONAL_STUFF
-  debug_con << "Adding bot with ID " << ttos(rb->ID()) << "";
-#endif
+	  if (RandBool()) // New teammate A
+	  {
+		  AddTeammatesA(1);
+	  }
+	  else // New teammate B
+	  {
+		  AddTeammatesB(1);
+	  }
   }
 }
 
-void Raven_Game::AddTeammates(unsigned int NumBotsToAdd)
+void Raven_Game::AddTeammatesA(unsigned int NumBotsToAdd)
 {
 	while (NumBotsToAdd--)
 	{
 		//create a bot. (its position is irrelevant at this point because it will
 		//not be rendered until it is spawned)
-		Raven_Teammate* rb = new Raven_Teammate(this, Vector2D(), m_Team);
+		Raven_Teammate* rb = new Raven_Teammate(this, Vector2D(), m_TeamA);
 
 		//switch the default steering behaviors on
 		rb->GetSteering()->WallAvoidanceOn();
 		rb->GetSteering()->SeparationOn();
 
 		m_Bots.push_back(rb);
-		m_Team->AddTeammate(rb);
+		m_TeamA->AddTeammate(rb);
 
 		//register the bot with the entity manager
 		EntityMgr->RegisterEntity(rb);
@@ -390,19 +338,44 @@ void Raven_Game::AddTeammates(unsigned int NumBotsToAdd)
 	}
 }
 
-void Raven_Game::AddOrRemoveLeader()
+void Raven_Game::AddTeammatesB(unsigned int NumBotsToAdd)
 {
-	if (m_Team->GetLeader() == nullptr) {
-		//create a leader. (its position is irrelevant at this point because it will
+	while (NumBotsToAdd--)
+	{
+		//create a bot. (its position is irrelevant at this point because it will
 		//not be rendered until it is spawned)
-		Raven_Leader * rb = new Raven_Leader(this, Vector2D(), m_Team);
+		Raven_Teammate* rb = new Raven_Teammate(this, Vector2D(), m_TeamB);
 
 		//switch the default steering behaviors on
 		rb->GetSteering()->WallAvoidanceOn();
 		rb->GetSteering()->SeparationOn();
 
 		m_Bots.push_back(rb);
-		m_Team->SetLeader(rb);
+		m_TeamB->AddTeammate(rb);
+
+		//register the bot with the entity manager
+		EntityMgr->RegisterEntity(rb);
+
+
+#ifdef LOG_CREATIONAL_STUFF
+		debug_con << "Adding teammate bot with ID " << ttos(rb->ID()) << "";
+#endif
+	}
+}
+
+void Raven_Game::AddLeader()
+{
+	if (m_TeamA->GetLeader() == nullptr) {
+		//create a leader. (its position is irrelevant at this point because it will
+		//not be rendered until it is spawned)
+		Raven_Leader * rb = new Raven_Leader(this, Vector2D(), m_TeamA);
+
+		//switch the default steering behaviors on
+		rb->GetSteering()->WallAvoidanceOn();
+		rb->GetSteering()->SeparationOn();
+
+		m_Bots.push_back(rb);
+		m_TeamA->SetLeader(rb);
 		
 		//register the bot with the entity manager
 		EntityMgr->RegisterEntity(rb);
@@ -412,9 +385,6 @@ void Raven_Game::AddOrRemoveLeader()
 		debug_con << "Adding leader bot with ID " << ttos(rb->ID()) << "";
 #endif
 	}
-	else {
-		m_bRemoveALeader = true;
-	}
 }
 
 void Raven_Game::AddFollowers(unsigned int NumBotsToAdd)
@@ -423,14 +393,14 @@ void Raven_Game::AddFollowers(unsigned int NumBotsToAdd)
 	{
 		//create a bot. (its position is irrelevant at this point because it will
 		//not be rendered until it is spawned)
-		Raven_Follower* rb = new Raven_Follower(this, Vector2D(), m_Team);
+		Raven_Follower* rb = new Raven_Follower(this, Vector2D(), m_TeamA);
 
 		//switch the default steering behaviors on
 		rb->GetSteering()->WallAvoidanceOn();
 		rb->GetSteering()->SeparationOn();
 
 		m_Bots.push_back(rb);
-		m_Team->AddTeammate(rb);
+		m_TeamA->AddTeammate(rb);
 
 		//register the bot with the entity manager
 		EntityMgr->RegisterEntity(rb);
@@ -470,9 +440,76 @@ void Raven_Game::RemoveBot()
   m_bRemoveABot = true;
 }
 
-void Raven_Game::RemoveTeammate()
+void Raven_Game::RemoveTeammateA()
 {
-	m_bRemoveATeammate = true;
+	m_bRemoveATeammateA = true;
+}
+
+void Raven_Game::RemoveTeammateB()
+{
+	m_bRemoveATeammateB = true;
+}
+
+void Raven_Game::TeammateARemoval()
+{
+	if (!m_Bots.empty() && !m_TeamA->isEmpty())
+	{
+		Raven_Bot* pTeammate = m_TeamA->RemoveATeammate();
+		if (pTeammate == m_pSelectedBot) {
+			m_pSelectedBot = 0;
+			m_thereIsAHuman = false;
+		}
+
+		NotifyAllBotsOfRemoval(pTeammate);
+
+		bool TeammateRemoved = false;
+		std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+		while (curBot != m_Bots.end() && !TeammateRemoved)
+		{
+			if ((*curBot)->ID() == pTeammate->ID())
+			{
+				delete *curBot;
+				TeammateRemoved = true;
+			}
+
+			curBot++;
+		}
+		m_Bots.remove(pTeammate);
+		pTeammate = 0;
+	}
+
+	m_bRemoveATeammateA = false;
+}
+
+void Raven_Game::TeammateBRemoval()
+{
+	if (!m_Bots.empty() && !m_TeamB->isEmpty())
+	{
+		Raven_Bot* pTeammate = m_TeamB->RemoveATeammate();
+		if (pTeammate == m_pSelectedBot) {
+			m_pSelectedBot = 0;
+			m_thereIsAHuman = false;
+		}
+
+		NotifyAllBotsOfRemoval(pTeammate);
+
+		bool TeammateRemoved = false;
+		std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+		while (curBot != m_Bots.end() && !TeammateRemoved)
+		{
+			if ((*curBot)->ID() == pTeammate->ID())
+			{
+				delete *curBot;
+				TeammateRemoved = true;
+			}
+
+			curBot++;
+		}
+		m_Bots.remove(pTeammate);
+		pTeammate = 0;
+	}
+
+	m_bRemoveATeammateB = false;
 }
 
 //--------------------------- AddBolt -----------------------------------------
@@ -575,13 +612,15 @@ bool Raven_Game::LoadMap(const std::string& filename)
   delete m_pMap;
   delete m_pGraveMarkers;
   delete m_pPathManager;
-  delete m_Team;
+  delete m_TeamA;
+  delete m_TeamB;
 
   //in with the new
   m_pGraveMarkers = new GraveMarkers(script->GetDouble("GraveLifetime"));
   m_pPathManager = new PathManager<Raven_PathPlanner>(script->GetInt("MaxSearchCyclesPerUpdateStep"));
   m_pMap = new Raven_Map();
-  m_Team = new Raven_TeamManager(Vector2D());
+  m_TeamA = new Raven_TeamManager(Vector2D());
+  m_TeamB = new Raven_TeamManager(Vector2D());
 
   //make sure the entity manager is reset
   EntityMgr->Reset();
