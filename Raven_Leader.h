@@ -10,6 +10,8 @@
 //-----------------------------------------------------------------------------
 #include "Raven_Teammate.h"
 
+class Regulator;
+
 enum {
 	order_attack,
 };
@@ -23,6 +25,12 @@ class Raven_Leader : public Raven_Teammate
 {
 private:
 	Leader_Order m_order;
+
+	Raven_Bot* m_savedTarget;
+
+	//A regulator object limits the update frequency of a specific AI component
+	Regulator*                         m_pLocationSendingRegulator;
+	Regulator*                         m_pLocationTargetRegulator;
 
 public:
 	Raven_Leader(Raven_Game* world, Vector2D pos, Raven_TeamManager* teammanager);

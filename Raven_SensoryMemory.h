@@ -114,6 +114,7 @@ public:
 
   void     RenderBoxesAroundRecentlySensed()const;
 
+  void     AddRavenToMemory(Raven_Bot* pBot);
 };
 
 

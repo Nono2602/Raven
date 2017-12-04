@@ -280,3 +280,32 @@ void  Raven_SensoryMemory::RenderBoxesAroundRecentlySensed()const
   }
 
 }
+
+void Raven_SensoryMemory::AddRavenToMemory(Raven_Bot* pBot)
+{
+	//make sure the bot being examined is not this bot
+	if (m_pOwner != pBot)
+	{
+		//if the bot is already part of the memory then update its data, else
+		//create a new memory record and add it to the memory
+		MakeNewRecordIfNotAlreadyPresent(pBot);
+
+		MemoryRecord& info = m_MemoryMap[pBot];
+
+		//test if there is LOS between bots 
+		if (m_pOwner->GetWorld()->isLOSOkay(m_pOwner->Pos(), pBot->Pos()))
+		{
+			info.bShootable = true;
+		}
+		else
+		{
+			info.bShootable = false;
+		}
+
+		//record the position of the bot
+		info.vLastSensedPosition = pBot->Pos();
+
+		//record the time it was sensed
+		info.fTimeLastSensed = (double)Clock->GetCurrentTime();
+	}
+}

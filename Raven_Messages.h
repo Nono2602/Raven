@@ -23,7 +23,8 @@ enum message_type
   Msg_UserHasRemovedBot,
   Msg_TeammateLocation,
   Msg_AskForLocation,
-  Msg_AttackThisTarget
+  Msg_LeaderLocation,
+  Msg_LeaderTargetLocation
 };
 
 //used for outputting debug info
@@ -71,9 +72,13 @@ inline std::string MessageToString(int msg)
 
     return "Msg_AskForLocation";
 
-  case Msg_AttackThisTarget:
+  case Msg_LeaderLocation:
 
-	  return "Msg_AttackThisTarget";
+	  return "Msg_LeaderLocation";
+
+  case Msg_LeaderTargetLocation:
+
+	  return "Msg_LeaderTargetLocation";
 
   default:
 

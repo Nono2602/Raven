@@ -11,11 +11,20 @@
 
 #include "Goals/Goal_Composite.h"
 #include "Goals/Raven_Goal_Types.h"
+#include "Raven_Leader.h"
 
 class Raven_Follower;
 
 class Goal_ObeyLeader : public Goal_Composite<Raven_Follower>
 {
+private:
+	bool m_bOrderIsSet;
+	bool m_bOrderHasChanged;
+	Leader_Order m_order;
+
+	bool m_bLeaderPosIsSet;
+	Vector2D m_knownLeaderPos;
+
 public:
 	Goal_ObeyLeader(Raven_Follower* pOwner);
 	~Goal_ObeyLeader();

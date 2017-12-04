@@ -18,29 +18,20 @@ Goal_ThinkAsFollower::~Goal_ThinkAsFollower()
 
 void Goal_ThinkAsFollower::Arbitrate()
 {
-	/*if (static_cast<Raven_Teammate*>(m_pOwner)->HasLeader()) {
-		AddGoal_ObeyLeader();
-	}
-	else {*/
+	if (!static_cast<Raven_Follower*>(m_pOwner)->HasLeader()) {
 		Goal_ThinkAsTeammate::Arbitrate();
-	/*}*/
+	}
 }
 
 bool Goal_ThinkAsFollower::HandleMessage(const Telegram & msg)
 {
-	switch (msg.Msg)
+	if (msg.Msg == Msg_LeaderTargetLocation)
 	{
-	case Msg_AttackThisTarget:
-	{
-		static_cast<Raven_Follower*>(m_pOwner)->SetOrder(*static_cast<Leader_Order *>(msg.ExtraInfo));
 		AddGoal_ObeyLeader();
+		ForwardMessageToFrontMostSubgoal(msg);
 		return true;
 	}
-	default:
-	{
-		return ForwardMessageToFrontMostSubgoal(msg);
-	}
-	}
+	return ForwardMessageToFrontMostSubgoal(msg);
 }
 
 void Goal_ThinkAsFollower::AddGoal_ObeyLeader()

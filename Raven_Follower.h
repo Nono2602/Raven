@@ -17,10 +17,6 @@
 
 class Raven_Follower : public Raven_Teammate
 {
-private:
-	bool m_bOrderIsSet;
-	Leader_Order m_order;
-
 public:
 	Raven_Follower(Raven_Game* world, Vector2D pos, Raven_TeamManager* teammanager);
 	~Raven_Follower();
@@ -30,8 +26,5 @@ public:
 	Raven_Follower& operator=(const Raven_Follower&);
 
 	virtual bool                       HasTag(int tag) const override;
-
-	void SetOrder(const Leader_Order& order);
-	const Leader_Order& GetOrder() const;
 };
 #endif

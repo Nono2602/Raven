@@ -54,6 +54,12 @@ Bot_VisionUpdateFreq = 4
 --the number of times a second a teammate bot updates its partner
 Teammate_PartnerUpdateFreq = 2
 
+--the number of times a second a leader send its location to its teammate
+Leader_LocationSendingFreq = 1
+
+--the number of times a second a leader send its target location
+Leader_LocationTargetFreq = 3
+
 --note that a frequency of -1 will disable the feature and a frequency of zero
 --will ensure the feature is updated every bot update
 
