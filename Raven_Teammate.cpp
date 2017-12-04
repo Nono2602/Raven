@@ -147,7 +147,7 @@ bool Raven_Teammate::HandleMessage(const Telegram& msg)
 
 	case Msg_TeammateLocation:
 	{
-		if (EntityMgr->IsIDValid(msg.Sender) && msg.ExtraInfo)
+		if (msg.ExtraInfo)
 		{
 			Raven_Teammate * sender = static_cast<Raven_Teammate*>(EntityMgr->GetEntityFromID(msg.Sender));
 			if (!m_pPartner || m_pPartner->isDead()) {
