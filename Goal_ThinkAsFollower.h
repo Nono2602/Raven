@@ -18,7 +18,7 @@ public:
 	Goal_ThinkAsFollower(Raven_Follower* pBot);
 	~Goal_ThinkAsFollower();
 
-	virtual void Arbitrate() override;
+	/*virtual void Arbitrate() override;*/
 
 	virtual bool HandleMessage(const Telegram& msg) override;
 

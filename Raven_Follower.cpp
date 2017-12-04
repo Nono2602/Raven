@@ -12,6 +12,11 @@ Raven_Follower::~Raven_Follower()
 {
 }
 
+Goal_ThinkAsFollower * const Raven_Follower::GetBrain()
+{
+	return static_cast<Goal_ThinkAsFollower *>(m_pBrain);
+}
+
 bool Raven_Follower::HasTag(int tag) const
 {
 	return Raven_Teammate::HasTag(tag) || tag == follower_bot;

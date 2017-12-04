@@ -1,21 +1,20 @@
-#ifndef REGROUPGOAL_EVALUATOR
-#define REGROUPGOAL_EVALUATOR
+#ifndef OBEYLEADERGOAL_EVALUATOR
+#define OBEYLEADERGOAL_EVALUATOR
 //-----------------------------------------------------------------------------
 //
-//  Name:   RegroupGoal_Evaluator.h
+//  Name:   ObeyLeader_Evaluator.h
 //
 //  Author: Loic Mouton
 //
-//  Desc:   class to calculate how desirable the goal of regrouping is
+//  Desc:   class to calculate how desirable the goal of obeying is
 //-----------------------------------------------------------------------------
 #include "goals\Goal_Evaluator.h"
-
-class RegroupGoal_Evaluator :
+class ObeyLeaderGoal_Evaluator :
 	public Goal_Evaluator
 {
 public:
-	RegroupGoal_Evaluator(double bias);
-	~RegroupGoal_Evaluator();
+	ObeyLeaderGoal_Evaluator(double bias);
+	~ObeyLeaderGoal_Evaluator();
 
 	virtual double CalculateDesirability(Raven_Bot* pBot) override;
 

@@ -71,8 +71,9 @@ bool Raven_Teammate::HandleMessage(const Telegram& msg)
 	switch (msg.Msg)
 	{
 	case Msg_TakeThatMF:
-	{// Teammates can do damage
-
+	{
+#ifdef FRIENDLY_FIRE //Teammates can do damage to each other
+		
 		//just return if already dead or spawning
 		if (isDead() || isSpawning()) return true;
 
@@ -88,6 +89,27 @@ bool Raven_Teammate::HandleMessage(const Telegram& msg)
 				Msg_YouGotMeYouSOB,
 				NO_ADDITIONAL_INFO);
 		}
+#else
+		sender = static_cast<Raven_Bot*>(EntityMgr->GetEntityFromID(msg.Sender));
+		if (!m_pTeamManager->isTeammate(sender)) {
+
+			//just return if already dead or spawning
+			if (isDead() || isSpawning()) return true;
+
+			//the extra info field of the telegram carries the amount of damage
+			ReduceHealth(DereferenceToType<int>(msg.ExtraInfo));
+
+			//if this bot is now dead let the shooter know
+			if (isDead())
+			{
+				Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
+					ID(),
+					msg.Sender,
+					Msg_YouGotMeYouSOB,
+					NO_ADDITIONAL_INFO);
+			}
+		}
+#endif
 
 		return true;
 	}
@@ -108,7 +130,7 @@ bool Raven_Teammate::HandleMessage(const Telegram& msg)
 	case Msg_GunshotSound: 
 	{
 		sender = static_cast<Raven_Bot*>(msg.ExtraInfo);
-		if (!sender->HasTag(teammate_bot) || !m_pTeamManager->isTeammate(sender)) {
+		if (!m_pTeamManager->isTeammate(sender)) {
 			//add the source of this sound to the bot's percepts
 			GetSensoryMem()->UpdateWithSoundSource((Raven_Bot*)msg.ExtraInfo);
 		}
