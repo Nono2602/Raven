@@ -46,7 +46,8 @@ private:
   std::list<Raven_Bot*>				m_Bots;
 
   //the user can create a Raven bots team that will target an enemy bot
-  Raven_TeamManager*				m_Team;
+  Raven_TeamManager*				m_TeamA;
+  Raven_TeamManager*				m_TeamB;
 
   //the user may select a bot to control manually. This is a pointer to that
   //bot

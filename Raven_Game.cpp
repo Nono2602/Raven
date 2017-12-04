@@ -45,7 +45,8 @@ Raven_Game::Raven_Game():m_pSelectedBot(NULL),
                          m_pMap(NULL),
                          m_pPathManager(NULL),
                          m_pGraveMarkers(NULL),
-						 m_Team(NULL),
+						 m_TeamA(NULL),
+						 m_TeamB(NULL),
 						 m_thereIsAHuman(false)
 {
   //load in the default map
@@ -59,7 +60,8 @@ Raven_Game::~Raven_Game()
 {
   Clear();
   delete m_pPathManager;
-  delete m_Team;
+  delete m_TeamA;
+  delete m_TeamB;
   delete m_pMap;
   
   delete m_pGraveMarkers;
@@ -105,9 +107,13 @@ void Raven_Game::Clear()
 
   m_pSelectedBot = NULL;
 
-  if (m_Team)
+  if (m_TeamA)
   {
-	  m_Team->Clear();
+	  m_TeamA->Clear();
+  }
+  if (m_TeamB)
+  {
+	  m_TeamB->Clear();
   }
 }
 // bool test = true;
@@ -161,9 +167,13 @@ void Raven_Game::Update()
   }
   
   //update the team
-  if (!m_Team->isEmpty())
+  if (!m_TeamA->isEmpty())
   {
-	  m_Team->Update();
+	  m_TeamA->Update();
+  }
+  if (!m_TeamB->isEmpty())
+  {
+	  m_TeamB->Update();
   }
 
   //update the bots
@@ -223,9 +233,9 @@ void Raven_Game::Update()
   //one
   if (m_bRemoveATeammate)
   {
-	  if (!m_Bots.empty() && !m_Team->isEmpty())
+	  if (!m_Bots.empty() && !m_TeamA->isEmpty())
 	  {
-		  Raven_Bot* pTeammate = m_Team->RemoveATeammate();
+		  Raven_Bot* pTeammate = m_TeamA->RemoveATeammate();
 		  if (pTeammate == m_pSelectedBot) {
 			  m_pSelectedBot = 0;
 			  m_thereIsAHuman = false;
@@ -252,8 +262,8 @@ void Raven_Game::Update()
 	  m_bRemoveATeammate = false;
   }
   if (m_bRemoveALeader) {
-	  Raven_Leader* pLeader = m_Team->GetLeader();
-	  m_Team->SetLeader(nullptr);
+	  Raven_Leader* pLeader = m_TeamB->GetLeader();
+	  m_TeamB->SetLeader(nullptr);
 	  if (pLeader == m_pSelectedBot) {
 		  m_pSelectedBot = 0;
 		  m_thereIsAHuman = false;
@@ -371,14 +381,14 @@ void Raven_Game::AddTeammates(unsigned int NumBotsToAdd)
 	{
 		//create a bot. (its position is irrelevant at this point because it will
 		//not be rendered until it is spawned)
-		Raven_Teammate* rb = new Raven_Teammate(this, Vector2D(), m_Team);
+		Raven_Teammate* rb = new Raven_Teammate(this, Vector2D(), m_TeamA);
 
 		//switch the default steering behaviors on
 		rb->GetSteering()->WallAvoidanceOn();
 		rb->GetSteering()->SeparationOn();
 
 		m_Bots.push_back(rb);
-		m_Team->AddTeammate(rb);
+		m_TeamA->AddTeammate(rb);
 
 		//register the bot with the entity manager
 		EntityMgr->RegisterEntity(rb);
@@ -392,17 +402,17 @@ void Raven_Game::AddTeammates(unsigned int NumBotsToAdd)
 
 void Raven_Game::AddOrRemoveLeader()
 {
-	if (m_Team->GetLeader() == nullptr) {
+	if (m_TeamB->GetLeader() == nullptr) {
 		//create a leader. (its position is irrelevant at this point because it will
 		//not be rendered until it is spawned)
-		Raven_Leader * rb = new Raven_Leader(this, Vector2D(), m_Team);
+		Raven_Leader * rb = new Raven_Leader(this, Vector2D(), m_TeamB);
 
 		//switch the default steering behaviors on
 		rb->GetSteering()->WallAvoidanceOn();
 		rb->GetSteering()->SeparationOn();
 
 		m_Bots.push_back(rb);
-		m_Team->SetLeader(rb);
+		m_TeamB->SetLeader(rb);
 		
 		//register the bot with the entity manager
 		EntityMgr->RegisterEntity(rb);
@@ -423,14 +433,14 @@ void Raven_Game::AddFollowers(unsigned int NumBotsToAdd)
 	{
 		//create a bot. (its position is irrelevant at this point because it will
 		//not be rendered until it is spawned)
-		Raven_Follower* rb = new Raven_Follower(this, Vector2D(), m_Team);
+		Raven_Follower* rb = new Raven_Follower(this, Vector2D(), m_TeamB);
 
 		//switch the default steering behaviors on
 		rb->GetSteering()->WallAvoidanceOn();
 		rb->GetSteering()->SeparationOn();
 
 		m_Bots.push_back(rb);
-		m_Team->AddTeammate(rb);
+		m_TeamB->AddTeammate(rb);
 
 		//register the bot with the entity manager
 		EntityMgr->RegisterEntity(rb);
@@ -575,13 +585,15 @@ bool Raven_Game::LoadMap(const std::string& filename)
   delete m_pMap;
   delete m_pGraveMarkers;
   delete m_pPathManager;
-  delete m_Team;
+  delete m_TeamB;
+  delete m_TeamB;
 
   //in with the new
   m_pGraveMarkers = new GraveMarkers(script->GetDouble("GraveLifetime"));
   m_pPathManager = new PathManager<Raven_PathPlanner>(script->GetInt("MaxSearchCyclesPerUpdateStep"));
   m_pMap = new Raven_Map();
-  m_Team = new Raven_TeamManager(Vector2D());
+  m_TeamA = new Raven_TeamManager(Vector2D());
+  m_TeamB = new Raven_TeamManager(Vector2D());
 
   //make sure the entity manager is reset
   EntityMgr->Reset();
