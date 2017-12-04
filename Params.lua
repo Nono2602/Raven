@@ -51,6 +51,9 @@ Bot_TriggerUpdateFreq = 8
 --the number of times a second a bot updates its vision
 Bot_VisionUpdateFreq = 4
 
+--the number of times a second a teammate bot updates its partner
+Teammate_PartnerUpdateFreq = 2
+
 --note that a frequency of -1 will disable the feature and a frequency of zero
 --will ensure the feature is updated every bot update
 

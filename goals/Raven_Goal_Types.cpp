@@ -87,6 +87,9 @@ std::string GoalTypeToString::Convert(int gt)
 
 	  return "regroup";
 
+  case goal_obey_leader:
+	  return "obey_leader";
+
   default:
 
     return "UNKNOWN GOAL TYPE!";

@@ -15,7 +15,7 @@ class Raven_Teammate;
 class Goal_ThinkAsTeammate : public Goal_Think
 {
 public:
-	Goal_ThinkAsTeammate(Raven_Teammate* pBot);
+	Goal_ThinkAsTeammate(Raven_Teammate* pBot, bool bShouldInit = true);
 	virtual ~Goal_ThinkAsTeammate();
 
 	//top level goal type

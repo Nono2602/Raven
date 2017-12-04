@@ -50,8 +50,9 @@ public:
 	void		AddTeammate(Raven_Teammate* pBot);
 	Raven_Bot*	RemoveATeammate();
 
-	void		SetLeader(Raven_Leader* pBot) { m_pLeader = pBot; }
+	void			SetLeader(Raven_Leader* pBot) { m_pLeader = pBot; }
 	Raven_Leader*	GetLeader() const { return m_pLeader; }
+	bool			HasLeader() const { return m_pLeader != NULL;  }
 
 	bool		isEmpty() { return m_Teammates.empty(); }
 
@@ -60,18 +61,15 @@ public:
 	void		Update();
 	void		Clear();
 
-	void		SearchNewTeamTarget();
-	void		SearchNewTeamTargetByLeader();
-	void		UpdateTeammates();
 	Raven_Bot*	GetTeamTarget()const { return m_pTarget; }
-	void		ClearTarget();
 
 	bool		isWeaponAvailable()const { return m_WeaponAvailable; }
 	Vector2D	GetWeaponSpawn()const { return m_WeaponSpawn; }
 
 	int					TeamSize() const;
-	Vector2D			CenterOfMass(Raven_Teammate * pBot) const;
-	Raven_Teammate*		ClosestToLocation(const Vector2D& location, Raven_Teammate* pBot) const;
+	
+	void	SendMessageToAllTeammates(Raven_Teammate* sender, double delay, int msg, void* AdditionalInfo = NULL);
+	void	SendMessageToLeader(Raven_Teammate* sender, double delay, int msg, void* AdditionalInfo = NULL);
 };
 
 #endif

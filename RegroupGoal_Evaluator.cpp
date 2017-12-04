@@ -19,11 +19,11 @@ RegroupGoal_Evaluator::~RegroupGoal_Evaluator()
 double RegroupGoal_Evaluator::CalculateDesirability(Raven_Bot * pBot)
 {
 	Raven_Teammate * pTarget = static_cast<Raven_Teammate *>(pBot);
-	if (pTarget->TeamSize() <= 1) {
+	if (pTarget->TeamSize() <= 1 || !pTarget->HasPartner()) {
 		return 0.0;
 	}
-	double distance = pTarget->GetRegroupLocation().Distance(pTarget->Pos());
-
+	//double distance = pTarget->GetRegroupLocation().Distance(pTarget->Pos());
+	double distance = pTarget->DistanceToPartner();
 	const double distanceMin = 50.0;
 	const double distanceMax = 100.0;
 
@@ -33,7 +33,7 @@ double RegroupGoal_Evaluator::CalculateDesirability(Raven_Bot * pBot)
 	else // distance > distanceMin
 	{ 
 		//value used to tweak the desirability
-		const double Tweaker = 0.7;
+		const double Tweaker = 0.8;
 
 		double Desirability = Tweaker * (distance - distanceMin) / (distanceMax - distanceMin);
 

@@ -24,11 +24,11 @@
 
 //-------------------------- ctor ---------------------------------------------
 Raven_Bot::Raven_Bot(Raven_Game* world,Vector2D pos):
-	Raven_Bot(world, pos, new Raven_Steering(world, this), new Goal_Think(this))
+	Raven_Bot(world, pos, new Raven_Steering(world, this), new Goal_Think(this), new Raven_SensoryMemory(this, script->GetDouble("Bot_MemorySpan")))
 {
 }
 
-Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos, Raven_Steering * steering, Goal_Think * goal) :
+Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos, Raven_Steering * steering, Goal_Think * goal, Raven_SensoryMemory* memory) :
 
 	MovingEntity(pos,
 		script->GetDouble("Bot_Scale"),
@@ -85,7 +85,7 @@ Raven_Bot::Raven_Bot(Raven_Game * world, Vector2D pos, Raven_Steering * steering
 		script->GetDouble("Bot_AimAccuracy"),
 		script->GetDouble("Bot_AimPersistance"));
 
-	m_pSensoryMem = new Raven_SensoryMemory(this, script->GetDouble("Bot_MemorySpan"));
+	m_pSensoryMem = memory;
 }
 
 //-------------------------------- dtor ---------------------------------------
@@ -475,6 +475,11 @@ bool Raven_Bot::canStepBackward(Vector2D& PositionOfStep)const
   PositionOfStep = Pos() - Facing() * StepDistance - Facing() * BRadius();
 
   return canWalkTo(PositionOfStep);
+}
+
+bool Raven_Bot::HasTag(int tag) const
+{
+	return tag == standard_bot;
 }
 
 //--------------------------- Render -------------------------------------

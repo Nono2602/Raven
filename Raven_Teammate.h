@@ -23,14 +23,19 @@
 #include "Goal_ThinkAsTeammate.h"
 
 class Raven_TeamManager;
+class Regulator;
 
 class Raven_Teammate : public Raven_Bot
 {
 protected:
 	Raven_TeamManager*	m_pTeamManager;
 
-	Vector2D m_regroupLocation;
-	void UpdateRegroupLocation();
+	Raven_Teammate* m_pPartner;
+
+	Vector2D m_savedPosition;
+
+	//A regulator object limits the update frequency of a specific AI component
+	Regulator*                         m_pPartnerUpdateRegulator;
 
 public:
 	Raven_Teammate(Raven_Game* world, Vector2D pos, Raven_TeamManager* teammanager);
@@ -44,13 +49,18 @@ public:
 	virtual void	Update() override;
 	virtual bool	HandleMessage(const Telegram& msg) override;
 
-	Raven_Bot*		SearchNewTarget();
-	void			UpdateTeamTarget(Raven_Bot* newtarget);
+	void			UpdatePartner();
+	bool			HasPartner();
+	double			DistanceToPartner();
+	Raven_Teammate* GetPartner() { return m_pPartner; }
 
 	virtual Goal_ThinkAsTeammate* const       GetBrain() override;
+	Raven_TeamManager*                        GetTeam() const;
+	bool                                      HasLeader() const;
 
-	Vector2D GetRegroupLocation();
 	int TeamSize();
+
+	virtual bool                       HasTag(int tag) const override;
 };
 
 #endif

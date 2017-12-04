@@ -110,6 +110,7 @@ public:
   void AddBots(unsigned int NumBotsToAdd);
   void AddTeammates(unsigned int NumBotsToAdd);
   void AddOrRemoveLeader();
+  void AddFollowers(unsigned int NumBotsToAdd);
   void AddRocket(Raven_Bot* shooter, Vector2D target);
   void AddRailGunSlug(Raven_Bot* shooter, Vector2D target);
   void AddShotGunPellet(Raven_Bot* shooter, Vector2D target);

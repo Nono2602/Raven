@@ -60,11 +60,11 @@ public:
 
 class Raven_SensoryMemory
 {
-private:
+protected:
 
   typedef std::map<Raven_Bot*, MemoryRecord> MemoryMap;
 
-private:
+protected:
   
   //the owner of this instance
   Raven_Bot* m_pOwner;
@@ -97,7 +97,7 @@ public:
 
   //this method iterates through all the opponents in the game world and 
   //updates the records of those that are in the owner's FOV
-  void     UpdateVision();
+  virtual void     UpdateVision();
 
   bool     isOpponentShootable(Raven_Bot* pOpponent)const;
   bool     isOpponentWithinFOV(Raven_Bot* pOpponent)const;

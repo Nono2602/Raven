@@ -349,6 +349,13 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 			 g_pRaven->RemoveTeammate();
 			 break;
 
+		 case 'L':
+			 g_pRaven->AddOrRemoveLeader();
+			 break;
+
+		 case 'F':
+			 g_pRaven->AddFollowers(1);
+			 break;
 
          case VK_UP:
 

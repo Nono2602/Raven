@@ -15,7 +15,7 @@ private:
 
 	Vector2D  m_CurrentDestination;
 
-	//set to true when the destination for the exploration has been established
+	//set to true when the destination has been established
 	bool      m_bDestinationIsSet;
 
 public:

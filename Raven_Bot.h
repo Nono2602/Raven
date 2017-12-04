@@ -29,6 +29,13 @@ class Goal_Think;
 class Raven_WeaponSystem;
 class Raven_SensoryMemory;
 
+enum {
+	standard_bot,
+	teammate_bot,
+	leader_bot,
+	follower_bot
+};
+
 
 class Raven_Bot : public MovingEntity
 {
@@ -127,7 +134,7 @@ protected:
 public:
   
   Raven_Bot(Raven_Game* world, Vector2D pos);
-  Raven_Bot(Raven_Game* world, Vector2D pos, Raven_Steering* steering, Goal_Think* goal);
+  Raven_Bot(Raven_Game* world, Vector2D pos, Raven_Steering* steering, Goal_Think* goal, Raven_SensoryMemory* memory);
   virtual ~Raven_Bot();
 
   //the usual suspects
@@ -215,8 +222,7 @@ public:
   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
   Raven_WeaponSystem* const          GetWeaponSys()const{return m_pWeaponSys;}
   Raven_SensoryMemory* const         GetSensoryMem()const{return m_pSensoryMem;}
-
-
+  virtual bool                       HasTag(int tag) const;
 };
 
 

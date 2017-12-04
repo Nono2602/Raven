@@ -31,12 +31,12 @@ protected:
 
 public:
 
-  Goal_Think(Raven_Bot* pBot);
+  Goal_Think(Raven_Bot* pBot, bool bShouldInit = true);
   ~Goal_Think();
 
   //this method iterates through each goal evaluator and selects the one
   //that has the highest score as the current goal
-  void Arbitrate();
+  virtual void Arbitrate();
 
   //returns true if the given goal is not at the front of the subgoal list
   bool notPresent(unsigned int GoalType)const;

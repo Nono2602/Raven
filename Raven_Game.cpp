@@ -28,6 +28,7 @@
 #include "goals/Raven_Goal_Types.h"
 
 #include "Raven_Leader.h"
+#include "Raven_Follower.h"
 
 
 
@@ -413,6 +414,31 @@ void Raven_Game::AddOrRemoveLeader()
 	}
 	else {
 		m_bRemoveALeader = true;
+	}
+}
+
+void Raven_Game::AddFollowers(unsigned int NumBotsToAdd)
+{
+	while (NumBotsToAdd--)
+	{
+		//create a bot. (its position is irrelevant at this point because it will
+		//not be rendered until it is spawned)
+		Raven_Follower* rb = new Raven_Follower(this, Vector2D(), m_Team);
+
+		//switch the default steering behaviors on
+		rb->GetSteering()->WallAvoidanceOn();
+		rb->GetSteering()->SeparationOn();
+
+		m_Bots.push_back(rb);
+		m_Team->AddTeammate(rb);
+
+		//register the bot with the entity manager
+		EntityMgr->RegisterEntity(rb);
+
+
+#ifdef LOG_CREATIONAL_STUFF
+		debug_con << "Adding follower bot with ID " << ttos(rb->ID()) << "";
+#endif
 	}
 }
 

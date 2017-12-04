@@ -34,22 +34,29 @@ void Goal_Regroup::Activate()
 
 	if (m_pOwner->TeamSize() > 1) {
 
-		if (!m_bDestinationIsSet)
+		//if (!m_bDestinationIsSet)
+		//{
+		//	//grab the regroup location
+		//	m_CurrentDestination = m_pOwner->GetRegroupLocation();
+
+		//	m_bDestinationIsSet = true;
+		//}
+		
+		if (!m_bDestinationIsSet && m_pOwner->HasPartner()) 
 		{
-			//grab the regroup location
-			m_CurrentDestination = m_pOwner->GetRegroupLocation();
+			m_CurrentDestination = m_pOwner->GetPartner()->Pos();
 
 			m_bDestinationIsSet = true;
 		}
+		if (m_bDestinationIsSet) {
+			//and request a path to that position
+			m_pOwner->GetPathPlanner()->RequestPathToPosition(m_CurrentDestination);
 
-		//and request a path to that position
-		m_pOwner->GetPathPlanner()->RequestPathToPosition(m_CurrentDestination);
-
-		//the bot may have to wait a few update cycles before a path is calculated
-		//so for appearances sake it simple ARRIVES at the destination until a path
-		//has been found
-		AddSubgoal(reinterpret_cast<Goal<Raven_Teammate> *>(new Goal_SeekToPosition(m_pOwner, m_CurrentDestination)));
-
+			//the bot may have to wait a few update cycles before a path is calculated
+			//so for appearances sake it simple ARRIVES at the destination until a path
+			//has been found
+			AddSubgoal(reinterpret_cast<Goal<Raven_Teammate> *>(new Goal_SeekToPosition(m_pOwner, m_CurrentDestination)));
+		}
 	}
 }
 
