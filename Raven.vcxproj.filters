@@ -313,13 +313,13 @@
     <ClCompile Include="Goal_ThinkAsFollower.cpp">
       <Filter>AI\goals\composite</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Follower.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSensoryMemory.cpp">
+    <ClCompile Include="Raven_TeammateSensoryMemory.cpp">
       <Filter>AI\Sensory Memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ObeyLeader.cpp">
+    <ClCompile Include="Raven_Follower.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Goal_ObeyLeader.cpp">
       <Filter>AI\goals\composite</Filter>
     </ClCompile>
   </ItemGroup>
@@ -699,13 +699,13 @@
     <ClInclude Include="Goal_ThinkAsFollower.h">
       <Filter>AI\goals\composite</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Follower.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSensoryMemory.h">
+    <ClInclude Include="Raven_TeammateSensoryMemory.h">
       <Filter>AI\Sensory Memory</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ObeyLeader.h">
+    <ClInclude Include="Raven_Follower.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Goal_ObeyLeader.h">
       <Filter>AI\goals\composite</Filter>
     </ClInclude>
   </ItemGroup>

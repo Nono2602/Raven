@@ -218,9 +218,9 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ObeyLeader.cpp" />
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Follower.cpp" />
-    <ClCompile Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSensoryMemory.cpp" />
+    <ClCompile Include="Goal_ObeyLeader.cpp" />
+    <ClCompile Include="Raven_Follower.cpp" />
+    <ClCompile Include="Raven_TeammateSensoryMemory.cpp" />
     <ClCompile Include="Goal_ThinkAsFollower.cpp" />
     <ClCompile Include="armory\Grenade.cpp" />
     <ClCompile Include="armory\Weapon_Grenade.cpp" />
@@ -551,9 +551,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Goal_ObeyLeader.h" />
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_Follower.h" />
-    <ClInclude Include="..\..\..\..\1 - Trimestre d%27Automne\8IAR125 - IA pour le jeu video\Projet\Raven\Raven_TeammateSensoryMemory.h" />
+    <ClInclude Include="Goal_ObeyLeader.h" />
+    <ClInclude Include="Raven_Follower.h" />
+    <ClInclude Include="Raven_TeammateSensoryMemory.h" />
     <ClInclude Include="Goal_ThinkAsFollower.h" />
     <ClInclude Include="armory\Grenade.h" />
     <ClInclude Include="armory\Weapon_Grenade.h" />
