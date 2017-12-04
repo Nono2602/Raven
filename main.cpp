@@ -16,14 +16,9 @@
 #include "lua/Raven_Scriptor.h"
 #include <iostream>
 #include <fstream>
-#include "NeuralNetwork\Net.h"
-#include "NeuralNetwork\Neuron.h"
 
 using namespace std;
 
-bool once = false;
-vector<unsigned> topology;
-vector<double> inputVals;
 LPARAM positionMouse;
 
 
@@ -41,244 +36,6 @@ char* g_szWindowClassName = "MyWindowClass";
 
 
 Raven_Game* g_pRaven;
-
-//numero arme courante
-static int armeCourante = 0; //type_blaster
-//active or not the collection of data
-static bool getDataFromHuman = false;
-//active or not the neuralnetwork.
-//When activate, a human can move a character, but let the neuralk shoot for him
-static bool NeuronIsActivated = true;
-
-//permit to add an information lign in the data file
-bool firstTimeGetData = true;
-//human bot shoot
-static bool humanBotShot = false;
-
-
-//Matcher arme courante au type d'arme
-int WeaponType(int nbRoulette) {
-	int res = 0;
-	switch (nbRoulette) {
-	case 0: {
-		res = type_blaster;
-	}
-			break;
-	case 1: {
-		res = type_shotgun;
-	}
-			break;
-	case 2: {
-		res = type_rocket_launcher;
-	}
-			break;
-	case 3: {
-		res = type_rail_gun;
-	}
-	case 4:
-		res = type_grenade;
-		break;
-	}
-	return res;
-}
-
-void choiceWeaponScrollUp(int& armeCourante, int nbArme) {
-	if (armeCourante >= nbArme) {
-		armeCourante = 0;
-	}
-	else {
-		armeCourante++;
-	}
-
-	int i = 0; //permet de savoir si on a fait le tour des armes possibles
-	while (g_pRaven->PossessedBot()->isWeaponChanged() != true && i != nbArme) { //permet d'eviter de faire trop de molette pour passer de l'arme 1 à 3 si le bot n'a pas l'arme 2
-		g_pRaven->ChangeWeaponOfPossessedBot(WeaponType(armeCourante));
-		if (armeCourante == nbArme) {
-			armeCourante = 0;
-		}
-		else {
-			armeCourante++;
-		}
-		i++;
-	}
-	if (armeCourante == 0) {
-		armeCourante = nbArme;
-	}
-	else {
-		armeCourante--;
-	}
-}
-
-void choiceWeaponScrollDown(int& armeCourante, int nbArme) {
-	if (armeCourante <= 0) {
-		armeCourante = nbArme;
-	}
-	else {
-		armeCourante--;
-	}
-
-	int i = 0; //permet de savoir si on a fait le tour des armes possibles
-	while (g_pRaven->PossessedBot()->isWeaponChanged() != true && i != nbArme) { //permet d'eviter de faire trop de molette pour passer de l'arme 1 à 3 si le bot n'a pas l'arme 2
-		g_pRaven->ChangeWeaponOfPossessedBot(WeaponType(armeCourante));
-		if (armeCourante == 0) {
-			armeCourante = nbArme;
-		}
-		else {
-			armeCourante--;
-		}
-		i++;
-	}
-	if (armeCourante == nbArme) {
-		armeCourante = 0;
-	}
-	else {
-		armeCourante++;
-	}
-}
-
-void getFrameInfo(vector<double> *inputVals){
-	
-	inputVals->clear();
-		int lifeHumanBot = 100;
-		int lifeOtherBot = 100;
-		int otherBotVisible = 0; //true if 1, 0 else
-		int isHumanBotShot = 0; //true if 1, 0 else
-		double distance = 0;
-		int ammunition = 20; //The blaster ammo is 0 because we can shoot all the time.
-
-		double posBotX;
-		double posBotY;
-
-		double posOtherBotX;
-		double posOtherBotY;
-
-		//get the life of the other bot and the human bot
-		std::list<Raven_Bot*> bots = g_pRaven->GetAllBots();
-		std::list<Raven_Bot*>::const_iterator curBot = bots.begin();
-		for (curBot; curBot != bots.end(); ++curBot) {
-			if (*curBot == g_pRaven->PossessedBot()) {
-				lifeHumanBot = (*curBot)->Health();
-				posBotX = (*curBot)->Pos().x;
-				posBotY = (*curBot)->Pos().y;
-			}
-			else {
-				lifeOtherBot = (*curBot)->Health();
-				//get the distance between the 2 bots
-				distance = g_pRaven->PossessedBot()->isPathPlanner()->GetCostToNode((*curBot)->isPathPlanner()->GetClosestNodeToPosition((*curBot)->Pos()));
-				posOtherBotX = (*curBot)->Pos().x;
-				posOtherBotY = (*curBot)->Pos().y;
-
-			}
-		}
-		//knows if the other bot is visible or not
-		std::vector<Raven_Bot*> botsVisible = g_pRaven->GetAllBotsInFOV(g_pRaven->PossessedBot());
-		if (botsVisible.empty()) otherBotVisible = 0;
-		else otherBotVisible = 1;
-
-		//ammunition quantity
-		if (armeCourante != 0) { //si l'arme n'est pas un blaster (sinon il en affiche 0 car on peut tirer a l'infini car le nb de ammo n'est pas pris en compte
-			ammunition = g_pRaven->PossessedBot()->GetWeaponSys()->GetCurrentWeapon()->NumRoundsRemaining();
-		}
-
-		//get if the human bot shoot
-		if (humanBotShot) isHumanBotShot = 1;
-		else 0;
-
-		//get the direction where the bot is facing
-		Vector2D humanBotDirectionFacing = g_pRaven->PossessedBot()->Facing();
-		int xFacing, yFacing;
-		xFacing = 100 * humanBotDirectionFacing.x;
-		humanBotDirectionFacing.x = (double)xFacing / 100;
-		yFacing = 100 * humanBotDirectionFacing.y;
-		humanBotDirectionFacing.y = (double)yFacing / 100;
-
-		inputVals->push_back(lifeHumanBot);
-		inputVals->push_back(lifeOtherBot);
-		inputVals->push_back(otherBotVisible);
-		inputVals->push_back(distance);
-		inputVals->push_back(humanBotDirectionFacing.x);
-		inputVals->push_back(humanBotDirectionFacing.y);
-		inputVals->push_back(posBotX);
-		inputVals->push_back(posBotY);
-		inputVals->push_back(posOtherBotX);
-		inputVals->push_back(posOtherBotY);
-		//inputVals->push_back(WeaponType(armeCourante));
-		inputVals->push_back(ammunition);
-
-		
-		humanBotShot = false;
-}
-
-
-
-/*Get data for the neural network, only work with 2 bots on the map*/
-void getDataFromHumanBot() {
-	ofstream fichier("dataHumanBot.txt", ios::out | ios::app);
-	if (fichier)
-	{
-		if (firstTimeGetData) {
-			fichier << "HealthHumanBot HealthOtherBot OtherBotVisible Distance HumanBotDirectionFacingX HumanBotDirectionFacingY HumanPosX HumanPosY BotPosX BotPosY Weapon Ammo HumanBotShot" << endl;
-			firstTimeGetData = false;
-		}
-		int lifeHumanBot = 100;
-		int lifeOtherBot = 100; 
-		int otherBotVisible = 0; //true if 1, 0 else
-		int isHumanBotShot = 0; //true if 1, 0 else
-		double distance = 0;
-		int ammunition = 20; //The blaster ammo is 0 because we can shoot all the time.
-
-		double posBotX;
-		double posBotY;
-
-		double posOtherBotX;
-		double posOtherBotY;
-
-	//get the life of the other bot and the human bot
-		std::list<Raven_Bot*> bots = g_pRaven->GetAllBots();
-		std::list<Raven_Bot*>::const_iterator curBot = bots.begin();
-		for (curBot; curBot != bots.end(); ++curBot) {
-			if (*curBot == g_pRaven->PossessedBot()) {
-				lifeHumanBot = (*curBot)->Health();
-				posBotX = (*curBot)->Pos().x;
-				posBotY = (*curBot)->Pos().y;
-			}
-			else {
-				lifeOtherBot = (*curBot)->Health();
-				//get the distance between the 2 bots
-				distance = g_pRaven->PossessedBot()->isPathPlanner()->GetCostToNode((*curBot)->isPathPlanner()->GetClosestNodeToPosition((*curBot)->Pos()));
-				posOtherBotX = (*curBot)->Pos().x;
-				posOtherBotY = (*curBot)->Pos().y;
-
-			}
-		}
-	//knows if the other bot is visible or not
-		std::vector<Raven_Bot*> botsVisible = g_pRaven->GetAllBotsInFOV(g_pRaven->PossessedBot());
-		if (botsVisible.empty()) otherBotVisible = 0;
-		else otherBotVisible = 1;
-
-	//ammunition quantity
-		if (armeCourante != 0) { //si l'arme n'est pas un blaster (sinon il en affiche 0 car on peut tirer a l'infini car le nb de ammo n'est pas pris en compte
-			ammunition = g_pRaven->PossessedBot()->GetWeaponSys()->GetCurrentWeapon()->NumRoundsRemaining();
-		} 
-
-	//get if the human bot shoot
-		if (humanBotShot) isHumanBotShot = 1;
-		else 0;
-
-	//get the direction where the bot is facing
-		Vector2D humanBotDirectionFacing = g_pRaven->PossessedBot()->Facing();
-		int xFacing, yFacing;
-		xFacing = 100 * humanBotDirectionFacing.x;
-		humanBotDirectionFacing.x = (double)xFacing / 100;
-		yFacing = 100 * humanBotDirectionFacing.y;
-		humanBotDirectionFacing.y = (double)yFacing / 100;
-		
-		fichier << lifeHumanBot << " " << lifeOtherBot << " " << otherBotVisible << " " << distance << " " << humanBotDirectionFacing << " " << posBotX << " " << posBotY << " " << posOtherBotX << " " << posOtherBotY << WeaponType(armeCourante) << " " << ammunition << " " << isHumanBotShot  << endl;
-		humanBotShot = false;
-	}
-
-	else cerr << "Can't open the file !" << endl;
-}
 
 
 //---------------------------- WindowProc ---------------------------------
@@ -387,47 +144,8 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 
            break;
 
-         case '1':
-			if (!g_pRaven->isThereAHuman()) {
-				 g_pRaven->ChangeWeaponOfPossessedBot(type_blaster);
-			}
-
-           break;
-
-         case '2':
-			 if (!g_pRaven->isThereAHuman()) {
-				 g_pRaven->ChangeWeaponOfPossessedBot(type_shotgun);
-			 }
-
-           break;
-           
-         case '3':
-			 if (!g_pRaven->isThereAHuman()) {
-				 g_pRaven->ChangeWeaponOfPossessedBot(type_rocket_launcher);
-			 }
-
-           break;
-
-         case '4':
-			 if (!g_pRaven->isThereAHuman()) {
-				 g_pRaven->ChangeWeaponOfPossessedBot(type_rail_gun);
-			 }
-
-           break;
-
-		 case '5':
-			 if (!g_pRaven->isThereAHuman())
-				 g_pRaven->ChangeWeaponOfPossessedBot(type_grenade);
-		   break;
-
-         case 'X':
-			 if (!g_pRaven->isThereAHuman()) {
-				 g_pRaven->ExorciseAnyPossessedBot();
-			 }
-           break;
-
 		 case 'T':
-			 g_pRaven->AddTeammatesA(1);
+			 g_pRaven->AddFollowers(1);;
 			 break;
 		
 		 case 'Y':
@@ -435,15 +153,11 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 			 break;
 
 		 case 'U':
-			 g_pRaven->AddTeammatesB(1);
+			 g_pRaven->AddTeammates(1);
 			 break;
 
 		 case 'I':
 			 g_pRaven->RemoveTeammateB();
-
-		 case 'F':
-			 g_pRaven->AddFollowers(1);
-			 break;
 
          case VK_UP:
 
@@ -463,17 +177,8 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
     case WM_LBUTTONDOWN: //tire vers l'endroit ou se trouve le curseur de la souris
     {
 		 g_pRaven->ClickLeftMouseButton(MAKEPOINTS(lParam));
-		 humanBotShot = true;
     }
     
-    break;
-
-   case WM_RBUTTONDOWN: //se deplace a l'endroit ou se trouve le curseur de la souris
-   {
-	   if (!g_pRaven->isThereAHuman()) {
-		   g_pRaven->ClickRightMouseButton(MAKEPOINTS(lParam));
-		}
-    }
     break;
 
    case WM_KEYDOWN:
@@ -481,18 +186,6 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 	   
 	   break;
    }
-
-   case WM_MOUSEWHEEL: //change les armes avec la molette de la souris
-   {	if (g_pRaven->PossessedBot()) {
-			g_pRaven->PossessedBot()->SetWeaponChanged(false);
-			if ((short)HIWORD(wParam)/120 > 0) { //si la roulette est montee
-				choiceWeaponScrollUp(armeCourante,nbArme);
-			} else if ((short)HIWORD(wParam)/120 < 0) { //si la roulette est descendue
-				choiceWeaponScrollDown(armeCourante, nbArme);
-			}
-		}  
-   }
-   break;
 
     case WM_COMMAND:
     {
@@ -638,26 +331,7 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 
     
     case WM_PAINT:
-      {
-		if (g_pRaven->isThereAHuman()) {
-			Vector2D position = Vector2D(0, 0);
-			if (GetAsyncKeyState('Z')) {
-				position += Vector2D(0, -3);
-			}
-			if (GetAsyncKeyState('Q')) {
-				position += Vector2D(-3, 0);
-			}
-			if (GetAsyncKeyState('S')) {
-				position += Vector2D(0, 3);
-			}
-			if (GetAsyncKeyState('D')) {
-				position += Vector2D(3, 0);
-			}
-			if (position != Vector2D(0, 0)) {
-				g_pRaven->ChangePositionHumanBot(position);
-			}
-		}
-		      
+      {      
          PAINTSTRUCT ps;
           
          BeginPaint (hwnd, &ps);
@@ -814,15 +488,15 @@ int WINAPI WinMain (HINSTANCE hInstance,
     //make the window visible
     ShowWindow (hWnd, iCmdShow);
     UpdateWindow (hWnd);
-   
-    //create a timer
-    PrecisionTimer timer(FrameRate);
 
-    //start the timer
-    timer.Start();
+	//create a timer
+	PrecisionTimer timer(FrameRate);
 
-    //enter the message loop
-    bool bDone = false;
+	//start the timer
+	timer.Start();
+
+	//enter the message loop
+	bool bDone = false;
 
 	//initialize the time when we peak up information avec data
 	int currentTime = 0;
@@ -852,42 +526,12 @@ int WINAPI WinMain (HINSTANCE hInstance,
 			//render 
 			RedrawWindow(hWnd);
 		}
-		//Get the data for the neural network
-		if (getDataFromHuman && currentTime == timeMax) {
-			getDataFromHumanBot();
-			currentTime = 0;
-		}
-		else currentTime++;
-		//if (!once) {
-		if ( NeuronIsActivated && currentTime == timeMax) {
-			topology.clear();
-			topology.push_back(11);
-			topology.push_back(4);
-			topology.push_back(4);
-			topology.push_back(4);
-			topology.push_back(1);
-			Net myNet(topology);
-			
-			myNet.InitializeWithFile();
-			
-		//}
-			getFrameInfo(&inputVals);
-			myNet.FeedForward(inputVals);
-			vector<double> res;
-			myNet.GetResult(res);
-			if (res.back() > 0.9) {
-				g_pRaven->ClickLeftMouseButton(MAKEPOINTS(Vector2D(27,345)));
-				humanBotShot = true;
-			}
-			else {
-				humanBotShot = false;
-			}
-		}
-		else currentTime++;
-      //give the OS a little time
-      Sleep(2);
-     					
-    }//end while
+		
+		//give the OS a little time
+		Sleep(2);
+
+	}//end while
+
 
   }//end try block
 

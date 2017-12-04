@@ -52,9 +52,6 @@ private:
   //the user may select a bot to control manually. This is a pointer to that
   //bot
   Raven_Bot*						m_pSelectedBot;
-
-  //check if there is a human in the game
-  bool								m_thereIsAHuman;
   
   //this list contains any active projectiles (slugs, rockets,
   //shotgun pellets, etc)
@@ -105,13 +102,11 @@ public:
   //loads an environment from a file
   bool LoadMap(const std::string& FileName); 
 
-  void CreateHumanBot(Raven_Bot* rb);
   void AddBots(unsigned int NumBotsToAdd);
-  void AddTeammatesA(unsigned int NumBotsToAdd);
-  void AddTeammatesB(unsigned int NumBotsToAdd);
+  void AddTeammates(unsigned int NumBotsToAdd);
   void TeammateARemoval();
   void TeammateBRemoval();
-  void AddLeader();
+  void AddLeaders();
   void AddFollowers(unsigned int NumBotsToAdd);
   void AddRocket(Raven_Bot* shooter, Vector2D target);
   void AddRailGunSlug(Raven_Bot* shooter, Vector2D target);
@@ -123,8 +118,6 @@ public:
   void RemoveBot();
   void RemoveTeammateA();
   void RemoveTeammateB();
-
-  bool         isThereAHuman()const { return m_thereIsAHuman; }
 
   //returns true if a bot of size BoundingRadius cannot move from A to B
   //without bumping into world geometry
@@ -157,30 +150,10 @@ public:
 
 
   void        TogglePause(){m_bPaused = !m_bPaused;}
-  
-  //this method is called when the user clicks the right mouse button.
-  //The method checks to see if a bot is beneath the cursor. If so, the bot
-  //is recorded as selected.If the cursor is not over a bot then any selected
-  // bot/s will attempt to move to that position.
-  void        ClickRightMouseButton(POINTS p);
-
-  //void ChangePositionHumanBot();
 
   //this method is called when the user clicks the left mouse button. If there
   //is a possessed bot, this fires the weapon, else does nothing
   void        ClickLeftMouseButton(POINTS p);
-
-  void		  ChangePositionHumanBot(Vector2D position);
-
-  //when called will release any possessed bot from user control
-  void        ExorciseAnyPossessedBot();
- 
-  //if a bot is possessed the keyboard is polled for user input and any 
-  //relevant bot methods are called appropriately
-  void        GetPlayerInput()const;
-  Raven_Bot*  PossessedBot()const{return m_pSelectedBot;}
-  void        ChangeWeaponOfPossessedBot(unsigned int weapon)const;
-
   
   const Raven_Map* const                   GetMap()const{return m_pMap;}
   Raven_Map* const                         GetMap(){return m_pMap;}

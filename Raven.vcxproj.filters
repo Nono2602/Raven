@@ -310,9 +310,6 @@
     <ClCompile Include="Raven_TeammateSteeringBehaviors.cpp">
       <Filter>AI\Movement &amp; Navigation</Filter>
     </ClCompile>
-    <ClCompile Include="Goal_ThinkAsFollower.cpp">
-      <Filter>AI\goals\composite</Filter>
-    </ClCompile>
     <ClCompile Include="Raven_TeammateSensoryMemory.cpp">
       <Filter>AI\Sensory Memory</Filter>
     </ClCompile>
@@ -320,6 +317,9 @@
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Goal_ObeyLeader.cpp">
+      <Filter>AI\goals\composite</Filter>
+    </ClCompile>
+    <ClCompile Include="Goal_ThinkAsFollower.cpp">
       <Filter>AI\goals\composite</Filter>
     </ClCompile>
     <ClCompile Include="ObeyLeaderGoal_Evaluator.cpp">
@@ -699,9 +699,6 @@
     <ClInclude Include="Raven_TeammateSteeringBehaviors.h">
       <Filter>AI\Movement &amp; Navigation</Filter>
     </ClInclude>
-    <ClInclude Include="Goal_ThinkAsFollower.h">
-      <Filter>AI\goals\composite</Filter>
-    </ClInclude>
     <ClInclude Include="Raven_TeammateSensoryMemory.h">
       <Filter>AI\Sensory Memory</Filter>
     </ClInclude>
@@ -709,6 +706,9 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Goal_ObeyLeader.h">
+      <Filter>AI\goals\composite</Filter>
+    </ClInclude>
+    <ClInclude Include="Goal_ThinkAsFollower.h">
       <Filter>AI\goals\composite</Filter>
     </ClInclude>
     <ClInclude Include="ObeyLeaderGoal_Evaluator.h">
