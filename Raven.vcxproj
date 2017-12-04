@@ -222,6 +222,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ObeyLeaderGoal_Evaluator.cpp" />
     <ClCompile Include="Goal_ObeyLeader.cpp" />
     <ClCompile Include="Raven_Follower.cpp" />
     <ClCompile Include="Raven_TeammateSensoryMemory.cpp" />
@@ -555,6 +556,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ObeyLeaderGoal_Evaluator.h" />
     <ClInclude Include="Goal_ObeyLeader.h" />
     <ClInclude Include="Raven_Follower.h" />
     <ClInclude Include="Raven_TeammateSensoryMemory.h" />

@@ -14,6 +14,9 @@
 //-----------------------------------------------------------------------------
 #include "Raven_Teammate.h"
 #include "Raven_Leader.h"
+#include "Goal_ThinkAsFollower.h"
+
+class Goal_ThinkAsFollower;
 
 class Raven_Follower : public Raven_Teammate
 {
@@ -24,6 +27,8 @@ public:
 	//bots shouldn't be copied, only created or respawned
 	Raven_Follower(const Raven_Follower&);
 	Raven_Follower& operator=(const Raven_Follower&);
+
+	virtual Goal_ThinkAsFollower* const       GetBrain() override;
 
 	virtual bool                       HasTag(int tag) const override;
 };
