@@ -72,6 +72,7 @@ private:
 
   //if true a teammate bot is removed from the game
   bool								m_bRemoveATeammate;
+  bool								m_bRemoveAFollower;
 
   //if true a leader bot is removed from the game
   bool								m_bRemoveALeader;
@@ -121,6 +122,9 @@ public:
   //removes the last bot to be added
   void RemoveBot();
   void RemoveTeammate();
+  void RemoveFollower();
+  void TeammateRemoval();
+  void FollowerRemoval();
 
   bool         isThereAHuman()const { return m_thereIsAHuman; }
 

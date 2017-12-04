@@ -48,7 +48,7 @@ static int armeCourante = 0; //type_blaster
 static bool getDataFromHuman = false;
 //active or not the neuralnetwork.
 //When activate, a human can move a character, but let the neuralk shoot for him
-static bool NeuronIsActivated = true;
+static bool NeuronIsActivated = false;
 
 //permit to add an information lign in the data file
 bool firstTimeGetData = true;
@@ -441,6 +441,9 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
 		 case 'F':
 			 g_pRaven->AddFollowers(1);
 			 break;
+
+		 case 'G':
+			 g_pRaven->RemoveFollower();
 
          case VK_UP:
 

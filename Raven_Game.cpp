@@ -231,35 +231,28 @@ void Raven_Game::Update()
   }
   //if the user has requested that the number of teammates be decreased, remove
   //one
-  if (m_bRemoveATeammate)
+  if (m_bRemoveABot)
   {
-	  if (!m_Bots.empty() && !m_TeamA->isEmpty())
+	  if (RandBool())
 	  {
-		  Raven_Bot* pTeammate = m_TeamA->RemoveATeammate();
-		  if (pTeammate == m_pSelectedBot) {
-			  m_pSelectedBot = 0;
-			  m_thereIsAHuman = false;
-		  }
-
-		  NotifyAllBotsOfRemoval(pTeammate);
-
-		  bool TeammateRemoved = false;
-		  std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
-		  while (curBot != m_Bots.end() && !TeammateRemoved)
-		  {
-			  if ((*curBot)->ID() == pTeammate->ID())
-			  {
-				  delete *curBot;
-				  TeammateRemoved = true;
-			  }
-
-			  curBot++;
-		  }
-		  m_Bots.remove(pTeammate);
-		  pTeammate = 0;
+		  TeammateRemoval();
+	  }
+	  else
+	  {
+		  FollowerRemoval();
 	  }
 
-	  m_bRemoveATeammate = false;
+	  m_bRemoveABot = false;
+  }
+  //if the user has requested that the number of teammates be decreased, remove
+  //one
+  if (m_bRemoveATeammate)
+  {
+	  TeammateRemoval();
+  }
+  if (m_bRemoveAFollower)
+  {
+	  FollowerRemoval();
   }
   if (m_bRemoveALeader) {
 	  Raven_Leader* pLeader = m_TeamB->GetLeader();
@@ -349,30 +342,17 @@ void Raven_Game::CreateHumanBot(Raven_Bot* rb) {
 
 void Raven_Game::AddBots(unsigned int NumBotsToAdd)
 {
-  while (NumBotsToAdd--)
-  {
-    //create a bot. (its position is irrelevant at this point because it will
-    //not be rendered until it is spawned)
-    Raven_Bot* rb = new Raven_Bot(this, Vector2D());
-	
-	//switch the default steering behaviors on
-	rb->GetSteering()->WallAvoidanceOn();
-	rb->GetSteering()->SeparationOn();
-
-    m_Bots.push_back(rb);
-
-    //register the bot with the entity manager
-    EntityMgr->RegisterEntity(rb);
-
-	////////////////////////////////	HUMAN BOT	//////////////////////////////////////////////
-	//if you don't want human bot, comment this line
-	CreateHumanBot(rb);
-
-    
-#ifdef LOG_CREATIONAL_STUFF
-  debug_con << "Adding bot with ID " << ttos(rb->ID()) << "";
-#endif
-  }
+	while (NumBotsToAdd--)
+	{
+		if (RandBool()) // New teammate A
+		{
+			AddFollowers(1);
+		}
+		else // New teammate B
+		{
+			AddTeammates(1);
+		}
+	}
 }
 
 void Raven_Game::AddTeammates(unsigned int NumBotsToAdd)
@@ -400,6 +380,7 @@ void Raven_Game::AddTeammates(unsigned int NumBotsToAdd)
 	}
 }
 
+
 void Raven_Game::AddOrRemoveLeader()
 {
 	if (m_TeamB->GetLeader() == nullptr) {
@@ -413,7 +394,7 @@ void Raven_Game::AddOrRemoveLeader()
 
 		m_Bots.push_back(rb);
 		m_TeamB->SetLeader(rb);
-		
+
 		//register the bot with the entity manager
 		EntityMgr->RegisterEntity(rb);
 
@@ -477,12 +458,77 @@ void Raven_Game::NotifyAllBotsOfRemoval(Raven_Bot* pRemovedBot)const
 //-----------------------------------------------------------------------------
 void Raven_Game::RemoveBot()
 {
-  m_bRemoveABot = true;
+	m_bRemoveABot = true;
 }
 
 void Raven_Game::RemoveTeammate()
 {
 	m_bRemoveATeammate = true;
+}
+
+void Raven_Game::RemoveFollower()
+{
+	m_bRemoveAFollower = true;
+}
+
+void Raven_Game::TeammateRemoval()
+{
+	if (!m_Bots.empty() && !m_TeamA->isEmpty())
+	{
+		Raven_Bot* pTeammate = m_TeamA->RemoveATeammate();
+		if (pTeammate == m_pSelectedBot) {
+			m_pSelectedBot = 0;
+		}
+
+		NotifyAllBotsOfRemoval(pTeammate);
+
+		bool TeammateRemoved = false;
+		std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+		while (curBot != m_Bots.end() && !TeammateRemoved)
+		{
+			if ((*curBot)->ID() == pTeammate->ID())
+			{
+				delete *curBot;
+				TeammateRemoved = true;
+			}
+
+			curBot++;
+		}
+		m_Bots.remove(pTeammate);
+		pTeammate = 0;
+	}
+
+	m_bRemoveATeammate = false;
+}
+
+void Raven_Game::FollowerRemoval()
+{
+	if (!m_Bots.empty() && !m_TeamB->isEmpty())
+	{
+		Raven_Bot* pTeammate = m_TeamB->RemoveATeammate();
+		if (pTeammate == m_pSelectedBot) {
+			m_pSelectedBot = 0;
+		}
+
+		NotifyAllBotsOfRemoval(pTeammate);
+
+		bool TeammateRemoved = false;
+		std::list<Raven_Bot*>::const_iterator curBot = m_Bots.begin();
+		while (curBot != m_Bots.end() && !TeammateRemoved)
+		{
+			if ((*curBot)->ID() == pTeammate->ID())
+			{
+				delete *curBot;
+				TeammateRemoved = true;
+			}
+
+			curBot++;
+		}
+		m_Bots.remove(pTeammate);
+		pTeammate = 0;
+	}
+
+	m_bRemoveAFollower = false;
 }
 
 //--------------------------- AddBolt -----------------------------------------
