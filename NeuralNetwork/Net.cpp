@@ -1,5 +1,11 @@
 #include "Net.h"
 #include <assert.h>
+#include <sstream>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <cstdlib>
+#include <iostream>
 
 
 Net::Net(const vector<unsigned> &topology)
@@ -21,6 +27,27 @@ Net::Net(const vector<unsigned> &topology)
 		// Force the bias node's output value to 1.0 , it is the last neuron created above
 		m_Layers.back().back().SetOutputVal(1.0);
 	}
+}
+int Net::GetNBLayers() { return GetNet().size(); }
+
+
+void Net::InitializeWithFile() {
+	std::ifstream fichier("DummyNeuralNetwork.txt");
+	int nb_layers = GetNBLayers();
+	int nb_neurons;
+	std::string line;
+	for (int i = 0; i <nb_layers; i++)
+	{
+		nb_neurons = GetNet()[i].size();
+		for (int j = 0; j < nb_neurons; ++j) {
+			for (int k = 0; k < GetNet()[i][j].GetOutputWeights().size(); ++k) {
+				std::getline(fichier, line);
+				stringstream ss(line);
+				fichier >> GetNet()[i][j].GetOutputWeights().at(k).weight;
+			}
+		}
+	}
+	fichier.close();
 }
 
 void Net::FeedForward(const vector<double> &inputVals)
@@ -48,7 +75,7 @@ void Net::FeedForward(const vector<double> &inputVals)
 	}
 }
 
-void Net::BackProp(const vector<double> &targetVals) 
+void Net::BackProp(const vector<double> &targetVals)
 {
 	// Calculate overall net error (RMS (root mean square) of output neuron error)
 	//rms = sqrt((1/n(sum(i->1->n)(target(i)-actual(i))²)
@@ -63,7 +90,7 @@ void Net::BackProp(const vector<double> &targetVals)
 	m_error /= outputLayer.size() - 1; // get the average error squared
 	m_error = sqrt(m_error); // RMS
 
-	// Implement a recent average measurement of the precedent error
+							 // Implement a recent average measurement of the precedent error
 	m_recentAverageError = (m_recentAverageError * m_recentAverageSmoothingFactor + m_error)
 		/ (m_recentAverageSmoothingFactor + 1.0);
 
@@ -77,12 +104,12 @@ void Net::BackProp(const vector<double> &targetVals)
 
 	// Calculate gradient on hidden layers
 
-	for (unsigned layerNum = m_Layers.size() -2; layerNum > 0; --layerNum)
+	for (unsigned layerNum = m_Layers.size() - 2; layerNum > 0; --layerNum)
 	{
 		Layer &hiddenLayer = m_Layers[layerNum];
 		Layer &nextLayer = m_Layers[layerNum + 1];
 
-		for(unsigned n = 0; n < hiddenLayer.size(); ++n)
+		for (unsigned n = 0; n < hiddenLayer.size(); ++n)
 		{
 			hiddenLayer[n].CalcHiddenGradients(nextLayer);
 		}
@@ -103,10 +130,10 @@ void Net::BackProp(const vector<double> &targetVals)
 	}
 }
 
-void Net::GetResult(vector<double> &resultVals) const 
+void Net::GetResult(vector<double> &resultVals) const
 {
 	resultVals.clear();
-	for (unsigned n = 0; n < m_Layers.back().size() - 1; ++n) 
+	for (unsigned n = 0; n < m_Layers.back().size() - 1; ++n)
 	{
 		resultVals.push_back(m_Layers.back()[n].GetOutputVal());
 	}

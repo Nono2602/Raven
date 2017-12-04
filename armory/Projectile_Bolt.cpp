@@ -26,7 +26,7 @@ Bolt::Bolt(Raven_Bot* shooter, Vector2D target):
                          script->GetDouble("Bolt_Mass"),
                          script->GetDouble("Bolt_MaxForce"))
 {
-   assert (target != Vector2D());
+   //assert (target != Vector2D());
 }
 
 

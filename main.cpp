@@ -16,9 +16,15 @@
 #include "lua/Raven_Scriptor.h"
 #include <iostream>
 #include <fstream>
+#include "NeuralNetwork\Net.h"
+#include "NeuralNetwork\Neuron.h"
 
 using namespace std;
 
+bool once = false;
+vector<unsigned> topology;
+vector<double> inputVals;
+LPARAM positionMouse;
 
 
 //need to include this for the toolbar stuff
@@ -39,7 +45,11 @@ Raven_Game* g_pRaven;
 //numero arme courante
 static int armeCourante = 0; //type_blaster
 //active or not the collection of data
-static bool getDataFromHuman = true;
+static bool getDataFromHuman = false;
+//active or not the neuralnetwork.
+//When activate, a human can move a character, but let the neuralk shoot for him
+static bool NeuronIsActivated = true;
+
 //permit to add an information lign in the data file
 bool firstTimeGetData = true;
 //human bot shoot
@@ -125,6 +135,81 @@ void choiceWeaponScrollDown(int& armeCourante, int nbArme) {
 		armeCourante++;
 	}
 }
+
+void getFrameInfo(vector<double> *inputVals){
+	
+	inputVals->clear();
+		int lifeHumanBot = 100;
+		int lifeOtherBot = 100;
+		int otherBotVisible = 0; //true if 1, 0 else
+		int isHumanBotShot = 0; //true if 1, 0 else
+		double distance = 0;
+		int ammunition = 20; //The blaster ammo is 0 because we can shoot all the time.
+
+		double posBotX;
+		double posBotY;
+
+		double posOtherBotX;
+		double posOtherBotY;
+
+		//get the life of the other bot and the human bot
+		std::list<Raven_Bot*> bots = g_pRaven->GetAllBots();
+		std::list<Raven_Bot*>::const_iterator curBot = bots.begin();
+		for (curBot; curBot != bots.end(); ++curBot) {
+			if (*curBot == g_pRaven->PossessedBot()) {
+				lifeHumanBot = (*curBot)->Health();
+				posBotX = (*curBot)->Pos().x;
+				posBotY = (*curBot)->Pos().y;
+			}
+			else {
+				lifeOtherBot = (*curBot)->Health();
+				//get the distance between the 2 bots
+				distance = g_pRaven->PossessedBot()->isPathPlanner()->GetCostToNode((*curBot)->isPathPlanner()->GetClosestNodeToPosition((*curBot)->Pos()));
+				posOtherBotX = (*curBot)->Pos().x;
+				posOtherBotY = (*curBot)->Pos().y;
+
+			}
+		}
+		//knows if the other bot is visible or not
+		std::vector<Raven_Bot*> botsVisible = g_pRaven->GetAllBotsInFOV(g_pRaven->PossessedBot());
+		if (botsVisible.empty()) otherBotVisible = 0;
+		else otherBotVisible = 1;
+
+		//ammunition quantity
+		if (armeCourante != 0) { //si l'arme n'est pas un blaster (sinon il en affiche 0 car on peut tirer a l'infini car le nb de ammo n'est pas pris en compte
+			ammunition = g_pRaven->PossessedBot()->GetWeaponSys()->GetCurrentWeapon()->NumRoundsRemaining();
+		}
+
+		//get if the human bot shoot
+		if (humanBotShot) isHumanBotShot = 1;
+		else 0;
+
+		//get the direction where the bot is facing
+		Vector2D humanBotDirectionFacing = g_pRaven->PossessedBot()->Facing();
+		int xFacing, yFacing;
+		xFacing = 100 * humanBotDirectionFacing.x;
+		humanBotDirectionFacing.x = (double)xFacing / 100;
+		yFacing = 100 * humanBotDirectionFacing.y;
+		humanBotDirectionFacing.y = (double)yFacing / 100;
+
+		inputVals->push_back(lifeHumanBot);
+		inputVals->push_back(lifeOtherBot);
+		inputVals->push_back(otherBotVisible);
+		inputVals->push_back(distance);
+		inputVals->push_back(humanBotDirectionFacing.x);
+		inputVals->push_back(humanBotDirectionFacing.y);
+		inputVals->push_back(posBotX);
+		inputVals->push_back(posBotY);
+		inputVals->push_back(posOtherBotX);
+		inputVals->push_back(posOtherBotY);
+		//inputVals->push_back(WeaponType(armeCourante));
+		inputVals->push_back(ammunition);
+
+		
+		humanBotShot = false;
+}
+
+
 
 /*Get data for the neural network, only work with 2 bots on the map*/
 void getDataFromHumanBot() {
@@ -738,39 +823,64 @@ int WINAPI WinMain (HINSTANCE hInstance,
 
 	//initialize the time when we peak up information avec data
 	int currentTime = 0;
-	int timeMax = 100;
+	int timeMax = 200;
 
-    while(!bDone)
-    {
-      while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) ) 
-      {
-        if( msg.message == WM_QUIT ) 
-        {
-          // Stop loop if it's a quit message
-	        bDone = true;
-        } 
+	while (!bDone)
+	{
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (msg.message == WM_QUIT)
+			{
+				// Stop loop if it's a quit message
+				bDone = true;
+			}
 
-        else 
-        {
-          TranslateMessage( &msg );
-          DispatchMessage( &msg );
-        }
-      }
+			else
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+		}
 
-      if (timer.ReadyForNextFrame() && msg.message != WM_QUIT)
-      {
-        g_pRaven->Update();
-        
-        //render 
-        RedrawWindow(hWnd);
-      }
-	  //Get the data for the neural network
-	  if (getDataFromHuman && currentTime == timeMax) {
-		  getDataFromHumanBot();
-		  currentTime = 0;
-	  }
-	  else currentTime++;
+		if (timer.ReadyForNextFrame() && msg.message != WM_QUIT)
+		{
+			g_pRaven->Update();
 
+			//render 
+			RedrawWindow(hWnd);
+		}
+		//Get the data for the neural network
+		if (getDataFromHuman && currentTime == timeMax) {
+			getDataFromHumanBot();
+			currentTime = 0;
+		}
+		else currentTime++;
+		//if (!once) {
+		if ( NeuronIsActivated && currentTime == timeMax) {
+			topology.clear();
+			topology.push_back(11);
+			topology.push_back(4);
+			topology.push_back(4);
+			topology.push_back(4);
+			topology.push_back(1);
+			Net myNet(topology);
+			
+			myNet.InitializeWithFile();
+			
+		//}
+			getFrameInfo(&inputVals);
+			myNet.FeedForward(inputVals);
+			vector<double> res;
+			myNet.GetResult(res);
+			if (res.back() > 0.9) {
+				g_pRaven->ClickLeftMouseButton(MAKEPOINTS(Vector2D(27,345)));
+				humanBotShot = true;
+			}
+			else {
+				humanBotShot = false;
+			}
+		}
+		else currentTime++;
       //give the OS a little time
       Sleep(2);
      					

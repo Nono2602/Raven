@@ -216,7 +216,7 @@ public:
   Raven_Game* const                  GetWorld(){return m_pWorld;} 
   Raven_Steering* const              GetSteering(){return m_pSteering;}
   Raven_PathPlanner* const           GetPathPlanner(){return m_pPathPlanner;}
-  virtual Goal_Think* const                  GetBrain(){return m_pBrain;}
+  virtual Goal_Think* const          GetBrain(){return m_pBrain;}
   const Raven_TargetingSystem* const GetTargetSys()const{return m_pTargSys;}
   Raven_TargetingSystem* const       GetTargetSys(){return m_pTargSys;}
   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
